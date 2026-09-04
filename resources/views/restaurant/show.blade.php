@@ -318,7 +318,77 @@
                 </div>
             </section>
 
-            <!-- 3. Yorumlar & Değerlendirme (restoranim.net Style) -->
+            <!-- 3. Konum & Harita Entegrasyonu -->
+            <section id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs border border-stone-100 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-ink flex items-center gap-2">
+                            <x-ico name="map-pin" class="w-5 h-5 text-terracotta" />
+                            <span>Konum & Harita</span>
+                        </h2>
+                        @if($address)
+                            <p class="text-xs text-stone-600 mt-1">{{ $address }}</p>
+                        @endif
+                    </div>
+                    <a href="{{ $mapsUrl }}" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-2xs transition-colors">
+                        <x-ico name="navigation" class="w-3.5 h-3.5" />
+                        <span>Google Haritalar'da Yol Tarifi</span>
+                    </a>
+                </div>
+
+                <!-- Leaflet Interactive Map Container -->
+                <div class="h-64 sm:h-80 w-full rounded-xl overflow-hidden relative shadow-inner border border-stone-200/60 bg-stone-100 z-10"
+                     x-data="{ 
+                        mapInstance: null,
+                        initMap() {
+                            this.$nextTick(() => {
+                                if (typeof L === 'undefined') {
+                                    const script = document.createElement('script');
+                                    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                                    script.onload = () => this.renderMap();
+                                    document.head.appendChild(script);
+                                } else {
+                                    this.renderMap();
+                                }
+                            });
+                        },
+                        renderMap() {
+                            if (this.mapInstance) return;
+                            const lat = {{ $restaurant->display_latitude ?? 35.3403 }};
+                            const lng = {{ $restaurant->display_longitude ?? 33.3190 }};
+                            
+                            this.mapInstance = L.map($el, { 
+                                center: [lat, lng], 
+                                zoom: 15, 
+                                scrollWheelZoom: false 
+                            });
+
+                            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                                attribution: '&copy; OpenStreetMap &copy; CARTO',
+                                maxZoom: 19
+                            }).addTo(this.mapInstance);
+
+                            const customPin = L.divIcon({
+                                className: 'custom-restaurant-pin',
+                                html: `<div style='background: #E85D3F; color: white; padding: 5px 11px; border-radius: 9999px; font-weight: 800; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(232, 93, 63, 0.4); border: 2px solid white; white-space: nowrap;'>
+                                        <span style='color: #FFD278;'>★</span>
+                                        <span>{{ addslashes($restaurant->name) }}</span>
+                                       </div>`,
+                                iconSize: [120, 28],
+                                iconAnchor: [60, 14]
+                            });
+
+                            L.marker([lat, lng], { icon: customPin }).addTo(this.mapInstance)
+                             .bindPopup('<b>{{ addslashes($restaurant->name) }}</b><br><small>{{ addslashes($address) }}</small>')
+                             .openPopup();
+                        }
+                     }" 
+                     x-init="initMap()">
+                </div>
+            </section>
+
+            <!-- 4. Yorumlar & Değerlendirme (restoranim.net Style) -->
             <section id="degerlendirmeler" class="bg-surface rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold text-ink">Değerlendirmeler</h2>
@@ -592,7 +662,7 @@
         <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
 
             <!-- 1. İletişim Kartı (restoranim.net Style) -->
-            <div id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs border border-stone-100 space-y-5">
+            <div id="sidebar-iletisim" class="bg-surface rounded-2xl p-6 shadow-2xs border border-stone-100 space-y-5">
                 <h3 class="text-base font-bold text-ink">İletişim</h3>
 
                 <div class="space-y-4">
