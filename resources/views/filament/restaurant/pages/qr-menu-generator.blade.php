@@ -172,58 +172,25 @@
             if (!card) return;
 
             const printWindow = window.open('', '_blank', 'width=800,height=900');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="utf-8">
-                    <title>${title} Masa Kartı</title>
-                    <style>
-                        @page {
-                            size: A5 portrait;
-                            margin: 10mm;
-                        }
-                        body {
-                            margin: 0;
-                            padding: 20px;
-                            background: #F4F0E8;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            min-height: 100vh;
-                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-                            -webkit-print-color-adjust: exact !important;
-                            print-color-adjust: exact !important;
-                        }
-                        .print-wrapper {
-                            width: 320px;
-                            margin: auto;
-                        }
-                        @media print {
-                            body {
-                                background: white !important;
-                                padding: 0 !important;
-                                min-height: auto !important;
-                            }
-                            .print-wrapper {
-                                width: 320px !important;
-                            }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="print-wrapper">
-                        ${card.outerHTML}
-                    </div>
-                    <script>
-                        setTimeout(() => {
-                            window.print();
-                        }, 400);
-                    </` + `script>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
+            const cardHtml = card.outerHTML;
+
+            const doc = printWindow.document;
+            doc.open();
+            doc.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title + ' Masa Kartı</title>' +
+                '<style>' +
+                '@page { size: A5 portrait; margin: 10mm; }' +
+                'body { margin: 0; padding: 20px; background: #F4F0E8; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }' +
+                '.print-wrapper { width: 320px; margin: auto; }' +
+                '@media print { body { background: white !important; padding: 0 !important; min-height: auto !important; } .print-wrapper { width: 320px !important; } }' +
+                '</style></head><body>' +
+                '<div class="print-wrapper">' + cardHtml + '</div>' +
+                '</body></html>');
+            doc.close();
+
+            printWindow.focus();
+            setTimeout(function() {
+                printWindow.print();
+            }, 500);
         }
     </script>
 </x-filament-panels::page>
