@@ -159,7 +159,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        $restaurant->load(['city', 'categories', 'menuCategories.items']);
+        $restaurant->load(['city', 'categories', 'menuCategories.items', 'branches.city']);
 
         $featuredItems = $restaurant->menuItems()
             ->where(function ($q) {

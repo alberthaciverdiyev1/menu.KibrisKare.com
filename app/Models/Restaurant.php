@@ -66,4 +66,9 @@ class Restaurant extends Model
     {
         return $this->hasMany(MenuItem::class)->orderBy('order');
     }
+
+    public function branches(): HasMany
+    {
+        return $this->hasMany(Branch::class);
+    }
 }

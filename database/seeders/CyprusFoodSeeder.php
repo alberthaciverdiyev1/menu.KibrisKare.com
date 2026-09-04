@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branch;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\MenuCategory;
@@ -376,6 +377,45 @@ class CyprusFoodSeeder extends Seeder
                 }
             }
             $restaurant->categories()->sync($categoryIds);
+
+            // Default Main Branch
+            Branch::updateOrCreate(
+                [
+                    'restaurant_id' => $restaurant->id,
+                    'name' => $restaurant->name . ' - Merkez Şube',
+                ],
+                [
+                    'city_id' => $restaurant->city_id,
+                    'address' => $restaurant->address,
+                    'latitude' => $restaurant->latitude,
+                    'longitude' => $restaurant->longitude,
+                    'phone' => $restaurant->phone,
+                    'opening_hours' => $restaurant->opening_hours,
+                    'is_main' => true,
+                    'is_active' => true,
+                ]
+            );
+
+            // Add an extra branch for Niazi's (e.g. Lefkoşa Dereboyu branch)
+            if ($restaurant->slug === 'niazis-restaurant-girne') {
+                $lefkosaCity = $cities['lefkosa'] ?? null;
+                Branch::updateOrCreate(
+                    [
+                        'restaurant_id' => $restaurant->id,
+                        'name' => "Niazi's Express Lefkoşa",
+                    ],
+                    [
+                        'city_id' => $lefkosaCity?->id ?? $restaurant->city_id,
+                        'address' => 'Mehmet Akif Caddesi (Dereboyu) No:54, Lefkoşa',
+                        'latitude' => 35.1920,
+                        'longitude' => 33.3550,
+                        'phone' => '+90 392 228 44 55',
+                        'opening_hours' => '11:00 - 23:00',
+                        'is_main' => false,
+                        'is_active' => true,
+                    ]
+                );
+            }
 
             // Add menus
             $orderCat = 1;

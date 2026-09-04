@@ -230,6 +230,41 @@
                         <span>Google Haritalarda Aç ↗</span>
                     </a>
                 </div>
+
+                @if($restaurant->branches && $restaurant->branches->count() > 1)
+                    <!-- Branches List (Tüm Şubeler) -->
+                    <div class="pt-5 border-t border-warm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-muted block">Tüm Şubeler ({{ $restaurant->branches->count() }})</span>
+                            <span class="text-xs font-medium text-terracotta">Aynı lezzet, farklı lokasyonlar</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            @foreach($restaurant->branches as $branch)
+                                <div class="p-3.5 rounded-2xl bg-sand/60 border border-warm/80 space-y-2">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-1.5 min-w-0">
+                                            <span class="font-bold text-xs text-ink truncate">{{ $branch->name }}</span>
+                                            @if($branch->is_main)
+                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-terracotta/10 text-terracotta shrink-0">Merkez</span>
+                                            @endif
+                                        </div>
+                                        @if($branch->city)
+                                            <span class="text-[11px] font-semibold text-muted shrink-0">{{ $branch->city->name }}</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-[11px] text-muted line-clamp-1">{{ $branch->address }}</p>
+                                    <div class="flex items-center justify-between pt-1 text-[11px] border-t border-warm/60">
+                                        <span class="text-muted font-mono">{{ $branch->opening_hours ?? '10:00 - 23:00' }}</span>
+                                        @if($branch->phone)
+                                            <a href="tel:{{ $branch->phone }}" class="text-terracotta hover:underline font-bold">{{ $branch->phone }}</a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- RIGHT 5 COLS: Operating Hours & Verified Amenities -->
