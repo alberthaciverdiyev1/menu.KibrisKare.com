@@ -297,7 +297,7 @@
             <div class="flex flex-wrap items-center gap-3 shrink-0">
                 @if($restaurant->phone)
                     <a href="tel:{{ $restaurant->phone }}" 
-                       class="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-surface hover:bg-sand text-ink font-bold text-sm shadow-2xs hover:shadow-xs transition-all border border-stone-200/60">
+                       class="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-surface hover:bg-sand text-ink font-bold text-sm shadow-2xs hover:shadow-xs transition-all">
                         <x-ico name="phone" class="w-4 h-4 text-terracotta" />
                         <span>Ara / Rezervasyon</span>
                     </a>
@@ -329,7 +329,7 @@
 
             <!-- 2. Öne Çıkan Menü Seçenekleri -->
             @if($featuredItems->isNotEmpty())
-                <section class="pt-8 border-t border-stone-200/60 space-y-6">
+                <section class="pt-8 space-y-6">
                     <div class="flex items-center justify-between">
                         <div>
                             <h2 class="text-xl font-bold text-ink tracking-tight font-display">Öne Çıkan Lezzetler</h2>
@@ -352,11 +352,11 @@
 
             <!-- 3. Şubeler (Birden fazla varsa) -->
             @if($hasMultipleBranches)
-                <section class="pt-8 border-t border-stone-200/60 space-y-4">
+                <section class="pt-8 space-y-4">
                     <h2 class="text-xl font-bold text-ink tracking-tight font-display">Şubeler ({{ $restaurant->branches->count() }})</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @foreach($restaurant->branches as $branch)
-                            <div class="p-4 rounded-2xl bg-surface border border-stone-200/60 shadow-2xs space-y-2">
+                            <div class="p-4 rounded-2xl bg-surface shadow-2xs space-y-2">
                                 <div class="flex items-center justify-between">
                                     <h3 class="font-bold text-sm text-ink">{{ $branch->name }}</h3>
                                     @if($branch->is_main)
@@ -379,7 +379,7 @@
             @endif
 
             <!-- 4. Değerlendirmeler & Yorumlar -->
-            <section class="pt-8 border-t border-stone-200/60 space-y-6" x-data="{ showForm: false, rating: 5 }">
+            <section class="pt-8 space-y-6" x-data="{ showForm: false, rating: 5 }">
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-ink tracking-tight font-display">Misafir Değerlendirmeleri</h2>
