@@ -30,6 +30,11 @@ class RestaurantPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex('#E85D3F'),
             ])
+            ->maxContentWidth(\Filament\Support\Enums\MaxWidth::Full)
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::HEAD_END,
+                fn (): string => \Illuminate\Support\Facades\Blade::render("@include('filament.custom-compact-styles')")
+            )
             ->discoverResources(in: app_path('Filament/Restaurant/Resources'), for: 'App\\Filament\\Restaurant\\Resources')
             ->discoverPages(in: app_path('Filament/Restaurant/Pages'), for: 'App\\Filament\\Restaurant\\Pages')
             ->pages([
