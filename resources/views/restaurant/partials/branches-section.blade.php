@@ -1,7 +1,11 @@
-<!-- ================= ŞUBELER & LOKASYONLAR BÖLÜMÜ ================= -->
 @if($restaurant->branches->isNotEmpty())
-    <section id="subeler" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-5">
-        <div class="flex items-center justify-between">
+    <section id="subeler" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-4"
+             x-data="{ open: window.innerWidth >= 640 }"
+             @resize.window="if (window.innerWidth >= 640) open = true">
+        
+        <!-- Header with Mobile Collapse Toggle -->
+        <div class="flex items-center justify-between select-none cursor-pointer sm:cursor-default"
+             @click="if (window.innerWidth < 640) open = !open">
             <div>
                 <h2 class="text-lg font-bold text-ink flex items-center gap-2">
                     <x-ico name="map-pin" class="w-5 h-5 text-terracotta" />
@@ -9,9 +13,23 @@
                 </h2>
                 <p class="text-xs text-muted mt-0.5">Tüm şubelerin adres, iletişim ve güncel çalışma saatleri</p>
             </div>
+
+            <!-- Mobile Chevron Button -->
+            <button type="button"
+                    class="sm:hidden p-2 rounded-xl bg-sand text-ink hover:bg-stone-200/60 transition-transform duration-200 cursor-pointer shrink-0"
+                    :class="open ? 'rotate-180' : ''"
+                    aria-label="Şubeleri Göster / Gizle">
+                <x-ico name="chevron-down" class="w-5 h-5 text-ink" />
+            </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Branches Grid -->
+        <div x-show="open"
+             x-cloak
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 sm:!grid">
             @foreach($restaurant->branches as $branch)
                 @php
                     $bIsOpen = $branch->isOpenNow();
