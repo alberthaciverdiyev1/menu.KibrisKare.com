@@ -46,11 +46,188 @@
         </p>
     @endif
 
-    <!-- ================= HERO ================= -->
-    <div class="rounded-2xl overflow-hidden border border-warm bg-sand">
-        <div class="aspect-[16/9] sm:aspect-[21/9]">
-            <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover">
-        </div>
+    <!-- ================= HERO / PHOTO GRID (Vilka / Airbnb Style) ================= -->
+    @php
+        $galleryImages = is_array($restaurant->gallery) ? array_values(array_filter($restaurant->gallery)) : [];
+        $hasGallery = !empty($galleryImages);
+        $totalPhotos = ($hasGallery ? count($galleryImages) : 0) + ($restaurant->image ? 1 : 0);
+        $allPhotos = array_filter(array_merge([$restaurant->image], array_map(fn($img) => \Illuminate\Support\Str::startsWith($img, ['http://', 'https://']) ? $img : asset('storage/' . $img), $galleryImages)));
+    @endphp
+
+    <div x-data="{ 
+            activeImage: null, 
+            isOpen: false,
+            currentIndex: 0,
+            photos: {{ json_encode(array_values($allPhotos)) }},
+            openModal(idx) {
+                this.currentIndex = idx;
+                this.activeImage = this.photos[idx];
+                this.isOpen = true;
+            },
+            next() {
+                if (this.currentIndex < this.photos.length - 1) {
+                    this.currentIndex++;
+                } else {
+                    this.currentIndex = 0;
+                }
+                this.activeImage = this.photos[this.currentIndex];
+            },
+            prev() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                } else {
+                    this.currentIndex = this.photos.length - 1;
+                }
+                this.activeImage = this.photos[this.currentIndex];
+            }
+         }" 
+         class="relative">
+        
+        @if(!$hasGallery || count($galleryImages) === 0)
+            <!-- Single Cover Photo -->
+            <div class="rounded-2xl overflow-hidden border border-warm bg-sand">
+                <div class="aspect-[16/9] sm:aspect-[21/9]">
+                    <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover">
+                </div>
+            </div>
+        @elseif(count($galleryImages) === 1)
+            <!-- 2-Photo Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl overflow-hidden border border-warm bg-sand p-1">
+                <button type="button" @click="openModal(0)" class="relative aspect-4/3 sm:aspect-auto sm:h-80 md:h-96 rounded-xl overflow-hidden group focus:outline-none">
+                    <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
+                </button>
+                <button type="button" @click="openModal(1)" class="relative aspect-4/3 sm:aspect-auto sm:h-80 md:h-96 rounded-xl overflow-hidden group focus:outline-none">
+                    <img src="{{ $allPhotos[1] ?? $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
+                    <div class="absolute bottom-3 right-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ink/80 hover:bg-ink text-white text-xs font-bold backdrop-blur-sm shadow-md">
+                            <x-ico name="camera" class="w-4 h-4" />
+                            2 Fotoğrafı Gör
+                        </span>
+                    </div>
+                </button>
+            </div>
+        @elseif(count($galleryImages) === 2 || count($galleryImages) === 3)
+            <!-- 3-Photo Grid (Vilka layout: 1 Main + 2 Stacked on right) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 rounded-2xl overflow-hidden border border-warm bg-sand/40 p-1">
+                <button type="button" @click="openModal(0)" class="relative sm:col-span-2 aspect-[16/10] sm:aspect-auto sm:h-84 md:h-[400px] rounded-xl overflow-hidden group focus:outline-none">
+                    <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
+                </button>
+                <div class="grid grid-cols-2 sm:grid-cols-1 gap-2.5 sm:h-84 md:h-[400px]">
+                    <button type="button" @click="openModal(1)" class="relative h-full aspect-4/3 sm:aspect-auto rounded-xl overflow-hidden group focus:outline-none">
+                        <img src="{{ $allPhotos[1] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </button>
+                    <button type="button" @click="openModal(2)" class="relative h-full aspect-4/3 sm:aspect-auto rounded-xl overflow-hidden group focus:outline-none">
+                        <img src="{{ $allPhotos[2] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute bottom-3 right-3">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ink/80 hover:bg-ink text-white text-xs font-bold backdrop-blur-sm shadow-md">
+                                <x-ico name="camera" class="w-3.5 h-3.5" />
+                                Tümünü Gör ({{ $totalPhotos }})
+                            </span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        @else
+            <!-- 5-Photo Grid (Vilka / Airbnb Layout: 1 Large Left + 4 Grid Right) -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 rounded-2xl overflow-hidden border border-warm bg-sand/30 p-1">
+                <!-- Large Main Photo (Col 1-2) -->
+                <button type="button" @click="openModal(0)" class="relative md:col-span-2 aspect-[16/10] md:aspect-auto md:h-[420px] rounded-xl overflow-hidden group focus:outline-none">
+                    <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
+                </button>
+                
+                <!-- 4 Smaller Photos in 2x2 Grid (Col 3-4) -->
+                <div class="grid grid-cols-2 gap-2.5 md:col-span-2 md:h-[420px]">
+                    @for($i = 1; $i <= 4; $i++)
+                        @if(isset($allPhotos[$i]))
+                            <button type="button" @click="openModal({{ $i }})" class="relative h-full aspect-4/3 md:aspect-auto rounded-xl overflow-hidden group focus:outline-none">
+                                <img src="{{ $allPhotos[$i] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                
+                                @if($i === 4)
+                                    <div class="absolute inset-0 bg-ink/30 group-hover:bg-ink/40 transition-colors flex items-center justify-center p-2">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface text-ink font-bold text-xs shadow-lg">
+                                            <x-ico name="camera" class="w-3.5 h-3.5 text-terracotta" />
+                                            +{{ $totalPhotos - 4 }} Fotoğraf
+                                        </span>
+                                    </div>
+                                @endif
+                            </button>
+                        @endif
+                    @endfor
+                </div>
+            </div>
+        @endif
+
+        <!-- Floating All Photos Badge Button -->
+        @if($totalPhotos > 1)
+            <button type="button" 
+                    @click="openModal(0)"
+                    class="hidden sm:inline-flex absolute bottom-4 right-4 items-center gap-2 px-3.5 py-2 rounded-xl bg-surface/95 hover:bg-surface text-ink font-bold text-xs shadow-md border border-warm backdrop-blur-md transition-all hover:scale-102">
+                <x-ico name="camera" class="w-4 h-4 text-terracotta" />
+                <span>Tüm Fotoğraflar ({{ $totalPhotos }})</span>
+            </button>
+        @endif
+
+        <!-- Fullscreen Gallery Lightbox Modal -->
+        <template x-teleport="body">
+            <div x-show="isOpen" 
+                 x-cloak 
+                 @click.self="isOpen = false"
+                 @keydown.escape.window="isOpen = false"
+                 @keydown.arrow-right.window="next()"
+                 @keydown.arrow-left.window="prev()"
+                 class="fixed inset-0 z-50 bg-ink/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-6 select-none">
+                
+                <!-- Modal Top Bar -->
+                <div class="flex items-center justify-between text-white pb-3 border-b border-white/10 max-w-6xl w-full mx-auto">
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-sm sm:text-base">{{ $restaurant->name }}</span>
+                        <span class="text-xs text-stone-400 bg-white/10 px-2.5 py-1 rounded-full font-mono" x-text="(currentIndex + 1) + ' / ' + photos.length"></span>
+                    </div>
+                    <button type="button" 
+                            @click="isOpen = false" 
+                            class="text-white hover:text-stone-300 font-bold text-sm flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-full transition-colors">
+                        <span>✕</span>
+                        <span class="hidden sm:inline">Kapat</span>
+                    </button>
+                </div>
+
+                <!-- Modal Image Container with Nav Arrows -->
+                <div class="relative flex-1 flex items-center justify-center max-w-6xl w-full mx-auto my-auto py-4">
+                    <!-- Prev Button -->
+                    <button type="button" 
+                            x-show="photos.length > 1"
+                            @click="prev()" 
+                            class="absolute left-2 sm:left-4 z-10 p-3 rounded-full bg-ink/60 hover:bg-ink text-white border border-white/20 transition-transform active:scale-95 focus:outline-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+
+                    <!-- Active Image -->
+                    <img :src="activeImage" 
+                         alt="{{ $restaurant->name }}" 
+                         class="max-h-[75vh] max-w-full rounded-2xl object-contain shadow-2xl transition-all duration-200 border border-white/10">
+
+                    <!-- Next Button -->
+                    <button type="button" 
+                            x-show="photos.length > 1"
+                            @click="next()" 
+                            class="absolute right-2 sm:right-4 z-10 p-3 rounded-full bg-ink/60 hover:bg-ink text-white border border-white/20 transition-transform active:scale-95 focus:outline-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Bottom Thumbnails Strip -->
+                <div x-show="photos.length > 1" class="max-w-4xl w-full mx-auto flex items-center justify-center gap-2 overflow-x-auto py-2 hide-scrollbar">
+                    <template x-for="(p, i) in photos" :key="i">
+                        <button type="button" 
+                                @click="currentIndex = i; activeImage = p" 
+                                :class="currentIndex === i ? 'ring-2 ring-terracotta scale-105 opacity-100' : 'opacity-50 hover:opacity-80'"
+                                class="h-12 sm:h-14 aspect-4/3 rounded-lg overflow-hidden shrink-0 transition-all focus:outline-none">
+                            <img :src="p" class="w-full h-full object-cover">
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </template>
     </div>
 
     <!-- ================= PROFILE (identity + actions) ================= -->
@@ -187,64 +364,6 @@
                     @endif
                 </aside>
             </div>
-
-            <!-- ================= RESTAURANT GALLERY ================= -->
-            @php
-                $galleryImages = is_array($restaurant->gallery) ? array_filter($restaurant->gallery) : [];
-            @endphp
-            @if(!empty($galleryImages))
-                <div class="mt-12 pt-10 border-t border-warm space-y-4" x-data="{ activeImage: null }">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="text-lg font-extrabold text-ink">Fotoğraf Galerisi</h2>
-                            <p class="text-xs text-muted mt-0.5">Mekan, ambiyans ve sunumlarımızdan kareler ({{ count($galleryImages) }} Fotoğraf)</p>
-                        </div>
-                    </div>
-
-                    <!-- Gallery Grid -->
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
-                        @foreach($galleryImages as $img)
-                            @php
-                                $imgUrl = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://']) ? $img : asset('storage/' . $img);
-                            @endphp
-                            <button type="button" 
-                                    @click="activeImage = '{{ $imgUrl }}'"
-                                    class="group aspect-4/3 rounded-xl overflow-hidden bg-sand border border-warm relative block focus:outline-none focus:ring-2 focus:ring-terracotta">
-                                <img src="{{ $imgUrl }}" 
-                                     alt="{{ $restaurant->name }} Galeri Fotoğrafı" 
-                                     loading="lazy" 
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span class="p-2 rounded-full bg-surface/90 text-ink shadow-sm">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
-                                    </span>
-                                </div>
-                            </button>
-                        @endforeach
-                    </div>
-
-                    <!-- Lightbox Modal -->
-                    <template x-teleport="body">
-                        <div x-show="activeImage" 
-                             x-cloak 
-                             @click.self="activeImage = null"
-                             @keydown.escape.window="activeImage = null"
-                             class="fixed inset-0 z-50 bg-ink/90 backdrop-blur-sm flex items-center justify-center p-4">
-                            <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
-                                <button type="button" 
-                                        @click="activeImage = null" 
-                                        class="absolute -top-10 right-0 text-white hover:text-stone-300 font-bold text-sm flex items-center gap-1.5 bg-ink/50 px-3 py-1.5 rounded-full border border-white/20">
-                                    <span>✕</span>
-                                    <span>Kapat</span>
-                                </button>
-                                <img :src="activeImage" 
-                                     alt="Galeri Büyük Görünüm" 
-                                     class="max-h-[85vh] max-w-full rounded-2xl object-contain shadow-2xl border border-white/10">
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            @endif
 
             <!-- Reviews (on the same sheet) -->
             <div class="mt-12 pt-10 border-t border-warm" x-data="{ showForm: false, rating: 5 }">
