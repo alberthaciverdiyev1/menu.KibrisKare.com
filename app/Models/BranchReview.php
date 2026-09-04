@@ -15,6 +15,7 @@ class BranchReview extends Model
         'rating',
         'author_name',
         'comment',
+        'photos',
         'ip_address',
         'delete_requested',
         'delete_request_reason',
@@ -22,6 +23,7 @@ class BranchReview extends Model
 
     protected $casts = [
         'rating' => 'integer',
+        'photos' => 'array',
         'delete_requested' => 'boolean',
     ];
 

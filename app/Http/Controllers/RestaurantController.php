@@ -298,16 +298,29 @@ class RestaurantController extends Controller
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:1000',
             'author_name' => 'nullable|string|max:100',
+            'photos' => 'nullable|array|max:8',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,webp,avif|max:5120',
         ]);
 
         $authorName = !empty(trim($validated['author_name'] ?? '')) 
             ? trim($validated['author_name']) 
             : 'Anonim Misafir';
 
+        $photoPaths = [];
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photoFile) {
+                if ($photoFile->isValid()) {
+                    $path = $photoFile->store('reviews', 'public');
+                    $photoPaths[] = $path;
+                }
+            }
+        }
+
         $branch->reviews()->create([
             'rating' => $validated['rating'],
             'comment' => $validated['comment'] ?? null,
             'author_name' => $authorName,
+            'photos' => !empty($photoPaths) ? $photoPaths : null,
             'ip_address' => $request->ip(),
         ]);
 
@@ -327,6 +340,6 @@ class RestaurantController extends Controller
             }
         }
 
-        return back()->with('success', 'Değerlendirmeniz ve yorumunuz başarıyla kaydedildi! Teşekkür ederiz.');
+        return back()->with('success', 'Değerlendirmeniz ve fotoğraflarınız başarıyla kaydedildi! Teşekkür ederiz.');
     }
 }
