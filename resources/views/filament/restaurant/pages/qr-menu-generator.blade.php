@@ -155,12 +155,12 @@
                         </div>
 
                         <!-- Full Print Button (Opens clean printable stand card in new tab) -->
-                        <button type="button" 
-                                onclick="printStandCard('{{ $cardId }}', '{{ e($restaurant->name) }} - {{ e($branch->name) }}')"
-                                style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #2C1810; color: #FFFFFF; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s;">
+                        <a href="{{ route('restaurant.print-card', ['restaurant' => $restaurant->slug, 'branch' => $branch->id]) }}" 
+                           target="_blank"
+                           style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #2C1810; color: #FFFFFF; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s;">
                             <span>🖨️</span>
                             <span>Masa Stant Kartını Yazdır (A5 / A6)</span>
-                        </button>
+                        </a>
 
                     </div>
                 @endforeach
@@ -168,23 +168,4 @@
         @endif
 
     </div>
-
-    <script>
-        function printStandCard(cardId, title) {
-            const cardEl = document.getElementById(cardId);
-            if (!cardEl) return;
-            const w = window.open('', '_blank');
-            if (!w) {
-                alert('Yazdırma penceresi açılamadı. Lütfen tarayıcınızın pop-up engelleyicisini kontrol edin.');
-                return;
-            }
-            w.document.open();
-            w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title + ' QR Menü</title><style>@page { size: A5 portrait; margin: 10mm; } body { margin: 0; padding: 24px; background: #FAF8F5; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } .card-wrap { width: 320px; margin: auto; } @media print { body { background: white !important; padding: 0 !important; min-height: auto !important; } .card-wrap { width: 320px !important; box-shadow: none !important; } }</style></head><body><div class="card-wrap">' + cardEl.outerHTML + '</div></body></html>');
-            w.document.close();
-            setTimeout(() => {
-                w.focus();
-                w.print();
-            }, 500);
-        }
-    </script>
 </x-filament-panels::page>

@@ -211,6 +211,19 @@ class RestaurantController extends Controller
     }
 
     /**
+     * Masa Stant Kartı Yazdırma Sayfası (/restaurant/{slug}/print-card/{branch})
+     */
+    public function printStandCard(Restaurant $restaurant, \App\Models\Branch $branch)
+    {
+        $branch->load('city');
+        $restaurant->load('city');
+        $menuUrl = route('restaurant.menu', ['restaurant' => $restaurant->slug, 'branch' => $branch->id]);
+        $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=8&color=2C1810&bgcolor=FFFFFF&data=" . urlencode($menuUrl);
+
+        return view('restaurant.print-card', compact('restaurant', 'branch', 'menuUrl', 'qrCodeUrl'));
+    }
+
+    /**
      * Harita Sayfası (/harita)
      */
     public function mapView(Request $request)

@@ -16,6 +16,9 @@ Route::get('/restaurant/{restaurant:slug}', [RestaurantController::class, 'show'
 // Restoran Özel Dijital Menü Sayfası
 Route::get('/restaurant/{restaurant:slug}/menu', [RestaurantController::class, 'menu'])->name('restaurant.menu');
 
+// Masa Stant Kartı Yazdırma Sayfası (A5 / A6)
+Route::get('/restaurant/{restaurant:slug}/print-card/{branch}', [RestaurantController::class, 'printStandCard'])->name('restaurant.print-card');
+
 // Şube Anonim Puan & Yorum Ekleme
 Route::post('/branches/{branch}/reviews', [RestaurantController::class, 'storeBranchReview'])->name('branches.reviews.store');
 
