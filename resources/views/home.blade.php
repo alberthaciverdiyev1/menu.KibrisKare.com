@@ -4,124 +4,162 @@
 
 @section('content')
 
-    <!-- HERO SECTION -->
-    <section class="relative bg-sand border-b border-warm pt-16 pb-20 overflow-hidden">
-        
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
-            
-            <!-- Curated Location Pill -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-warm text-ink text-xs font-bold uppercase tracking-wider mb-6 shadow-2xs">
-                <span class="w-2 h-2 rounded-full bg-terracotta"></span>
-                <span>Kuzey Kıbrıs Restoran & Dijital Menü Rehberi</span>
-            </div>
+@php
+    // Editorial hero anchors on the most appetizing thing: a real restaurant's dish photo.
+    $heroRest = ($popularRestaurants->isNotEmpty())
+        ? $popularRestaurants->first()
+        : ($nearbyRestaurants->isNotEmpty() ? $nearbyRestaurants->first() : null);
+    $citySlugNow = $selectedCity->slug ?? 'girne';
+@endphp
 
-            <!-- HERO TITLE -->
-            <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-ink tracking-tight leading-[1.1] uppercase">
-                KIBRIS'TA NE YEMEK <br class="hidden sm:inline" />
-                <span class="text-terracotta">İSTİYORSUNUZ?</span>
-            </h1>
+    <!-- HERO SECTION (editorial, image-anchored two-column) -->
+    <section class="bg-sand border-b border-warm overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16 sm:pt-20 sm:pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
 
-            <!-- HERO SUBTITLE -->
-            <p class="mt-4 text-base sm:text-lg text-muted max-w-xl mx-auto font-normal leading-relaxed">
-                Yakınınızdaki restoranları keşfedin, yemek çeşitlerine ve güncel porsiyon fiyatlarına anında göz atın.
-            </p>
-
-            <!-- SEARCH BAR (Wireframe: [ 🔍 Restoran, yemek veya mutfak ara... ] [ Ara ]) -->
-            <form action="{{ route('restaurants.index') }}" method="GET" class="mt-8 sm:mt-10 max-w-2xl mx-auto">
-                <input type="hidden" name="city" value="{{ $selectedCity->slug ?? 'girne' }}">
-                @if($selectedCategorySlug)
-                    <input type="hidden" name="category" value="{{ $selectedCategorySlug }}">
-                @endif
-                
-                <div class="flex items-center bg-white rounded-2xl shadow-sm border border-warm p-2 focus-within:border-terracotta focus-within:ring-2 focus-within:ring-terracotta/15">
-                    <div class="pl-3.5 pr-2 text-muted">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <!-- LEFT: intro + search -->
+                <div class="lg:col-span-7">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <span class="w-2 h-2 rounded-full bg-terracotta"></span>
+                        <span class="text-xs sm:text-sm font-bold text-ink tracking-wide">Kuzey Kıbrıs Yeme-İçme Rehberi</span>
                     </div>
-                    <label for="hero-search" class="sr-only">Restoran, yemek veya mutfak ara</label>
-                    <input id="hero-search"
-                           type="text"
-                           name="q"
-                           value="{{ $searchQuery ?? '' }}"
-                           placeholder="Restoran adı, yemek veya mutfak arayın (örn: Şeftali Kebabı, Burger, Pizza)..."
-                           class="w-full bg-transparent border-none text-ink text-sm sm:text-base placeholder-muted/70 focus:outline-none focus:ring-0 font-medium">
-                    <button type="submit" 
-                            class="px-6 sm:px-8 py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm uppercase tracking-wider shrink-0 shadow-xs">
-                        Ara
-                    </button>
+
+                    <h1 class="text-4xl sm:text-5xl xl:text-[3.35rem] font-black text-ink tracking-tight leading-[1.08]">
+                        Bugün ne yiyecekseniz,<br class="hidden sm:block">
+                        güncel fiyatıyla bakın.
+                    </h1>
+
+                    <p class="mt-5 text-base sm:text-lg text-muted max-w-lg leading-relaxed">
+                        Girne'den Gazimağusa'ya restoran, meyhane ve kafeleri keşfedin; Şeftali Kebabı'ndan deniz mahsullerine doğrulanmış dijital menülere anında ulaşın.
+                    </p>
+
+                    <!-- SEARCH -->
+                    <form action="{{ route('restaurants.index') }}" method="GET" class="mt-8 max-w-xl">
+                        <input type="hidden" name="city" value="{{ $citySlugNow }}">
+                        @if($selectedCategorySlug)
+                            <input type="hidden" name="category" value="{{ $selectedCategorySlug }}">
+                        @endif
+                        <label for="hero-search" class="sr-only">Restoran, yemek veya mutfak ara</label>
+                        <div class="flex items-center bg-surface rounded-2xl border border-warm p-1.5 pl-4 shadow-xs focus-within:border-terracotta focus-within:ring-2 focus-within:ring-terracotta/15">
+                            <svg class="w-5 h-5 text-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <input id="hero-search"
+                                   type="text"
+                                   name="q"
+                                   value="{{ $searchQuery ?? '' }}"
+                                   placeholder="Restoran adı, yemek veya mutfak arayın…"
+                                   class="w-full bg-transparent px-3 py-2.5 border-none text-ink text-sm sm:text-base placeholder-muted/70 focus:outline-none focus:ring-0 font-medium">
+                            <button type="submit" class="px-6 py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm shrink-0 shadow-xs">
+                                Ara
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- QUICK CITIES + MAP LINK -->
+                    <div class="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div class="flex items-center gap-2 flex-wrap text-xs">
+                            <span class="text-muted font-bold mr-1">Hızlı seçim:</span>
+                            @foreach($cities as $city)
+                                <x-city-pill
+                                    :active="($selectedCity->slug ?? '') == $city->slug"
+                                    :href="'?city='.$city->slug.($searchQuery ? '&q='.$searchQuery : '').($selectedCategorySlug ? '&category='.$selectedCategorySlug : '')">
+                                    {{ $city->name }}
+                                </x-city-pill>
+                            @endforeach
+                        </div>
+                        <a href="#harita" class="inline-flex items-center gap-1.5 text-sm font-bold text-terracotta hover:text-terracotta-dark shrink-0">
+                            <x-ico name="map" class="w-4 h-4" />
+                            <span>Haritada Keşfet</span>
+                        </a>
+                    </div>
                 </div>
-            </form>
 
-            <!-- LOCATION & QUICK MAP SHORTCUT (Wireframe: [ 📍 Girne ]  [ Haritada Ara ]) -->
-            <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm">
-                <!-- Location indicator -->
-                <div class="inline-flex items-center gap-2 bg-white border border-warm px-4 py-2 rounded-full text-ink shadow-2xs font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-open"></span>
-                    <span class="text-muted">Konum:</span>
-                    <span class="font-extrabold text-ink">{{ $selectedCity->name ?? 'Girne' }}</span>
+                <!-- RIGHT: featured editorial card (the most characteristic thing in the subject's world) -->
+                <div class="lg:col-span-5">
+                    @if($heroRest)
+                        <div class="group bg-surface rounded-3xl border border-warm overflow-hidden shadow-sm">
+                            <div class="relative aspect-[4/3] overflow-hidden bg-sand">
+                                <img src="{{ $heroRest->image }}"
+                                     alt="{{ $heroRest->name }} öne çıkan yemek"
+                                     class="w-full h-full object-cover">
+                                <div class="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-extrabold bg-ink text-white shadow-xs">
+                                    <x-ico name="star" filled class="w-3 h-3 text-star" />
+                                    <span>{{ number_format($heroRest->rating, 1) }}</span>
+                                </div>
+                                @if($heroRest->is_open)
+                                    <div class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-open text-white shadow-xs">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                                        Açık
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="p-5 sm:p-6">
+                                <div class="text-[11px] font-bold text-muted tracking-wider">{{ $heroRest->cuisine }} • {{ $heroRest->city->name }}</div>
+                                <h2 class="mt-1 text-xl sm:text-2xl font-extrabold text-ink group-hover:text-terracotta">{{ $heroRest->name }}</h2>
+                                <div class="mt-4 flex flex-wrap gap-2.5">
+                                    <a href="{{ route('restaurant.menu', $heroRest->slug) }}"
+                                       class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white text-xs font-bold shadow-xs">
+                                        <x-ico name="book-open" class="w-4 h-4" />
+                                        <span>Menüyü Gör</span>
+                                    </a>
+                                    <a href="{{ route('restaurant.show', $heroRest->slug) }}"
+                                       class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-sand hover:bg-surface border border-warm text-ink text-xs font-bold">
+                                        Mekan Detayı
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="bg-surface rounded-3xl border border-warm p-10 text-center">
+                            <div class="w-14 h-14 rounded-2xl bg-sand text-terracotta flex items-center justify-center mx-auto">
+                                <x-ico name="map" class="w-7 h-7" />
+                            </div>
+                            <p class="mt-4 text-sm text-muted">Yakında Kıbrıs sofraları burada.</p>
+                        </div>
+                    @endif
                 </div>
 
-                <!-- [Haritada Ara] button -->
-                <a href="#harita" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-sand border border-warm text-ink hover:text-terracotta font-bold shadow-2xs">
-                    <svg class="w-4 h-4 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                    <span>Haritada Ara</span>
-                </a>
             </div>
-
-            <!-- City quick switch pills -->
-            <div class="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
-                @foreach($cities as $city)
-                    <x-city-pill 
-                        :active="($selectedCity->slug ?? '') == $city->slug"
-                        :href="'?city='.$city->slug.($searchQuery ? '&q='.$searchQuery : '').($selectedCategorySlug ? '&category='.$selectedCategorySlug : '')">
-                        {{ $city->name }}
-                    </x-city-pill>
-                @endforeach
-            </div>
-
         </div>
     </section>
 
-    <!-- CATEGORIES SECTION (Wireframe: Kategoriler | Pizza, Burger, Cafe, Sushi, Steak... →) -->
-    <section id="kategoriler" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-warm">
-        <div class="flex items-center justify-between mb-5">
-            <div>
-                <span class="text-xs font-bold uppercase tracking-wider text-muted block">Kategoriler</span>
-                <h2 class="text-xl sm:text-2xl font-black text-ink mt-0.5">
-                    Mutfak Türüne Göre Seçin
-                </h2>
-            </div>
+    <!-- CATEGORIES (surface browse control) -->
+    <section id="kategoriler" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div class="bg-surface rounded-2xl border border-warm p-5 sm:p-6 shadow-2xs">
+            <div class="flex items-center justify-between gap-3 mb-4">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="w-1.5 h-6 rounded-full bg-terracotta shrink-0"></span>
+                    <h2 class="text-lg sm:text-xl font-extrabold text-ink truncate">Mutfak türüne göre seçin</h2>
+                    @if($selectedCategorySlug)
+                        <a href="?city={{ $selectedCity->slug ?? 'girne' }}"
+                           class="inline-flex items-center gap-1 shrink-0 text-xs font-bold text-muted hover:text-ink bg-sand border border-warm px-2.5 py-1 rounded-lg">
+                            <x-ico name="close" class="w-3 h-3" />
+                            <span>Kaldır</span>
+                        </a>
+                    @endif
+                </div>
 
-            <div class="flex items-center gap-3">
-                @if($selectedCategorySlug)
-                    <a href="?city={{ $selectedCity->slug ?? 'girne' }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-ink bg-surface border border-warm px-3 py-1.5 rounded-lg">
-                        <x-ico name="close" class="w-3.5 h-3.5" />
-                        <span>Filtreyi Kaldır</span>
-                    </a>
-                @endif
-                <a href="{{ route('categories') }}" class="text-xs font-bold text-terracotta hover:text-terracotta-dark hover:underline">
-                    Tüm Kategoriler →
+                <a href="{{ route('categories') }}"
+                   class="inline-flex items-center gap-1 shrink-0 text-xs font-bold text-terracotta hover:text-terracotta-dark">
+                    <span>Tüm kategoriler</span>
+                    <x-ico name="chevron-right" class="w-3.5 h-3.5" />
                 </a>
             </div>
-        </div>
 
-        <!-- Horizontal scrollable categories -->
-        <div class="flex items-center gap-2.5 overflow-x-auto pb-2 hide-scrollbar">
-            <!-- All pill -->
-            <x-category-pill 
-                :active="!$selectedCategorySlug"
-                :href="'?city='.($selectedCity->slug ?? 'girne')">
-                Tüm Mutfaklar
-            </x-category-pill>
-
-            @foreach($categories as $category)
-                <x-category-pill 
-                    :active="$selectedCategorySlug == $category->slug"
-                    :href="'?city='.($selectedCity->slug ?? 'girne').'&category='.$category->slug.($searchQuery ? '&q='.$searchQuery : '')">
-                    {{ $category->name }}
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 hide-scrollbar">
+                <x-category-pill
+                    :active="!$selectedCategorySlug"
+                    :href="'?city='.($selectedCity->slug ?? 'girne')">
+                    Tüm Mutfaklar
                 </x-category-pill>
-            @endforeach
 
-            <div class="px-2 text-muted text-sm hidden sm:block select-none font-bold">→</div>
+                @foreach($categories as $category)
+                    <x-category-pill
+                        :active="$selectedCategorySlug == $category->slug"
+                        :href="'?city='.($selectedCity->slug ?? 'girne').'&category='.$category->slug.($searchQuery ? '&q='.$searchQuery : '')">
+                        {{ $category->name }}
+                    </x-category-pill>
+                @endforeach
+            </div>
         </div>
     </section>
 

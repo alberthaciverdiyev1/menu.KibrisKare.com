@@ -97,40 +97,31 @@
         </a>
 
         <!-- CARD DETAILS -->
-        <div class="p-5 flex flex-col flex-grow justify-between bg-surface">
-            <div>
-                <!-- Cuisine Badge -->
-                <div class="text-xs font-bold uppercase tracking-wider text-muted mb-1.5 truncate">
-                    {{ $restaurant->cuisine }}
-                </div>
-
-                <!-- Restaurant Title -->
-                <a href="{{ route('restaurant.show', $restaurant->slug) }}" class="block">
-                    <h3 class="font-extrabold text-lg text-ink group-hover:text-terracotta leading-snug">
-                        {{ $restaurant->name }}
-                    </h3>
-                </a>
-
-                <!-- Address / Excerpt -->
-                <p class="text-xs text-muted mt-2 line-clamp-2 leading-relaxed font-normal">
-                    {{ $restaurant->description }}
-                </p>
+        <div class="p-5 flex flex-col flex-grow">
+            <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="text-xs font-bold text-muted truncate">{{ $restaurant->cuisine }}</span>
+                <span class="text-xs font-mono font-bold text-ink shrink-0">{{ $restaurant->price_range }}</span>
             </div>
 
-            <!-- Card Footer: Quick Actions -->
-            <div class="mt-5 pt-3.5 border-t border-warm flex items-center justify-between gap-3">
-                <a href="{{ route('restaurant.show', $restaurant->slug) }}" 
-                   class="text-xs font-bold text-muted hover:text-ink">
-                    Mekan Bilgisi
-                </a>
+            <a href="{{ route('restaurant.show', $restaurant->slug) }}" class="block">
+                <h3 class="font-extrabold text-lg text-ink group-hover:text-terracotta leading-snug">
+                    {{ $restaurant->name }}
+                </h3>
+            </a>
 
-                <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
-                   class="inline-flex items-center gap-1.5 text-xs font-bold text-terracotta hover:text-terracotta-dark group/btn">
-                    <span>Menüyü Gör</span>
-                    <svg class="w-3.5 h-3.5 group-hover/btn:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+            <p class="text-xs text-muted mt-2 line-clamp-2 leading-relaxed font-normal">
+                {{ $restaurant->description }}
+            </p>
+
+            <!-- Single clear primary action (restraint: image/title already link to detail) -->
+            <div class="mt-auto pt-4 border-t border-warm flex items-center justify-between gap-3">
+                <span class="text-[11px] font-semibold text-muted">{{ $restaurant->reviews_count }} değerlendirme</span>
+                <a href="{{ route('restaurant.menu', $restaurant->slug) }}"
+                   class="inline-flex items-center gap-1.5 text-xs font-bold text-terracotta hover:text-terracotta-dark">
+                    <x-ico name="book-open" class="w-3.5 h-3.5" />
+                    <span>Dijital Menüyü Gör</span>
                 </a>
             </div>
-
         </div>
     </div>
 @endif
