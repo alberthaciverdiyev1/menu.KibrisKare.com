@@ -41,12 +41,12 @@
                             </span>
                         </div>
 
-                        <!-- Open/Close Status (Top Right) -->
-                        <div class="absolute top-4 right-4">
-                            @if($restaurant->is_open)
-                                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold bg-open text-white shadow-xs">
-                                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                                    Şu Anda Açık
+                        <!-- Live Open Status -->
+                        <div class="absolute top-4 right-4 flex items-center gap-2">
+                            @if($restaurant->isOpenNow())
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-emerald-800 shadow-xs border border-emerald-200">
+                                    <span class="w-2 h-2 rounded-full bg-open"></span>
+                                    <span>Şu Anda Açık</span>
                                 </span>
                             @else
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-ink text-stone-300 shadow-xs border border-stone-700">
@@ -59,9 +59,6 @@
                         <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-bold">
                             <span class="px-3 py-1.5 rounded-lg bg-ink/90 text-white shadow-xs backdrop-blur-xs">
                                 📍 {{ $restaurant->city->name }} • {{ $restaurant->distance }}
-                            </span>
-                            <span class="px-3 py-1.5 rounded-lg bg-surface text-ink shadow-xs border border-warm font-mono">
-                                {{ $restaurant->price_range }}
                             </span>
                         </div>
                     </div>
@@ -277,23 +274,68 @@
                             <span class="text-xs font-bold uppercase tracking-wider text-muted block">Ziyaret Saatleri</span>
                             <h3 class="text-xl font-black text-ink mt-0.5">Çalışma Düzeni</h3>
                         </div>
-                        <span class="w-3 h-3 rounded-full {{ $restaurant->is_open ? 'bg-open' : 'bg-stone-400' }}"></span>
+                        <span class="w-3 h-3 rounded-full {{ $restaurant->isOpenNow() ? 'bg-open' : 'bg-stone-400' }}"></span>
                     </div>
 
                     <!-- Current Day Banner -->
-                    <div class="p-4 rounded-2xl {{ $restaurant->is_open ? 'bg-emerald-50 border border-emerald-200/60' : 'bg-sand border border-warm' }} flex items-center justify-between">
+                    <div class="p-4 rounded-2xl {{ $restaurant->isOpenNow() ? 'bg-emerald-50 border border-emerald-200/60' : 'bg-sand border border-warm' }} flex items-center justify-between">
                         <div>
-                            <span class="text-xs font-bold {{ $restaurant->is_open ? 'text-open' : 'text-muted' }} uppercase tracking-wider">
-                                {{ $restaurant->is_open ? '● Şu Anda Servis Veriyor' : '● Kapalı' }}
+                            <span class="text-xs font-bold {{ $restaurant->isOpenNow() ? 'text-open' : 'text-muted' }} uppercase tracking-wider">
+                                {{ $restaurant->isOpenNow() ? '● Şu Anda Servis Veriyor' : '● Şu Anda Kapalı' }}
                             </span>
                             <p class="text-base font-extrabold text-ink mt-0.5">
-                                {{ $restaurant->opening_hours }}
+                                {{ $restaurant->getTodayHours() }}
                             </p>
                         </div>
                         <span class="text-xs font-bold text-muted bg-white px-2.5 py-1 rounded-lg border border-warm">
-                            Hergün
+                            Bugün
                         </span>
                     </div>
+
+                    @if(!empty($restaurant->weekly_hours) && is_array($restaurant->weekly_hours))
+                        <!-- 7 Günlük Açılış - Kapanış Tablosu -->
+                        <div class="pt-3 border-t border-warm space-y-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-muted block pb-1">Haftalık Saatler</span>
+                            @php
+                                $daysMap = [
+                                    'monday' => 'Pazartesi',
+                                    'tuesday' => 'Salı',
+                                    'wednesday' => 'Çarşamba',
+                                    'thursday' => 'Perşembe',
+                                    'friday' => 'Cuma',
+                                    'saturday' => 'Cumartesi',
+                                    'sunday' => 'Pazar',
+                                ];
+                                $currentDayKey = strtolower(now()->format('l'));
+                            @endphp
+
+                            <div class="space-y-1.5 text-xs">
+                                @foreach($daysMap as $dayKey => $dayName)
+                                    @php
+                                        $dayConfig = $restaurant->weekly_hours[$dayKey] ?? null;
+                                        $isToday = ($dayKey === $currentDayKey);
+                                    @endphp
+                                    <div class="flex items-center justify-between py-1 px-2.5 rounded-lg {{ $isToday ? 'bg-sand font-bold text-ink border border-warm' : 'text-muted' }}">
+                                        <div class="flex items-center gap-1.5">
+                                            <span>{{ $dayName }}</span>
+                                            @if($isToday)
+                                                <span class="text-[10px] bg-terracotta text-white px-1.5 py-0.2 rounded font-extrabold">Bugün</span>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            @if(!empty($dayConfig['is_closed']))
+                                                <span class="text-stone-400 font-semibold">Kapalı</span>
+                                            @elseif(!empty($dayConfig['open']) && !empty($dayConfig['close']))
+                                                <span class="font-mono text-ink">{{ $dayConfig['open'] }} - {{ $dayConfig['close'] }}</span>
+                                            @else
+                                                <span class="font-mono text-ink">{{ $restaurant->opening_hours }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
                     <p class="text-xs text-muted leading-relaxed">
                         Mutfak sipariş alımı kapanış saatinden 45 dakika önce sona ermektedir. Yoğun saatler için rezervasyon önerilir.

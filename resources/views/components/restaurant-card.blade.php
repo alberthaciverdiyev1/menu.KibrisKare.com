@@ -19,9 +19,6 @@
                         {{ $restaurant->name }}
                     </h4>
                 </a>
-                <span class="text-[10px] font-extrabold text-ink shrink-0 font-mono">
-                    {{ $restaurant->price_range }}
-                </span>
             </div>
 
             <div class="flex items-center gap-1.5 text-[11px] text-muted mt-0.5">
@@ -32,7 +29,7 @@
                 <span>•</span>
                 <span class="truncate">{{ $restaurant->city->name }}</span>
                 <span>•</span>
-                @if($restaurant->is_open)
+                @if($restaurant->isOpenNow())
                     <span class="text-open font-bold text-[10px]">Açık</span>
                 @else
                     <span class="text-muted font-medium text-[10px]">Kapalı</span>
@@ -71,19 +68,12 @@
                 </span>
             </div>
 
-            <!-- Price Range (Top Right) -->
-            <div class="absolute top-3 right-3">
-                <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-surface text-ink shadow-xs border border-warm">
-                    {{ $restaurant->price_range }}
-                </span>
-            </div>
-
             <!-- Location & Status (Bottom Solid Badges, No Gradient) -->
             <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs">
                 <span class="px-2.5 py-1 rounded-md font-bold bg-ink text-white shadow-xs">
                     {{ $restaurant->city->name }} • {{ $restaurant->distance }}
                 </span>
-                @if($restaurant->is_open)
+                @if($restaurant->isOpenNow())
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold bg-open text-white shadow-xs">
                         <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
                         Açık
@@ -100,7 +90,6 @@
         <div class="p-5 flex flex-col flex-grow">
             <div class="flex items-center justify-between gap-2 mb-1.5">
                 <span class="text-xs font-bold text-muted truncate">{{ $restaurant->cuisine }}</span>
-                <span class="text-xs font-mono font-bold text-ink shrink-0">{{ $restaurant->price_range }}</span>
             </div>
 
             <a href="{{ route('restaurant.show', $restaurant->slug) }}" class="block">

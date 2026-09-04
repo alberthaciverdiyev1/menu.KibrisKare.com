@@ -29,6 +29,7 @@ class Restaurant extends Model
         'cover_image',
         'distance',
         'opening_hours',
+        'weekly_hours',
         'is_popular',
         'is_new',
         'is_open',
@@ -45,6 +46,7 @@ class Restaurant extends Model
         'has_delivery' => 'boolean',
         'latitude' => 'float',
         'longitude' => 'float',
+        'weekly_hours' => 'array',
     ];
 
     public function city(): BelongsTo
@@ -70,5 +72,76 @@ class Restaurant extends Model
     public function branches(): HasMany
     {
         return $this->hasMany(Branch::class);
+    }
+
+    /**
+     * Güncel saate ve haftalık çalışma planına göre restoranın açık olup olmadığını döner
+     */
+    public function isOpenNow(): bool
+    {
+        $now = now();
+        $dayKey = strtolower($now->format('l')); // monday, tuesday, etc.
+        $currentTime = $now->format('H:i');
+
+        if (!empty($this->weekly_hours) && is_array($this->weekly_hours)) {
+            $todayConfig = $this->weekly_hours[$dayKey] ?? null;
+
+            if ($todayConfig) {
+                // Eğer gün kapalı olarak işaretlenmişse
+                if (!empty($todayConfig['is_closed'])) {
+                    return false;
+                }
+
+                $open = $todayConfig['open'] ?? null;
+                $close = $todayConfig['close'] ?? null;
+
+                if ($open && $close) {
+                    if ($open <= $close) {
+                        return $currentTime >= $open && $currentTime <= $close;
+                    } else {
+                        // Gece yarısını geçen saatler (örn: 18:00 - 02:00)
+                        return $currentTime >= $open || $currentTime <= $close;
+                    }
+                }
+            }
+        }
+
+        // Eğer haftalık saat girilmemişse opening_hours dizesini ayrıştırmayı dene
+        if (!empty($this->opening_hours) && str_contains($this->opening_hours, '-')) {
+            $parts = explode('-', $this->opening_hours);
+            $open = trim($parts[0]);
+            $close = trim($parts[1]);
+
+            if ($open <= $close) {
+                return $currentTime >= $open && $currentTime <= $close;
+            } else {
+                return $currentTime >= $open || $currentTime <= $close;
+            }
+        }
+
+        return (bool) $this->is_open;
+    }
+
+    /**
+     * Bugünün çalışma saatini döner
+     */
+    public function getTodayHours(): string
+    {
+        $now = now();
+        $dayKey = strtolower($now->format('l'));
+
+        if (!empty($this->weekly_hours) && is_array($this->weekly_hours)) {
+            $todayConfig = $this->weekly_hours[$dayKey] ?? null;
+            if ($todayConfig) {
+                if (!empty($todayConfig['is_closed'])) {
+                    return 'Bugün Kapalı';
+                }
+                if (!empty($todayConfig['open']) && !empty($todayConfig['close'])) {
+                    return $todayConfig['open'] . ' - ' . $todayConfig['close'];
+                }
+            }
+        }
+
+        return $this->opening_hours ?? '10:00 - 23:00';
     }
 }

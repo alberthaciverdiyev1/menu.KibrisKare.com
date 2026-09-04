@@ -27,10 +27,12 @@ class RestaurantStatsOverview extends BaseWidget
         $categoriesCount = MenuCategory::where('restaurant_id', $restaurant->id)->count();
         $branchesCount = Branch::where('restaurant_id', $restaurant->id)->count();
 
+        $isOpen = $restaurant->isOpenNow();
+
         return [
-            Stat::make('Restoran Durumu', $restaurant->is_open ? 'Şu Anda Açık ●' : 'Kapalı ○')
-                ->description($restaurant->name)
-                ->color($restaurant->is_open ? 'success' : 'danger'),
+            Stat::make('Canlı Durum', $isOpen ? 'Şu Anda Açık ●' : 'Şu Anda Kapalı ○')
+                ->description('Bugün: ' . $restaurant->getTodayHours())
+                ->color($isOpen ? 'success' : 'danger'),
 
             Stat::make('Kayıtlı Menü Ürünleri', $itemsCount . ' Çeşit')
                 ->description($categoriesCount . ' Kategori altında')

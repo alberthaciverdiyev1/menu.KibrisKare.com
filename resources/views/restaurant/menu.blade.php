@@ -34,8 +34,6 @@
                         <span>{{ $restaurant->city->name }}</span>
                         <span>•</span>
                         <span>{{ $restaurant->cuisine }}</span>
-                        <span>•</span>
-                        <span class="font-mono text-ink font-bold">{{ $restaurant->price_range }}</span>
                     </div>
                 </div>
 

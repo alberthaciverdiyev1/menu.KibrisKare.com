@@ -104,7 +104,7 @@ function cyprusMapComponent(config) {
                             <span>•</span>
                             <span>${rest.distance}</span>
                             <span>•</span>
-                            <span style="font-weight: 800; color: #191919;">${rest.price_range}</span>
+                            <span style="font-weight: 800; color: ${rest.is_open ? '#2E7D5B' : '#737373'};">${rest.is_open ? '● Açık' : '○ Kapalı'}</span>
                         </div>
                         <div style="display: flex; gap: 6px;">
                             <a href="${rest.detail_url}" 
