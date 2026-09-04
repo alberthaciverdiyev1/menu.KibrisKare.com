@@ -183,11 +183,30 @@ class RestaurantController extends Controller
     /**
      * Ayrı Restoran Menü Sayfası (/restaurant/{slug}/menu)
      */
-    public function menu(Restaurant $restaurant)
+    public function menu(Request $request, Restaurant $restaurant)
     {
-        $restaurant->load(['city', 'categories', 'menuCategories.items']);
+        $branchId = $request->query('branch');
+        $currentBranch = null;
 
-        return view('restaurant.menu', compact('restaurant'));
+        if ($branchId) {
+            $currentBranch = $restaurant->branches()->where('id', $branchId)->first();
+        }
+
+        $restaurant->load([
+            'city',
+            'categories',
+            'branches',
+            'menuCategories.items' => function ($query) use ($currentBranch) {
+                if ($currentBranch) {
+                    $query->where(function ($q) use ($currentBranch) {
+                        $q->whereDoesntHave('branches')
+                          ->orWhereHas('branches', fn($b) => $b->where('branches.id', $currentBranch->id));
+                    });
+                }
+            }
+        ]);
+
+        return view('restaurant.menu', compact('restaurant', 'currentBranch'));
     }
 
     /**

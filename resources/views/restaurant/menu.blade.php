@@ -20,29 +20,43 @@
                         <h1 class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
                             {{ $restaurant->name }}
                         </h1>
-                        <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-sand text-terracotta border border-warm">
-                            Dijital Menü
-                        </span>
+                        @if(isset($currentBranch) && $currentBranch)
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-terracotta text-white shadow-2xs">
+                                📍 {{ $currentBranch->name }}
+                            </span>
+                        @else
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-sand text-terracotta border border-warm">
+                                Dijital Menü
+                            </span>
+                        @endif
                     </div>
 
-                    <div class="flex items-center gap-3 text-xs text-muted font-medium mt-1.5">
+                    <div class="flex items-center gap-3 text-xs text-muted font-medium mt-1.5 flex-wrap">
                         <span class="font-bold text-star flex items-center gap-1">
                             <x-ico name="star" filled class="w-3 h-3" />
                             <span>{{ number_format($restaurant->rating, 1) }}</span>
                         </span>
                         <span>•</span>
-                        <span>{{ $restaurant->city->name }}</span>
+                        <span>{{ $currentBranch ? ($currentBranch->city->name ?? $restaurant->city->name) : $restaurant->city->name }}</span>
                         <span>•</span>
                         <span>{{ $restaurant->cuisine }}</span>
+                        @if(isset($currentBranch) && $currentBranch)
+                            <span>•</span>
+                            <span class="text-ink font-semibold">🕒 {{ $currentBranch->getTodayHours() }}</span>
+                        @endif
                     </div>
                 </div>
 
-                @if($restaurant->phone)
+                @php
+                    $phoneToCall = (isset($currentBranch) && $currentBranch->phone) ? $currentBranch->phone : $restaurant->phone;
+                @endphp
+
+                @if($phoneToCall)
                     <div class="shrink-0">
-                        <a href="tel:{{ $restaurant->phone }}"
+                        <a href="tel:{{ $phoneToCall }}"
                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface hover:bg-sand border border-warm text-ink font-bold text-xs shadow-2xs">
                             <x-ico name="phone" class="w-4 h-4 text-terracotta" />
-                            <span>Sipariş / Rezervasyon: {{ $restaurant->phone }}</span>
+                            <span>Sipariş / İletişim: {{ $phoneToCall }}</span>
                         </a>
                     </div>
                 @endif
