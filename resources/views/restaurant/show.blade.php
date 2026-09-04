@@ -171,57 +171,62 @@
         <template x-teleport="body">
             <div x-show="isOpen" 
                  x-cloak 
-                 @click.self="isOpen = false"
                  @keydown.escape.window="isOpen = false"
                  @keydown.arrow-right.window="next()"
                  @keydown.arrow-left.window="prev()"
-                 class="fixed inset-0 z-50 bg-ink/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-6 select-none">
+                 class="fixed inset-0 z-[9999] bg-ink/95 backdrop-blur-md flex flex-col justify-between p-3 sm:p-6 select-none overflow-hidden h-screen w-screen">
                 
-                <!-- Modal Top Bar -->
-                <div class="flex items-center justify-between text-white pb-3 border-b border-white/10 max-w-6xl w-full mx-auto">
+                <!-- Modal Top Header Bar -->
+                <div class="flex items-center justify-between text-white pb-3 border-b border-white/10 w-full shrink-0">
                     <div class="flex items-center gap-3">
-                        <span class="font-bold text-sm sm:text-base">{{ $restaurant->name }}</span>
-                        <span class="text-xs text-stone-400 bg-white/10 px-2.5 py-1 rounded-full font-mono" x-text="(currentIndex + 1) + ' / ' + photos.length"></span>
+                        <span class="font-bold text-sm sm:text-base text-white tracking-tight">{{ $restaurant->name }}</span>
+                        <span class="text-xs text-stone-300 bg-white/10 px-2.5 py-1 rounded-full font-mono" x-text="(currentIndex + 1) + ' / ' + photos.length"></span>
                     </div>
                     <button type="button" 
                             @click="isOpen = false" 
-                            class="text-white hover:text-stone-300 font-bold text-sm flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-full transition-colors">
-                        <span>✕</span>
-                        <span class="hidden sm:inline">Kapat</span>
+                            class="text-white hover:text-white font-bold text-sm flex items-center gap-1.5 bg-white/15 hover:bg-white/25 px-4 py-2 rounded-xl transition-all cursor-pointer shadow-lg focus:outline-none">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        <span>Kapat</span>
                     </button>
                 </div>
 
-                <!-- Modal Image Container with Nav Arrows -->
-                <div class="relative flex-1 flex items-center justify-center max-w-6xl w-full mx-auto my-auto py-4">
+                <!-- Modal Center Image Area with Navigation Buttons -->
+                <div class="relative flex-1 w-full flex items-center justify-center min-h-0 py-2 sm:py-4 px-2 sm:px-16"
+                     @click.self="isOpen = false">
+                    
                     <!-- Prev Button -->
                     <button type="button" 
                             x-show="photos.length > 1"
-                            @click="prev()" 
-                            class="absolute left-2 sm:left-4 z-10 p-3 rounded-full bg-ink/60 hover:bg-ink text-white border border-white/20 transition-transform active:scale-95 focus:outline-none">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                            @click.stop="prev()" 
+                            aria-label="Önceki Fotoğraf"
+                            class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 p-3 sm:p-4 rounded-full bg-stone-900/80 hover:bg-stone-900 text-white border border-white/20 transition-all hover:scale-110 active:scale-95 shadow-2xl focus:outline-none cursor-pointer">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                     </button>
 
-                    <!-- Active Image -->
-                    <img :src="activeImage" 
-                         alt="{{ $restaurant->name }}" 
-                         class="max-h-[75vh] max-w-full rounded-2xl object-contain shadow-2xl transition-all duration-200 border border-white/10">
+                    <!-- Active Image Display -->
+                    <div class="h-full w-full flex items-center justify-center p-2">
+                        <img :src="activeImage" 
+                             alt="{{ $restaurant->name }}" 
+                             class="max-h-[68vh] sm:max-h-[72vh] max-w-[95vw] sm:max-w-[85vw] w-auto h-auto rounded-xl object-contain shadow-2xl transition-all duration-200 border border-white/10">
+                    </div>
 
                     <!-- Next Button -->
                     <button type="button" 
                             x-show="photos.length > 1"
-                            @click="next()" 
-                            class="absolute right-2 sm:right-4 z-10 p-3 rounded-full bg-ink/60 hover:bg-ink text-white border border-white/20 transition-transform active:scale-95 focus:outline-none">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                            @click.stop="next()" 
+                            aria-label="Sonraki Fotoğraf"
+                            class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 p-3 sm:p-4 rounded-full bg-stone-900/80 hover:bg-stone-900 text-white border border-white/20 transition-all hover:scale-110 active:scale-95 shadow-2xl focus:outline-none cursor-pointer">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                     </button>
                 </div>
 
                 <!-- Bottom Thumbnails Strip -->
-                <div x-show="photos.length > 1" class="max-w-4xl w-full mx-auto flex items-center justify-center gap-2 overflow-x-auto py-2 hide-scrollbar">
+                <div x-show="photos.length > 1" class="w-full shrink-0 flex items-center justify-center gap-2 overflow-x-auto py-2 hide-scrollbar">
                     <template x-for="(p, i) in photos" :key="i">
                         <button type="button" 
-                                @click="currentIndex = i; activeImage = p" 
-                                :class="currentIndex === i ? 'ring-2 ring-terracotta scale-105 opacity-100' : 'opacity-50 hover:opacity-80'"
-                                class="h-12 sm:h-14 aspect-4/3 rounded-lg overflow-hidden shrink-0 transition-all focus:outline-none">
+                                @click.stop="currentIndex = i; activeImage = p" 
+                                :class="currentIndex === i ? 'ring-2 ring-terracotta scale-105 opacity-100' : 'opacity-40 hover:opacity-80'"
+                                class="h-12 sm:h-14 aspect-4/3 rounded-lg overflow-hidden shrink-0 transition-all focus:outline-none cursor-pointer bg-stone-800">
                             <img :src="p" class="w-full h-full object-cover">
                         </button>
                     </template>
