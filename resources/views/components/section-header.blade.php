@@ -26,7 +26,7 @@
     </div>
 
     @if($actionText && $actionUrl)
-        <a href="{{ $actionUrl }}" class="text-xs font-bold text-terracotta hover:text-terracotta-dark transition-colors uppercase tracking-wider flex items-center gap-1 shrink-0">
+        <a href="{{ $actionUrl }}" class="text-xs font-bold text-terracotta hover:text-terracotta-dark uppercase tracking-wider flex items-center gap-1 shrink-0">
             <span>{{ $actionText }}</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
         </a>

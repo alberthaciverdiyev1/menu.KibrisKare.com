@@ -13,7 +13,7 @@ $activeClass = $variant === 'ink'
 
 <a href="{{ $href }}" 
    {{ $attributes->merge([
-       'class' => 'px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 border ' . 
+       'class' => 'px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 border ' . 
                   ($active ? $activeClass : 'bg-surface text-ink border-warm hover:border-muted')
    ]) }}>
     {{ $slot }}

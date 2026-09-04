@@ -4,11 +4,11 @@
 
 @section('content')
 
-    <!-- RESTAURANT HERO BANNER -->
+    <!-- RESTAURANT HERO BANNER (Solid dark overlay, no gradient) -->
     <div class="relative bg-ink text-white overflow-hidden">
         <div class="absolute inset-0">
             <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover opacity-25">
-            <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/60"></div>
+            <div class="absolute inset-0 bg-ink/85"></div>
         </div>
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14">
@@ -55,13 +55,13 @@
                 <!-- Action Button to Menu -->
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
                     <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
-                       class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-black text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg">
+                       class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-black text-sm uppercase tracking-wider shadow-md hover:shadow-lg">
                         <span>Menüyü Görüntüle</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
 
                     @if($restaurant->phone)
-                        <a href="tel:{{ $restaurant->phone }}" class="inline-flex items-center justify-center gap-2 px-5 py-4 rounded-xl bg-stone-900 border border-stone-700 hover:bg-stone-800 text-white font-bold text-sm transition-colors">
+                        <a href="tel:{{ $restaurant->phone }}" class="inline-flex items-center justify-center gap-2 px-5 py-4 rounded-xl bg-stone-900 border border-stone-700 hover:bg-stone-800 text-white font-bold text-sm">
                             <span>Ara: {{ $restaurant->phone }}</span>
                         </a>
                     @endif
@@ -87,7 +87,7 @@
                         </p>
                     </div>
                     <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
-                       class="px-6 py-3.5 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm uppercase tracking-wider transition-colors shrink-0 shadow-xs">
+                       class="px-6 py-3.5 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm uppercase tracking-wider shrink-0 shadow-xs">
                         Menü Sayfasına Git →
                     </a>
                 </div>
@@ -169,7 +169,7 @@
                         @if($restaurant->phone)
                             <div>
                                 <span class="text-muted uppercase tracking-wider block font-bold text-[11px]">Telefon:</span>
-                                <a href="tel:{{ $restaurant->phone }}" class="font-bold text-ink hover:text-terracotta transition-colors block mt-0.5">
+                                <a href="tel:{{ $restaurant->phone }}" class="font-bold text-ink hover:text-terracotta block mt-0.5">
                                     {{ $restaurant->phone }}
                                 </a>
                             </div>
@@ -178,7 +178,7 @@
 
                     <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->latitude }},{{ $restaurant->longitude }}" 
                        target="_blank" 
-                       class="block w-full py-3.5 rounded-xl bg-ink hover:bg-terracotta text-white font-bold text-xs text-center uppercase tracking-wider transition-colors shadow-xs">
+                       class="block w-full py-3.5 rounded-xl bg-ink hover:bg-terracotta text-white font-bold text-xs text-center uppercase tracking-wider shadow-xs">
                         Google Haritalarda Aç ↗
                     </a>
                 </div>

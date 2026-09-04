@@ -12,7 +12,7 @@
     <h3 class="font-extrabold text-ink text-base">{{ $title }}</h3>
     <p class="text-xs text-muted mt-1 max-w-sm mx-auto leading-relaxed">{{ $message }}</p>
     @if($actionText && $actionUrl)
-        <a href="{{ $actionUrl }}" class="mt-4 inline-block px-5 py-2.5 rounded-xl bg-terracotta text-white text-xs font-bold hover:bg-terracotta-dark transition-colors shadow-xs">
+        <a href="{{ $actionUrl }}" class="mt-4 inline-block px-5 py-2.5 rounded-xl bg-terracotta text-white text-xs font-bold hover:bg-terracotta-dark shadow-xs">
             {{ $actionText }}
         </a>
     @endif

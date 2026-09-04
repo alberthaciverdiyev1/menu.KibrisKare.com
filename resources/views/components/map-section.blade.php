@@ -22,7 +22,7 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <button @click="resetView()" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-warm text-xs font-bold text-ink hover:border-muted shadow-2xs transition-colors">
+            <button @click="resetView()" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-warm text-xs font-bold text-ink hover:border-muted shadow-2xs">
                 <svg class="w-3.5 h-3.5 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 <span>Merkeze Odakla</span>
             </button>

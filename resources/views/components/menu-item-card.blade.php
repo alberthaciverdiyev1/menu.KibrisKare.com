@@ -8,7 +8,7 @@
     $image = $dish->image ?: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80';
 @endphp
 
-<div class="bg-surface p-4 sm:p-5 rounded-2xl border border-warm hover:border-muted transition-all duration-200 flex flex-col justify-between shadow-2xs hover:shadow-xs group"
+<div class="bg-surface p-4 sm:p-5 rounded-2xl border border-warm hover:border-muted flex flex-col justify-between shadow-2xs hover:shadow-xs group"
      {{ $attributes }}>
     
     <div class="flex items-start gap-4">
@@ -34,7 +34,7 @@
             </div>
 
             <!-- Title -->
-            <h3 class="font-extrabold text-base text-ink group-hover:text-terracotta transition-colors leading-snug">
+            <h3 class="font-extrabold text-base text-ink group-hover:text-terracotta leading-snug">
                 {{ $dish->name }}
             </h3>
 
@@ -57,8 +57,8 @@
         <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-sand shrink-0 shadow-2xs border border-warm">
             <img src="{{ $image }}" 
                  alt="{{ $dish->name }}" 
-                 loading="lazy"
-                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                 loading="lazy" 
+                 class="w-full h-full object-cover">
         </div>
     </div>
 
@@ -69,7 +69,7 @@
         </span>
 
         @if($showMenuLink && $slug)
-            <a href="{{ route('restaurant.menu', $slug) }}" class="font-bold text-terracotta hover:text-terracotta-dark transition-colors">
+            <a href="{{ route('restaurant.menu', $slug) }}" class="font-bold text-terracotta hover:text-terracotta-dark">
                 Menüde Gör →
             </a>
         @endif

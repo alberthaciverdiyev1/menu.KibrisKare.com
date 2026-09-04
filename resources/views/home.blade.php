@@ -33,7 +33,7 @@
                     <input type="hidden" name="category" value="{{ $selectedCategorySlug }}">
                 @endif
                 
-                <div class="flex items-center bg-white rounded-2xl shadow-sm border border-warm p-2 focus-within:border-terracotta focus-within:ring-2 focus-within:ring-terracotta/15 transition-all">
+                <div class="flex items-center bg-white rounded-2xl shadow-sm border border-warm p-2 focus-within:border-terracotta focus-within:ring-2 focus-within:ring-terracotta/15">
                     <div class="pl-3.5 pr-2 text-muted">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
@@ -43,7 +43,7 @@
                            placeholder="Restoran adı, yemek veya mutfak arayın (örn: Şeftali Kebabı, Burger, Pizza)..." 
                            class="w-full bg-transparent border-none text-ink text-sm sm:text-base placeholder-muted/70 focus:outline-none focus:ring-0 font-medium">
                     <button type="submit" 
-                            class="px-6 sm:px-8 py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm uppercase tracking-wider transition-colors shrink-0 shadow-xs">
+                            class="px-6 sm:px-8 py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm uppercase tracking-wider shrink-0 shadow-xs">
                         Ara
                     </button>
                 </div>
@@ -59,7 +59,7 @@
                 </div>
 
                 <!-- [Haritada Ara] button -->
-                <a href="#harita" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-sand border border-warm text-ink hover:text-terracotta font-bold transition-colors shadow-2xs">
+                <a href="#harita" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-sand border border-warm text-ink hover:text-terracotta font-bold shadow-2xs">
                     <svg class="w-4 h-4 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                     <span>Haritada Ara</span>
                 </a>
@@ -91,7 +91,7 @@
 
             <div class="flex items-center gap-3">
                 @if($selectedCategorySlug)
-                    <a href="?city={{ $selectedCity->slug ?? 'girne' }}" class="text-xs font-bold text-muted hover:text-ink bg-surface border border-warm px-3 py-1.5 rounded-lg transition-colors">
+                    <a href="?city={{ $selectedCity->slug ?? 'girne' }}" class="text-xs font-bold text-muted hover:text-ink bg-surface border border-warm px-3 py-1.5 rounded-lg">
                         ✕ Filtreyi Kaldır
                     </a>
                 @endif

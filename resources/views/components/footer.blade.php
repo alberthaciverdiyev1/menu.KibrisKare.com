@@ -23,20 +23,20 @@
             <div class="md:col-span-2 space-y-3">
                 <div class="text-xs font-bold text-white uppercase tracking-wider">Hızlı Erişim</div>
                 <ul class="space-y-2.5 text-sm text-stone-400 font-medium">
-                    <li><a href="{{ route('restaurants.index') }}" class="hover:text-white transition-colors">Tüm Restoranlar</a></li>
-                    <li><a href="{{ route('map') }}" class="hover:text-white transition-colors">Kıbrıs Haritası</a></li>
-                    <li><a href="{{ route('categories') }}" class="hover:text-white transition-colors">Mutfak Türleri</a></li>
-                    <li><a href="{{ route('restaurants.index', ['city' => 'girne']) }}" class="hover:text-white transition-colors">Girne Restoranları</a></li>
+                    <li><a href="{{ route('restaurants.index') }}" class="hover:text-white">Tüm Restoranlar</a></li>
+                    <li><a href="{{ route('map') }}" class="hover:text-white">Kıbrıs Haritası</a></li>
+                    <li><a href="{{ route('categories') }}" class="hover:text-white">Mutfak Türleri</a></li>
+                    <li><a href="{{ route('restaurants.index', ['city' => 'girne']) }}" class="hover:text-white">Girne Restoranları</a></li>
                 </ul>
             </div>
 
             <div class="md:col-span-2 space-y-3">
                 <div class="text-xs font-bold text-white uppercase tracking-wider">Popüler Mutfaklar</div>
                 <ul class="space-y-2.5 text-sm text-stone-400 font-medium">
-                    <li><a href="{{ route('restaurants.index', ['category' => 'kebap']) }}" class="hover:text-white transition-colors">Kıbrıs Şeftali Kebabı</a></li>
-                    <li><a href="{{ route('restaurants.index', ['category' => 'deniz-urunleri']) }}" class="hover:text-white transition-colors">Deniz Ürünleri & Balık</a></li>
-                    <li><a href="{{ route('restaurants.index', ['category' => 'pizza']) }}" class="hover:text-white transition-colors">Taş Fırın Pizza</a></li>
-                    <li><a href="{{ route('restaurants.index', ['category' => 'burger']) }}" class="hover:text-white transition-colors">Gurme Burger</a></li>
+                    <li><a href="{{ route('restaurants.index', ['category' => 'kebap']) }}" class="hover:text-white">Kıbrıs Şeftali Kebabı</a></li>
+                    <li><a href="{{ route('restaurants.index', ['category' => 'deniz-urunleri']) }}" class="hover:text-white">Deniz Ürünleri & Balık</a></li>
+                    <li><a href="{{ route('restaurants.index', ['category' => 'pizza']) }}" class="hover:text-white">Taş Fırın Pizza</a></li>
+                    <li><a href="{{ route('restaurants.index', ['category' => 'burger']) }}" class="hover:text-white">Gurme Burger</a></li>
                 </ul>
             </div>
 
@@ -45,7 +45,7 @@
                 <p class="text-xs text-stone-400 leading-relaxed font-normal">
                     Mekanınızı listemize ekleyin, misafirlerinize güncel QR ve web menünüzü sunun.
                 </p>
-                <a href="/admin" class="inline-block mt-2 px-4 py-2.5 rounded-lg bg-stone-800 hover:bg-terracotta text-white text-xs font-bold border border-stone-700 transition-colors">
+                <a href="/admin" class="inline-block mt-2 px-4 py-2.5 rounded-lg bg-stone-800 hover:bg-terracotta text-white text-xs font-bold border border-stone-700">
                     Yönetim Paneli Girişi →
                 </a>
             </div>

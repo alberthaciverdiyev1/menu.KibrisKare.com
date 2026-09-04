@@ -9,7 +9,7 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
             
             <div class="flex items-center gap-3.5 min-w-0">
-                <a href="{{ route('restaurant.show', $restaurant->slug) }}" class="w-9 h-9 rounded-lg border border-warm hover:border-ink flex items-center justify-center text-ink transition-colors shrink-0 bg-white" title="Mekan Detayına Dön">
+                <a href="{{ route('restaurant.show', $restaurant->slug) }}" class="w-9 h-9 rounded-lg border border-warm hover:border-ink flex items-center justify-center text-ink shrink-0 bg-white" title="Mekan Detayına Dön">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                 </a>
 
@@ -33,11 +33,11 @@
             </div>
 
             <div class="flex items-center gap-2.5 shrink-0">
-                <a href="{{ route('restaurant.show', $restaurant->slug) }}" class="text-xs font-bold text-ink hover:bg-sand px-3.5 py-2 rounded-lg border border-warm transition-colors">
+                <a href="{{ route('restaurant.show', $restaurant->slug) }}" class="text-xs font-bold text-ink hover:bg-sand px-3.5 py-2 rounded-lg border border-warm">
                     Mekan Bilgisi
                 </a>
                 @if($restaurant->phone)
-                    <a href="tel:{{ $restaurant->phone }}" class="text-xs font-bold text-white bg-terracotta hover:bg-terracotta-dark px-4 py-2 rounded-lg transition-colors shadow-xs">
+                    <a href="tel:{{ $restaurant->phone }}" class="text-xs font-bold text-white bg-terracotta hover:bg-terracotta-dark px-4 py-2 rounded-lg shadow-xs">
                         📞 Ara
                     </a>
                 @endif
@@ -89,25 +89,25 @@
                     <button type="button" 
                             @click="filterType = 'all'" 
                             :class="filterType === 'all' ? 'bg-ink text-white font-extrabold shadow-xs' : 'bg-sand text-ink border border-warm hover:border-muted font-bold'"
-                            class="px-3.5 py-2 rounded-lg transition-all shrink-0">
+                            class="px-3.5 py-2 rounded-lg shrink-0">
                         Tümü
                     </button>
                     <button type="button" 
                             @click="filterType = 'chef'" 
                             :class="filterType === 'chef' ? 'bg-terracotta text-white font-extrabold shadow-xs' : 'bg-sand text-ink border border-warm hover:border-muted font-bold'"
-                            class="px-3.5 py-2 rounded-lg transition-all shrink-0">
+                            class="px-3.5 py-2 rounded-lg shrink-0">
                         ⭐ Şefin Tavsiyesi
                     </button>
                     <button type="button" 
                             @click="filterType = 'popular'" 
                             :class="filterType === 'popular' ? 'bg-terracotta text-white font-extrabold shadow-xs' : 'bg-sand text-ink border border-warm hover:border-muted font-bold'"
-                            class="px-3.5 py-2 rounded-lg transition-all shrink-0">
+                            class="px-3.5 py-2 rounded-lg shrink-0">
                         🔥 Popüler
                     </button>
                     <button type="button" 
                             @click="filterType = 'vegetarian'" 
                             :class="filterType === 'vegetarian' ? 'bg-open text-white font-extrabold shadow-xs' : 'bg-sand text-ink border border-warm hover:border-muted font-bold'"
-                            class="px-3.5 py-2 rounded-lg transition-all shrink-0">
+                            class="px-3.5 py-2 rounded-lg shrink-0">
                         🌱 Vejetaryen
                     </button>
                 </div>
@@ -119,7 +119,7 @@
                 <button type="button" 
                         @click="activeCategory = 'all'" 
                         :class="activeCategory === 'all' ? 'bg-terracotta text-white font-bold shadow-xs' : 'bg-sand text-ink hover:text-terracotta font-semibold border border-warm'"
-                        class="px-3.5 py-2 rounded-lg transition-all shrink-0">
+                        class="px-3.5 py-2 rounded-lg shrink-0">
                     Tüm Menü ({{ $restaurant->menuItems->count() }})
                 </button>
 
@@ -127,7 +127,7 @@
                     <button type="button" 
                             @click="activeCategory = '{{ $cat->id }}'" 
                             :class="activeCategory === '{{ $cat->id }}' ? 'bg-terracotta text-white font-bold shadow-xs' : 'bg-sand text-ink hover:text-terracotta font-semibold border border-warm'"
-                            class="px-3.5 py-2 rounded-lg transition-all shrink-0">
+                            class="px-3.5 py-2 rounded-lg shrink-0">
                         {{ $cat->name }} ({{ $cat->items->count() }})
                     </button>
                 @endforeach
