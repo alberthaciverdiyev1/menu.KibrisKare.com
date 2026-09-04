@@ -62,7 +62,7 @@
     @endif
 
     <!-- ================= PHOTO GALLERY (Vilka / Airbnb Editorial Grid) ================= -->
-    <div x-data="{ 
+    <div x-data="{
             isOpen: false,
             currentIndex: 0,
             photos: {{ json_encode($allPhotos) }},
@@ -81,9 +81,9 @@
             prev() {
                 this.currentIndex = (this.currentIndex - 1 + this.photos.length) % this.photos.length;
             }
-         }" 
+         }"
          class="relative mt-2">
-        
+
         @if(!$hasGallery || count($allPhotos) <= 1)
             <!-- Single Full Photo -->
             <div class="relative w-full aspect-[16/9] sm:aspect-[21/9] max-h-[460px] rounded-3xl overflow-hidden bg-stone-200 group cursor-pointer"
@@ -140,7 +140,7 @@
                 <div @click="openModal(0)" class="md:col-span-2 h-full rounded-2xl md:rounded-l-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
                     <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
-                
+
                 <!-- 4 Smaller Grid Photos (Col 3-4) -->
                 <div class="hidden md:grid md:col-span-2 grid-cols-2 gap-3 h-full">
                     @for($i = 1; $i <= 4; $i++)
@@ -152,7 +152,7 @@
                             @endphp
                             <div @click="openModal({{ $i }})" class="{{ $cornerClass }} overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
                                 <img src="{{ $allPhotos[$i] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
-                                
+
                                 @if($i === 4 && $totalPhotos > 5)
                                     <div class="absolute inset-0 bg-ink/40 group-hover:bg-ink/50 transition-colors flex items-center justify-center p-2">
                                         <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface/95 text-ink font-bold text-xs shadow-lg backdrop-blur-sm">
@@ -170,7 +170,7 @@
 
         <!-- Floating View All Photos Button (Mobile & Desktop) -->
         @if($totalPhotos > 1)
-            <button type="button" 
+            <button type="button"
                     @click="openModal(0)"
                     class="absolute bottom-4 right-4 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface/95 hover:bg-surface text-ink font-bold text-xs shadow-lg backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer">
                 <x-ico name="camera" class="w-4 h-4 text-terracotta" />
@@ -180,21 +180,21 @@
 
         <!-- Lightbox Modal (Teleported to body) -->
         <template x-teleport="body">
-            <div x-show="isOpen" 
-                 x-cloak 
+            <div x-show="isOpen"
+                 x-cloak
                  @keydown.escape.window="closeModal()"
                  @keydown.arrow-right.window="next()"
                  @keydown.arrow-left.window="prev()"
                  class="fixed inset-0 z-[9999] bg-stone-950/95 backdrop-blur-lg flex flex-col justify-between p-4 sm:p-6 select-none overflow-hidden h-screen w-screen">
-                
+
                 <!-- Modal Header -->
                 <div class="flex items-center justify-between text-white pb-3 border-b border-white/10 w-full shrink-0">
                     <div class="flex items-center gap-3">
                         <span class="font-bold text-sm sm:text-base text-white tracking-tight">{{ $restaurant->name }}</span>
                         <span class="text-xs text-stone-400 bg-white/10 px-2.5 py-1 rounded-full font-mono" x-text="(currentIndex + 1) + ' / ' + photos.length"></span>
                     </div>
-                    <button type="button" 
-                            @click="closeModal()" 
+                    <button type="button"
+                            @click="closeModal()"
                             class="text-white hover:text-stone-200 font-bold text-sm flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-all cursor-pointer shadow-lg focus:outline-none">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
                         <span>Kapat</span>
@@ -204,11 +204,11 @@
                 <!-- Modal Image Stage -->
                 <div class="relative flex-1 w-full flex items-center justify-center min-h-0 py-4 px-2 sm:px-16"
                      @click.self="closeModal()">
-                    
+
                     <!-- Prev Arrow -->
-                    <button type="button" 
+                    <button type="button"
                             x-show="photos.length > 1"
-                            @click.stop="prev()" 
+                            @click.stop="prev()"
                             aria-label="Önceki Fotoğraf"
                             class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 p-3.5 sm:p-4 rounded-full bg-stone-900/80 hover:bg-stone-900 text-white border border-white/20 transition-all hover:scale-110 active:scale-95 shadow-2xl focus:outline-none cursor-pointer">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
@@ -216,15 +216,15 @@
 
                     <!-- Active Image -->
                     <div class="h-full w-full flex items-center justify-center p-2">
-                        <img :src="photos[currentIndex]" 
-                             alt="{{ $restaurant->name }}" 
+                        <img :src="photos[currentIndex]"
+                             alt="{{ $restaurant->name }}"
                              class="max-h-[68vh] sm:max-h-[74vh] max-w-[95vw] sm:max-w-[85vw] w-auto h-auto rounded-2xl object-contain shadow-2xl transition-all duration-200">
                     </div>
 
                     <!-- Next Arrow -->
-                    <button type="button" 
+                    <button type="button"
                             x-show="photos.length > 1"
-                            @click.stop="next()" 
+                            @click.stop="next()"
                             aria-label="Sonraki Fotoğraf"
                             class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 p-3.5 sm:p-4 rounded-full bg-stone-900/80 hover:bg-stone-900 text-white border border-white/20 transition-all hover:scale-110 active:scale-95 shadow-2xl focus:outline-none cursor-pointer">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
@@ -234,8 +234,8 @@
                 <!-- Bottom Thumbnails Strip -->
                 <div x-show="photos.length > 1" class="w-full shrink-0 flex items-center justify-center gap-2 overflow-x-auto py-2 hide-scrollbar">
                     <template x-for="(p, i) in photos" :key="i">
-                        <button type="button" 
-                                @click.stop="currentIndex = i" 
+                        <button type="button"
+                                @click.stop="currentIndex = i"
                                 :class="currentIndex === i ? 'ring-2 ring-terracotta scale-105 opacity-100' : 'opacity-40 hover:opacity-80'"
                                 class="h-12 sm:h-14 aspect-4/3 rounded-xl overflow-hidden shrink-0 transition-all focus:outline-none cursor-pointer bg-stone-800">
                             <img :src="p" class="w-full h-full object-cover">
@@ -249,30 +249,9 @@
     <!-- ================= RESTAURANT MASTHEAD & ACTIONS ================= -->
     <header class="mt-8 pb-8 border-b border-stone-200/70">
         <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-            
+
             <!-- Left Info Area -->
             <div class="min-w-0 flex-1">
-                <!-- Badges / Tags -->
-                <div class="flex flex-wrap items-center gap-2 text-xs font-semibold mb-3">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface text-ink shadow-2xs font-medium">
-                        <span class="w-1.5 h-1.5 rounded-full bg-terracotta"></span>
-                        {{ $restaurant->cuisine }}
-                    </span>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface text-ink shadow-2xs font-medium">
-                        <x-ico name="map-pin" class="w-3.5 h-3.5 text-muted" />
-                        {{ $restaurant->city->name }}
-                    </span>
-                    @if($restaurant->price_range)
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-surface text-terracotta font-mono font-bold shadow-2xs">
-                            {{ $restaurant->price_range }}
-                        </span>
-                    @endif
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg {{ $todayOpen ? 'bg-emerald-50 text-open' : 'bg-rose-50 text-rose-700' }} font-bold text-xs">
-                        <span class="w-2 h-2 rounded-full {{ $todayOpen ? 'bg-open animate-pulse' : 'bg-rose-500' }}"></span>
-                        {{ $todayOpen ? 'Şu An Açık' : 'Şu An Kapalı' }}
-                    </span>
-                </div>
-
                 <!-- Title & Rating -->
                 <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
                     <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-ink tracking-tight">
@@ -284,19 +263,12 @@
                         <span class="text-xs text-muted font-normal">({{ $restaurant->reviews_count }} değerlendirme)</span>
                     </div>
                 </div>
-
-                @if($address)
-                    <p class="mt-3 text-xs sm:text-sm text-muted flex items-center gap-1.5 font-normal">
-                        <x-ico name="map-pin" class="w-4 h-4 text-terracotta shrink-0" />
-                        <span>{{ $address }}</span>
-                    </p>
-                @endif
             </div>
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap items-center gap-3 shrink-0">
                 @if($restaurant->phone)
-                    <a href="tel:{{ $restaurant->phone }}" 
+                    <a href="tel:{{ $restaurant->phone }}"
                        class="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-surface hover:bg-sand text-ink font-bold text-sm shadow-2xs hover:shadow-xs transition-all">
                         <x-ico name="phone" class="w-4 h-4 text-terracotta" />
                         <span>Ara / Rezervasyon</span>
@@ -318,7 +290,7 @@
 
         <!-- Left Column: Story, Featured Food, Reviews (8 Cols) -->
         <div class="lg:col-span-8 space-y-12">
-            
+
             <!-- 1. Mekan Hikayesi / Açıklama -->
             <section class="space-y-3">
                 <h2 class="text-xl font-bold text-ink tracking-tight font-display">Mekan Hakkında</h2>
@@ -341,7 +313,7 @@
                             <x-ico name="chevron-right" class="w-3.5 h-3.5" />
                         </a>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @foreach($featuredItems as $dish)
                             <x-menu-item-card :dish="$dish" :showMenuLink="false" />
@@ -493,7 +465,7 @@
 
         <!-- Right Column: Sidebar (Working Hours, Map, Location) (4 Cols) -->
         <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-            
+
             <!-- Working Hours Card -->
             <div class="p-6 rounded-3xl bg-surface border border-stone-200/70 shadow-2xs space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-stone-100">
@@ -505,7 +477,7 @@
                         {{ $todayOpen ? 'ŞU AN AÇIK' : 'KAPALI' }}
                     </span>
                 </div>
-                
+
                 <ul class="divide-y divide-stone-100 text-xs">
                     @foreach($days as $key => $name)
                         @php
@@ -541,11 +513,11 @@
                          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(m);
                          L.marker([{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], { icon: L.divIcon({ className: 'custom-pin', html: '<div style=\'background:#E85D3F;color:#fff;padding:3px 7px;border-radius:9999px;font-weight:800;font-size:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.2);\'>★</div>', iconSize: [26,20], iconAnchor: [13,10] }) }).addTo(m);
                      }); } }" x-init="init()"></div>
-                
+
                 @if($address)
                     <p class="text-xs text-stone-600 leading-relaxed font-normal">{{ $address }}</p>
                 @endif
-                
+
                 <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->display_latitude }},{{ $restaurant->display_longitude }}"
                    target="_blank" rel="noopener"
                    class="inline-flex items-center justify-center w-full gap-2 px-4 py-2.5 rounded-xl bg-sand hover:bg-stone-200/70 text-ink font-bold text-xs transition-colors">
