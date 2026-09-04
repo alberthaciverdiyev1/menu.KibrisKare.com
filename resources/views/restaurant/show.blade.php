@@ -493,16 +493,6 @@
                         ['stars' => 1, 'count' => number_format(round($totalReviewsCount * 0.011), 0, ',', '.'), 'pct' => 4],
                     ];
 
-                    $frequentKeywords = [
-                        $restaurant->cuisine ? mb_strtolower($restaurant->cuisine) : 'kebap',
-                        'güler yüzlü',
-                        'lahmacun',
-                        'lezzetli mezeler',
-                        'hızlı servis',
-                        'harika atmosfer'
-                    ];
-
-                    // Sample showcase review photos for fallback when no reviews exist
                     $sampleReviewPhotos = [
                         'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80',
                         'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80',
@@ -535,23 +525,6 @@
                                     <div class="h-full rounded-full bg-gradient-to-r from-star to-terracotta" style="width: {{ $item['pct'] }}%;"></div>
                                 </div>
                                 <span class="text-muted font-mono text-right w-14 text-[11px]">{{ $item['count'] }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <!-- Yorumlarda sıkça bahsedilenler -->
-                <div class="pt-6 border-t border-stone-100">
-                    <h3 class="text-sm font-bold text-ink mb-3.5">Yorumlarda sıkça bahsedilenler</h3>
-                    <div class="flex flex-wrap gap-2.5">
-                        @foreach($frequentKeywords as $keyword)
-                            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-stone-200/80 bg-white hover:bg-stone-50 text-xs font-semibold text-ink shadow-2xs hover:border-terracotta/60 transition-colors">
-                                <span class="w-4 h-4 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center shrink-0">
-                                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.536 5.879a1 1 0 001.415 1.414 5 5 0 007.242 0 1 1 0 00-1.414-1.414 3 3 0 01-4.414 0 1 1 0 00-1.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                </span>
-                                <span>{{ $keyword }}</span>
                             </div>
                         @endforeach
                     </div>
@@ -613,7 +586,7 @@
                                         @php
                                             $fullPhotoUrl = $img->url;
                                         @endphp
-                                        <a href="{{ $fullPhotoUrl }}" target="_blank" rel="noopener noreferrer" class="aspect-square rounded-xl overflow-hidden bg-sand shadow-2xs group block">
+                                        <a href="{{ $fullPhotoUrl }}" target="_blank" rel="noopener noreferrer" class="aspect-square rounded-xl overflow-hidden bg-sand shadow-2xs group block border border-stone-200/60">
                                             <img src="{{ $fullPhotoUrl }}" alt="Yorum Fotoğrafı" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
                                         </a>
                                     @endforeach
