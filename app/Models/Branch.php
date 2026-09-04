@@ -127,6 +127,11 @@ class Branch extends Model
         return $this->hasMany(BranchReview::class)->where('is_approved', true)->latest();
     }
 
+    public function allReviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(BranchReview::class)->latest();
+    }
+
     public function getAverageRatingAttribute(): float
     {
         $avg = $this->reviews()->avg('rating');
