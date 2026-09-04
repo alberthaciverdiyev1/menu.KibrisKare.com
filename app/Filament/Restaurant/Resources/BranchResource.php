@@ -60,6 +60,28 @@ class BranchResource extends Resource
                     ->label('Şube Telefon Numarası')
                     ->tel()
                     ->maxLength(255),
+                Forms\Components\Section::make('Harita Konumu (OpenStreetMap)')
+                    ->description('Haritaya tıklayarak veya pini sürükleyerek şubenin kesin konumunu seçebilirsiniz.')
+                    ->schema([
+                        Forms\Components\ViewField::make('map')
+                            ->view('filament.forms.components.osm-map-picker')
+                            ->viewData([
+                                'latStatePath' => 'data.latitude',
+                                'lngStatePath' => 'data.longitude',
+                                'addressStatePath' => 'data.address',
+                            ])
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('latitude')
+                            ->label('Harita Enlem (Lat)')
+                            ->numeric()
+                            ->disabled()
+                            ->dehydrated(),
+                        Forms\Components\TextInput::make('longitude')
+                            ->label('Harita Boylam (Lng)')
+                            ->numeric()
+                            ->disabled()
+                            ->dehydrated(),
+                    ])->columns(2),
                 Forms\Components\Section::make('Haftalık Çalışma Saatleri (7 Gün)')
                     ->description('Şubenin açık/kapalı durumu bu saatlere göre belirlenir.')
                     ->collapsible()
@@ -106,28 +128,6 @@ class BranchResource extends Resource
                                 ]);
                         })->toArray(),
                     ]),
-                Forms\Components\Section::make('Harita Konumu (OpenStreetMap)')
-                    ->description('Haritaya tıklayarak veya pini sürükleyerek şubenin kesin konumunu seçebilirsiniz.')
-                    ->schema([
-                        Forms\Components\ViewField::make('map')
-                            ->view('filament.forms.components.osm-map-picker')
-                            ->viewData([
-                                'latStatePath' => 'data.latitude',
-                                'lngStatePath' => 'data.longitude',
-                                'addressStatePath' => 'data.address',
-                            ])
-                            ->columnSpanFull(),
-                        Forms\Components\TextInput::make('latitude')
-                            ->label('Harita Enlem (Lat)')
-                            ->numeric()
-                            ->disabled()
-                            ->dehydrated(),
-                        Forms\Components\TextInput::make('longitude')
-                            ->label('Harita Boylam (Lng)')
-                            ->numeric()
-                            ->disabled()
-                            ->dehydrated(),
-                    ])->columns(2),
                 Forms\Components\Toggle::make('is_main')
                     ->label('Ana / Merkez Şube')
                     ->default(false),
