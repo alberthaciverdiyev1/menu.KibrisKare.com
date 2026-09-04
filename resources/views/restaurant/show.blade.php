@@ -186,6 +186,12 @@
                 <x-ico name="book-open" class="w-4 h-4" />
                 <span>Menü</span>
             </a>
+            @if($restaurant->branches->isNotEmpty())
+                <a href="#subeler" class="inline-flex items-center gap-2 py-3 border-b-2 border-transparent text-stone-600 hover:text-ink">
+                    <x-ico name="map" class="w-4 h-4" />
+                    <span>Şubeler ({{ $restaurant->branches->count() }})</span>
+                </a>
+            @endif
             <a href="#konum" class="inline-flex items-center gap-2 py-3 border-b-2 border-transparent text-stone-600 hover:text-ink">
                 <x-ico name="map-pin" class="w-4 h-4" />
                 <span>Konum</span>
@@ -268,6 +274,86 @@
                 </div>
             </section>
 
+            <!-- Şubeler & Lokasyonlar Bölümü -->
+            @if($restaurant->branches->isNotEmpty())
+                <section id="subeler" class="bg-surface rounded-2xl p-6 shadow-2xs border border-stone-100 space-y-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-ink flex items-center gap-2">
+                                <x-ico name="map-pin" class="w-5 h-5 text-terracotta" />
+                                <span>{{ $restaurant->name }} Şubeleri ({{ $restaurant->branches->count() }})</span>
+                            </h2>
+                            <p class="text-xs text-muted mt-0.5">Tüm şubelerin adres, iletişim ve güncel çalışma saatleri</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @foreach($restaurant->branches as $branch)
+                            @php
+                                $bIsOpen = $branch->isOpenNow();
+                                $bHours = $branch->getTodayHours();
+                                $bMapUrl = "https://www.google.com/maps/dir/?api=1&destination={$branch->latitude},{$branch->longitude}";
+                            @endphp
+                            <div class="p-4 rounded-xl bg-sand/60 border border-stone-200/60 space-y-3 flex flex-col justify-between hover:border-terracotta/40 transition-colors">
+                                <div class="space-y-2">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div>
+                                            <h3 class="font-bold text-sm text-ink flex items-center gap-1.5 flex-wrap">
+                                                <span>{{ $branch->name }}</span>
+                                                @if($branch->is_main)
+                                                    <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-terracotta text-white">Ana Şube</span>
+                                                @endif
+                                            </h3>
+                                            @if($branch->city)
+                                                <span class="text-[11px] font-medium text-muted">{{ $branch->city->name }}</span>
+                                            @endif
+                                        </div>
+                                        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md shrink-0 {{ $bIsOpen ? 'bg-emerald-50 text-open' : 'bg-rose-50 text-rose-700' }}">
+                                            {{ $bIsOpen ? 'Açık' : 'Kapalı' }}
+                                        </span>
+                                    </div>
+
+                                    @if($branch->address)
+                                        <div class="flex items-start gap-2 text-xs text-stone-600">
+                                            <x-ico name="map-pin" class="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
+                                            <span class="line-clamp-2">{{ $branch->address }}</span>
+                                        </div>
+                                    @endif
+
+                                    <div class="flex items-center gap-2 text-xs text-stone-500">
+                                        <x-ico name="clock" class="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                                        <span>{{ $bHours }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="pt-2 border-t border-stone-200/50 flex items-center gap-2">
+                                    <a href="{{ route('restaurant.menu', ['restaurant' => $restaurant->slug, 'branch' => $branch->id]) }}"
+                                       class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-terracotta hover:bg-terracotta-dark text-white text-xs font-bold transition-colors">
+                                        <x-ico name="book-open" class="w-3.5 h-3.5" />
+                                        <span>Menü</span>
+                                    </a>
+
+                                    @if($branch->phone)
+                                        <a href="tel:{{ $branch->phone }}"
+                                           class="inline-flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-surface hover:bg-white text-ink border border-stone-200 text-xs font-bold transition-colors">
+                                            <x-ico name="phone" class="w-3.5 h-3.5 text-terracotta" />
+                                            <span>Ara</span>
+                                        </a>
+                                    @endif
+
+                                    @if($branch->latitude && $branch->longitude)
+                                        <a href="{{ $bMapUrl }}" target="_blank" rel="noopener noreferrer"
+                                           class="inline-flex items-center justify-center p-2 rounded-lg bg-surface hover:bg-white text-stone-700 border border-stone-200 transition-colors"
+                                           title="Yol Tarifi">
+                                            <x-ico name="navigation" class="w-3.5 h-3.5 text-amber-500" />
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
 
             <!-- 3. Konum & Harita Entegrasyonu -->
             <section id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs border border-stone-100 space-y-4">
@@ -288,10 +374,27 @@
                     </a>
                 </div>
 
+                @php
+                    $branchMarkers = $restaurant->branches->map(function($b) use ($restaurant) {
+                        return [
+                            'name' => $b->name,
+                            'address' => $b->address,
+                            'city' => $b->city->name ?? '',
+                            'phone' => $b->phone,
+                            'lat' => (float) $b->latitude,
+                            'lng' => (float) $b->longitude,
+                            'is_main' => (bool) $b->is_main,
+                            'is_open' => $b->isOpenNow(),
+                            'menu_url' => route('restaurant.menu', ['restaurant' => $restaurant->slug, 'branch' => $b->id]),
+                        ];
+                    })->filter(fn($b) => !empty($b['lat']) && !empty($b['lng']))->values();
+                @endphp
+
                 <!-- Leaflet Interactive Map Container -->
                 <div class="h-64 sm:h-80 w-full rounded-xl overflow-hidden relative shadow-inner border border-stone-200/60 bg-stone-100 z-10"
                      x-data="{
                         mapInstance: null,
+                        branches: @json($branchMarkers),
                         initMap() {
                             this.$nextTick(() => {
                                 if (typeof L === 'undefined') {
@@ -306,12 +409,12 @@
                         },
                         renderMap() {
                             if (this.mapInstance) return;
-                            const lat = {{ $restaurant->display_latitude ?? 35.3403 }};
-                            const lng = {{ $restaurant->display_longitude ?? 33.3190 }};
+                            const defaultLat = {{ $restaurant->display_latitude ?? 35.3403 }};
+                            const defaultLng = {{ $restaurant->display_longitude ?? 33.3190 }};
 
                             this.mapInstance = L.map($el, {
-                                center: [lat, lng],
-                                zoom: 15,
+                                center: [defaultLat, defaultLng],
+                                zoom: this.branches.length > 1 ? 12 : 15,
                                 scrollWheelZoom: false
                             });
 
@@ -320,19 +423,50 @@
                                 maxZoom: 19
                             }).addTo(this.mapInstance);
 
-                            const customPin = L.divIcon({
-                                className: 'custom-restaurant-pin',
-                                html: `<div style='background: #E85D3F; color: white; padding: 5px 11px; border-radius: 9999px; font-weight: 800; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(232, 93, 63, 0.4); border: 2px solid white; white-space: nowrap;'>
-                                        <span style='color: #FFD278;'>★</span>
-                                        <span>{{ addslashes($restaurant->name) }}</span>
-                                       </div>`,
-                                iconSize: [120, 28],
-                                iconAnchor: [60, 14]
-                            });
+                            if (this.branches.length > 0) {
+                                const bounds = [];
+                                this.branches.forEach(b => {
+                                    const customPin = L.divIcon({
+                                        className: 'custom-restaurant-pin',
+                                        html: `<div style='background: ${b.is_main ? '#E85D3F' : '#191919'}; color: white; padding: 4px 9px; border-radius: 9999px; font-weight: 800; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 2px solid white; white-space: nowrap;'>
+                                                <span style='color: #FFD278;'>★</span>
+                                                <span>${b.name}</span>
+                                               </div>`,
+                                        iconSize: [110, 26],
+                                        iconAnchor: [55, 13]
+                                    });
 
-                            L.marker([lat, lng], { icon: customPin }).addTo(this.mapInstance)
-                             .bindPopup('<b>{{ addslashes($restaurant->name) }}</b><br><small>{{ addslashes($address) }}</small>')
-                             .openPopup();
+                                    const marker = L.marker([b.lat, b.lng], { icon: customPin }).addTo(this.mapInstance);
+                                    marker.bindPopup(`
+                                        <div style='font-family: sans-serif; min-width: 160px;'>
+                                            <b style='font-size: 13px;'>${b.name}</b>
+                                            ${b.address ? `<p style='font-size: 11px; color: #666; margin: 3px 0 6px;'>${b.address}</p>` : ''}
+                                            <a href='${b.menu_url}' style='display: inline-block; background: #E85D3F; color: white; text-decoration: none; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 6px;'>Menüyü Aç →</a>
+                                        </div>
+                                    `);
+                                    bounds.push([b.lat, b.lng]);
+                                });
+
+                                if (bounds.length > 1) {
+                                    this.mapInstance.fitBounds(bounds, { padding: [30, 30] });
+                                } else if (bounds.length === 1) {
+                                    this.mapInstance.setView(bounds[0], 15);
+                                }
+                            } else {
+                                const customPin = L.divIcon({
+                                    className: 'custom-restaurant-pin',
+                                    html: `<div style='background: #E85D3F; color: white; padding: 5px 11px; border-radius: 9999px; font-weight: 800; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(232, 93, 63, 0.4); border: 2px solid white; white-space: nowrap;'>
+                                            <span style='color: #FFD278;'>★</span>
+                                            <span>{{ addslashes($restaurant->name) }}</span>
+                                           </div>`,
+                                    iconSize: [120, 28],
+                                    iconAnchor: [60, 14]
+                                });
+
+                                L.marker([defaultLat, defaultLng], { icon: customPin }).addTo(this.mapInstance)
+                                 .bindPopup('<b>{{ addslashes($restaurant->name) }}</b><br><small>{{ addslashes($address) }}</small>')
+                                 .openPopup();
+                            }
                         }
                      }"
                      x-init="initMap()">
