@@ -63,7 +63,7 @@
                 <a href="{{ route('home') }}" class="hover:text-white">Ana Sayfa</a>
                 <a href="{{ route('restaurants.index') }}" class="hover:text-white">Restoranlar</a>
                 <a href="{{ route('map') }}" class="hover:text-white">Harita</a>
-                <a href="/admin" class="hover:text-white">Panel</a>
+                <a href="/restaurant-panel" class="hover:text-white">Restoran Girişi</a>
             </div>
         </div>
     </div>

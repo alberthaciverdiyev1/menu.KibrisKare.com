@@ -15,7 +15,7 @@
         <div class="hidden sm:flex items-center gap-4 text-stone-300">
             <a href="{{ route('map') }}" class="hover:text-white">Haritada Keşfet</a>
             <span>•</span>
-            <a href="/admin" class="hover:text-white">İşletme Girişi</a>
+            <a href="/restaurant-panel" class="hover:text-white">İşletme Girişi</a>
         </div>
     </div>
 </div>
@@ -74,7 +74,7 @@
 
             <!-- RIGHT SIDE ACTIONS: Login & CTA -->
             <div class="flex items-center space-x-3">
-                <a href="/admin/login" class="hidden sm:inline-flex items-center text-xs font-bold text-muted hover:text-ink px-2 py-1">
+                <a href="/restaurant-panel" class="hidden sm:inline-flex items-center text-xs font-bold text-muted hover:text-ink px-2 py-1">
                     Restoran Girişi
                 </a>
                 <a href="{{ route('restaurants.index') }}" class="inline-flex items-center px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-terracotta hover:bg-terracotta-dark text-white shadow-xs">
