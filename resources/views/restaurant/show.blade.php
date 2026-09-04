@@ -85,18 +85,16 @@
         
         @if(!$hasGallery || count($galleryImages) === 0)
             <!-- Single Cover Photo -->
-            <div class="rounded-2xl overflow-hidden border border-warm bg-sand">
-                <div class="aspect-[16/9] sm:aspect-[21/9]">
-                    <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover">
-                </div>
+            <div class="rounded-2xl overflow-hidden bg-sand aspect-[16/9] sm:aspect-[21/9]">
+                <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover">
             </div>
         @elseif(count($galleryImages) === 1)
             <!-- 2-Photo Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl overflow-hidden border border-warm bg-sand p-1">
-                <button type="button" @click="openModal(0)" class="relative aspect-4/3 sm:aspect-auto sm:h-80 md:h-96 rounded-xl overflow-hidden group focus:outline-none">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 rounded-2xl overflow-hidden">
+                <button type="button" @click="openModal(0)" class="relative aspect-4/3 sm:aspect-auto sm:h-80 md:h-96 rounded-xl overflow-hidden group focus:outline-none bg-sand">
                     <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
                 </button>
-                <button type="button" @click="openModal(1)" class="relative aspect-4/3 sm:aspect-auto sm:h-80 md:h-96 rounded-xl overflow-hidden group focus:outline-none">
+                <button type="button" @click="openModal(1)" class="relative aspect-4/3 sm:aspect-auto sm:h-80 md:h-96 rounded-xl overflow-hidden group focus:outline-none bg-sand">
                     <img src="{{ $allPhotos[1] ?? $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
                     <div class="absolute bottom-3 right-3">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ink/80 hover:bg-ink text-white text-xs font-bold backdrop-blur-sm shadow-md">
@@ -108,15 +106,15 @@
             </div>
         @elseif(count($galleryImages) === 2 || count($galleryImages) === 3)
             <!-- 3-Photo Grid (Vilka layout: 1 Main + 2 Stacked on right) -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 rounded-2xl overflow-hidden border border-warm bg-sand/40 p-1">
-                <button type="button" @click="openModal(0)" class="relative sm:col-span-2 aspect-[16/10] sm:aspect-auto sm:h-84 md:h-[400px] rounded-xl overflow-hidden group focus:outline-none">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 rounded-2xl overflow-hidden">
+                <button type="button" @click="openModal(0)" class="relative sm:col-span-2 aspect-[16/10] sm:aspect-auto sm:h-84 md:h-[400px] rounded-xl overflow-hidden group focus:outline-none bg-sand">
                     <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
                 </button>
-                <div class="grid grid-cols-2 sm:grid-cols-1 gap-2.5 sm:h-84 md:h-[400px]">
-                    <button type="button" @click="openModal(1)" class="relative h-full aspect-4/3 sm:aspect-auto rounded-xl overflow-hidden group focus:outline-none">
+                <div class="grid grid-cols-2 sm:grid-cols-1 gap-2 sm:h-84 md:h-[400px]">
+                    <button type="button" @click="openModal(1)" class="relative h-full aspect-4/3 sm:aspect-auto rounded-xl overflow-hidden group focus:outline-none bg-sand">
                         <img src="{{ $allPhotos[1] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     </button>
-                    <button type="button" @click="openModal(2)" class="relative h-full aspect-4/3 sm:aspect-auto rounded-xl overflow-hidden group focus:outline-none">
+                    <button type="button" @click="openModal(2)" class="relative h-full aspect-4/3 sm:aspect-auto rounded-xl overflow-hidden group focus:outline-none bg-sand">
                         <img src="{{ $allPhotos[2] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         <div class="absolute bottom-3 right-3">
                             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ink/80 hover:bg-ink text-white text-xs font-bold backdrop-blur-sm shadow-md">
@@ -129,17 +127,17 @@
             </div>
         @else
             <!-- 5-Photo Grid (Vilka / Airbnb Layout: 1 Large Left + 4 Grid Right) -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 rounded-2xl overflow-hidden border border-warm bg-sand/30 p-1">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden">
                 <!-- Large Main Photo (Col 1-2) -->
-                <button type="button" @click="openModal(0)" class="relative md:col-span-2 aspect-[16/10] md:aspect-auto md:h-[420px] rounded-xl overflow-hidden group focus:outline-none">
+                <button type="button" @click="openModal(0)" class="relative md:col-span-2 aspect-[16/10] md:aspect-auto md:h-[420px] rounded-xl overflow-hidden group focus:outline-none bg-sand">
                     <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
                 </button>
                 
                 <!-- 4 Smaller Photos in 2x2 Grid (Col 3-4) -->
-                <div class="grid grid-cols-2 gap-2.5 md:col-span-2 md:h-[420px]">
+                <div class="grid grid-cols-2 gap-2 md:col-span-2 md:h-[420px]">
                     @for($i = 1; $i <= 4; $i++)
                         @if(isset($allPhotos[$i]))
-                            <button type="button" @click="openModal({{ $i }})" class="relative h-full aspect-4/3 md:aspect-auto rounded-xl overflow-hidden group focus:outline-none">
+                            <button type="button" @click="openModal({{ $i }})" class="relative h-full aspect-4/3 md:aspect-auto rounded-xl overflow-hidden group focus:outline-none bg-sand">
                                 <img src="{{ $allPhotos[$i] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                 
                                 @if($i === 4)
@@ -161,7 +159,7 @@
         @if($totalPhotos > 1)
             <button type="button" 
                     @click="openModal(0)"
-                    class="hidden sm:inline-flex absolute bottom-4 right-4 items-center gap-2 px-3.5 py-2 rounded-xl bg-surface/95 hover:bg-surface text-ink font-bold text-xs shadow-md border border-warm backdrop-blur-md transition-all hover:scale-102">
+                    class="hidden sm:inline-flex absolute bottom-4 right-4 items-center gap-2 px-3.5 py-2 rounded-xl bg-surface/95 hover:bg-surface text-ink font-bold text-xs shadow-md backdrop-blur-md transition-all hover:scale-102">
                 <x-ico name="camera" class="w-4 h-4 text-terracotta" />
                 <span>Tüm Fotoğraflar ({{ $totalPhotos }})</span>
             </button>
@@ -236,7 +234,7 @@
     </div>
 
     <!-- ================= RESTAURANT HEADER (Clean Flat Typography & Actions) ================= -->
-    <header class="mt-8 pb-6 border-b border-warm/80">
+    <header class="mt-8 pb-6 border-b border-stone-200/60">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div class="min-w-0">
                 <div class="flex items-center gap-2 text-xs font-semibold text-muted mb-2">
@@ -253,7 +251,7 @@
                     <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-ink tracking-tight">
                         {{ $restaurant->name }}
                     </h1>
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sand border border-warm text-sm font-bold text-ink">
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface text-sm font-bold text-ink shadow-2xs">
                         <x-ico name="star" filled class="w-4 h-4 text-star" />
                         <span>{{ number_format($restaurant->rating, 1) }}</span>
                         <span class="text-xs text-muted font-normal">({{ $restaurant->reviews_count }} değerlendirme)</span>
@@ -272,7 +270,7 @@
             <div class="flex items-center gap-3 shrink-0">
                 @if($restaurant->phone)
                     <a href="tel:{{ $restaurant->phone }}" 
-                       class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-sand hover:bg-surface border border-warm text-ink font-bold text-xs sm:text-sm shadow-xs transition-colors">
+                       class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-surface hover:bg-orange-50/50 text-ink font-bold text-xs sm:text-sm shadow-xs transition-colors">
                         <x-ico name="phone" class="w-4 h-4 text-terracotta" />
                         <span>{{ $restaurant->phone }}</span>
                     </a>
@@ -303,15 +301,15 @@
 
                 <!-- Hızlı Özellik Etiketleri -->
                 <div class="pt-2 flex flex-wrap gap-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-warm text-xs font-semibold text-ink">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface text-xs font-semibold text-ink shadow-2xs">
                         <span class="w-1.5 h-1.5 rounded-full bg-terracotta"></span>
                         {{ $restaurant->cuisine }}
                     </span>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-warm text-xs font-semibold text-ink">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface text-xs font-semibold text-ink shadow-2xs">
                         <x-ico name="map-pin" class="w-3.5 h-3.5 text-muted" />
                         {{ $restaurant->city->name }}
                     </span>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg {{ $todayOpen ? 'bg-emerald-50 text-open border border-emerald-200/60' : 'bg-rose-50 text-rose-700 border border-rose-200/60' }} text-xs font-bold">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg {{ $todayOpen ? 'bg-emerald-50 text-open' : 'bg-rose-50 text-rose-700' }} text-xs font-bold">
                         <span class="w-2 h-2 rounded-full {{ $todayOpen ? 'bg-open animate-pulse' : 'bg-rose-500' }}"></span>
                         {{ $todayOpen ? 'Şu An Açık' : 'Şu An Kapalı' }}
                     </span>
@@ -320,7 +318,7 @@
 
             <!-- 2. Öne Çıkan Lezzetler -->
             @if($featuredItems->isNotEmpty())
-                <section class="pt-8 border-t border-warm/80 space-y-5">
+                <section class="pt-8 border-t border-stone-200/60 space-y-5">
                     <div class="flex items-center justify-between">
                         <div>
                             <h2 class="text-lg font-bold text-ink tracking-tight">Öne Çıkan Lezzetler</h2>
@@ -342,7 +340,7 @@
             @endif
 
             <!-- 3. Değerlendirmeler & Yorumlar -->
-            <section class="pt-8 border-t border-warm/80 space-y-6" x-data="{ showForm: false, rating: 5 }">
+            <section class="pt-8 border-t border-stone-200/60 space-y-6" x-data="{ showForm: false, rating: 5 }">
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <div>
                         <h2 class="text-lg font-bold text-ink tracking-tight">Değerlendirmeler</h2>
@@ -358,7 +356,7 @@
                 <!-- Review Form -->
                 <form id="review-form" x-show="showForm" x-cloak method="POST"
                       action="{{ $firstBranchId ? route('branches.reviews.store', $firstBranchId) : '#' }}"
-                      class="p-5 rounded-2xl bg-surface border border-warm shadow-xs space-y-4">
+                      class="p-5 rounded-2xl bg-surface shadow-xs space-y-4">
                     @csrf
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="text-xs font-bold text-ink">Puanınız:</span>
@@ -374,14 +372,14 @@
                         <div>
                             <label for="review-author" class="block text-xs font-bold text-muted mb-1">Adınız / Rumuz</label>
                             <input id="review-author" type="text" name="author_name" placeholder="Anonim misafir"
-                                   class="w-full px-3.5 py-2 rounded-xl bg-sand border border-warm text-xs text-ink focus:outline-none focus:border-terracotta placeholder:text-muted/60">
+                                   class="w-full px-3.5 py-2 rounded-xl bg-sand text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta placeholder:text-muted/60">
                         </div>
                         <div>
                             <label for="review-branch" class="block text-xs font-bold text-muted mb-1">Şube</label>
                             @if($hasMultipleBranches)
                                 <select id="review-branch"
                                         @change="document.getElementById('review-form').action = $event.target.selectedOptions[0].dataset.url"
-                                        class="w-full px-3.5 py-2 rounded-xl bg-sand border border-warm text-xs text-ink focus:outline-none focus:border-terracotta">
+                                        class="w-full px-3.5 py-2 rounded-xl bg-sand text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta">
                                     @foreach($restaurant->branches as $b)
                                         <option value="{{ $b->id }}" data-url="{{ route('branches.reviews.store', $b->id) }}" {{ $b->is_main ? 'selected' : '' }}>{{ $b->name }}</option>
                                     @endforeach
@@ -395,7 +393,7 @@
                         <label for="review-comment" class="block text-xs font-bold text-muted mb-1">Yorumunuz</label>
                         <textarea id="review-comment" name="comment" rows="3"
                                   placeholder="Lezzet, servis ve ortam nasıldı?"
-                                  class="w-full px-3.5 py-2 rounded-xl bg-sand border border-warm text-xs text-ink focus:outline-none focus:border-terracotta placeholder:text-muted/60 resize-none"></textarea>
+                                  class="w-full px-3.5 py-2 rounded-xl bg-sand text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta placeholder:text-muted/60 resize-none"></textarea>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-1">
                         <button type="button" @click="showForm = false" class="px-3.5 py-2 rounded-lg text-xs font-bold text-muted hover:text-ink">İptal</button>
@@ -409,11 +407,11 @@
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach($allReviews->take(4) as $rev)
-                            <article class="p-4 rounded-xl bg-surface border border-warm flex flex-col justify-between">
+                            <article class="p-4 rounded-xl bg-surface flex flex-col justify-between shadow-2xs">
                                 <div>
                                     <div class="flex items-center justify-between gap-2">
                                         <div class="flex items-center gap-2">
-                                            <div class="w-6 h-6 rounded-full bg-sand text-ink font-bold text-xs flex items-center justify-center border border-warm">
+                                            <div class="w-6 h-6 rounded-full bg-sand text-ink font-bold text-xs flex items-center justify-center">
                                                 {{ mb_substr($rev->author_name ?: 'A', 0, 1) }}
                                             </div>
                                             <span class="font-bold text-xs text-ink">{{ $rev->author_name ?: 'Anonim misafir' }}</span>
@@ -442,13 +440,13 @@
             
             <!-- Working Hours -->
             <div class="space-y-3">
-                <div class="flex items-center justify-between pb-2 border-b border-warm/80">
+                <div class="flex items-center justify-between pb-2 border-b border-stone-200/60">
                     <h3 class="text-sm font-bold text-ink">Çalışma Saatleri</h3>
-                    <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full {{ $todayOpen ? 'bg-emerald-50 text-open border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200' }}">
+                    <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full {{ $todayOpen ? 'bg-emerald-50 text-open' : 'bg-rose-50 text-rose-700' }}">
                         {{ $todayOpen ? 'AÇIK' : 'KAPALI' }}
                     </span>
                 </div>
-                <ul class="divide-y divide-warm/50 text-xs">
+                <ul class="divide-y divide-stone-200/40 text-xs">
                     @foreach($days as $key => $name)
                         @php
                             $cfg = is_array($weekly) ? ($weekly[$key] ?? null) : null;
@@ -471,9 +469,9 @@
             </div>
 
             <!-- Location & Map -->
-            <div class="space-y-3 pt-6 border-t border-warm/80">
+            <div class="space-y-3 pt-6 border-t border-stone-200/60">
                 <h3 class="text-sm font-bold text-ink">Konum & Ulaşım</h3>
-                <div class="h-44 rounded-xl overflow-hidden border border-warm relative shadow-2xs"
+                <div class="h-44 rounded-xl overflow-hidden relative shadow-2xs"
                      x-data="{ init() { this.$nextTick(() => { if (typeof L === 'undefined') return;
                          const m = L.map($el, { center: [{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], zoom: 15, scrollWheelZoom: false, zoomControl: false });
                          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(m);
