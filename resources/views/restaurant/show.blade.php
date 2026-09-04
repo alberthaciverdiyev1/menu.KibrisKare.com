@@ -46,10 +46,10 @@
     $mapsUrl = "https://www.google.com/maps/dir/?api=1&destination={$restaurant->display_latitude},{$restaurant->display_longitude}";
 @endphp
 
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-28" 
-     x-data="{ 
-        galleryOpen: false, 
-        galleryIndex: 0, 
+<div class="max-w-6xl mx-auto px-4 sm:px-4 pt-4 pb-28"
+     x-data="{
+        galleryOpen: false,
+        galleryIndex: 0,
         reviewFormOpen: false,
         rating: 5,
         photos: {{ json_encode($allPhotos) }},
@@ -95,9 +95,9 @@
     <!-- ================= RESTORANIM.NET 3-COLUMN HERO PHOTO GRID ================= -->
     <div class="h-[280px] sm:h-[340px] md:h-[360px] w-full rounded-2xl overflow-hidden mt-1">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-2.5 h-full w-full">
-            
+
             <!-- Column 1: Left Big Photo (md:col-span-5) -->
-            <div @click="openGallery(0)" 
+            <div @click="openGallery(0)"
                  class="md:col-span-5 h-full rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative">
                 <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
             </div>
@@ -119,7 +119,7 @@
                 </div>
                 <div @click="openGallery(4)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full min-h-0">
                     <img src="{{ $allPhotos[4] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
-                    
+
                     @if($totalPhotos > 4)
                         <div class="absolute inset-0 bg-black/55 group-hover:bg-black/65 transition-colors flex flex-col items-center justify-center text-white text-center p-2">
                             <x-ico name="camera" class="w-5 h-5 mb-1 text-white" />
@@ -175,17 +175,13 @@
         </div>
     </div>
 
-    <!-- ================= SUB-NAVIGATION TABS (restoranim.net Style) ================= -->
-    <div class="mt-6 border-b border-stone-200/80 sticky top-[72px] z-20 bg-sand/95 backdrop-blur-md -mx-4 px-4 sm:mx-0 sm:px-0">
+    <!-- ================= SUB-NAVIGATION TABS ================= -->
+    <div id="genel-bakis" class="mt-6 border-b border-stone-200/80 sticky top-[72px] z-20 bg-sand/95 backdrop-blur-md -mx-4 px-4 sm:mx-0 sm:px-0">
         <div class="flex items-center gap-6 sm:gap-8 overflow-x-auto hide-scrollbar text-xs sm:text-sm whitespace-nowrap font-semibold">
             <a href="#genel-bakis" class="inline-flex items-center gap-2 py-3 border-b-2 border-terracotta text-terracotta font-bold">
                 <x-ico name="clock" class="w-4 h-4" />
                 <span>Genel Bakış</span>
             </a>
-            <button type="button" @click="openGallery(0)" class="inline-flex items-center gap-2 py-3 border-b-2 border-transparent text-stone-600 hover:text-ink cursor-pointer">
-                <x-ico name="camera" class="w-4 h-4" />
-                <span>Fotoğraflar</span>
-            </button>
             <a href="{{ route('restaurant.menu', $restaurant->slug) }}" class="inline-flex items-center gap-2 py-3 border-b-2 border-transparent text-stone-600 hover:text-ink">
                 <x-ico name="book-open" class="w-4 h-4" />
                 <span>Menü</span>
@@ -201,102 +197,11 @@
         </div>
     </div>
 
-    <!-- ================= ACTION BUTTONS ROW ================= -->
-    <div id="genel-bakis" class="mt-6 grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-        <!-- 1. Menü -->
-        <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
-           class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white text-xs sm:text-sm font-bold shadow-xs transition-colors">
-            <x-ico name="book-open" class="w-4 h-4" />
-            <span>Menü</span>
-        </a>
-
-        <!-- 2. Ara / Rezervasyon -->
-        @if($restaurant->phone)
-            <a href="tel:{{ $restaurant->phone }}" 
-               class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-surface hover:bg-sand text-ink text-xs sm:text-sm font-bold shadow-xs transition-colors">
-                <x-ico name="phone" class="w-4 h-4 text-terracotta" />
-                <span>Ara</span>
-            </a>
-        @else
-            <button disabled class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-surface text-muted/50 text-xs sm:text-sm font-bold shadow-xs">
-                <x-ico name="phone" class="w-4 h-4" />
-                <span>Ara</span>
-            </button>
-        @endif
-
-        <!-- 3. Yol Tarifi -->
-        <a href="{{ $mapsUrl }}" target="_blank" rel="noopener noreferrer"
-           class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-surface hover:bg-sand text-ink text-xs sm:text-sm font-bold shadow-xs transition-colors">
-            <x-ico name="map-pin" class="w-4 h-4 text-terracotta" />
-            <span>Yol Tarifi</span>
-        </a>
-
-        <!-- 4. Değerlendir -->
-        <button type="button" @click="reviewFormOpen = true; $nextTick(() => document.getElementById('degerlendirmeler').scrollIntoView({ behavior: 'smooth' }))"
-                class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-surface hover:bg-sand text-ink text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer">
-            <x-ico name="star" filled class="w-4 h-4 text-star" />
-            <span>Değerlendir</span>
-        </button>
-
-        <!-- 5. Paylaş -->
-        <button type="button" @click="copyUrl()"
-                class="col-span-2 sm:col-span-1 flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-surface hover:bg-sand text-ink text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer">
-            <x-ico name="external" class="w-4 h-4 text-muted" />
-            <span>Paylaş</span>
-        </button>
-    </div>
-
     <!-- ================= MAIN TWO-COLUMN CONTENT GRID ================= -->
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
         <!-- Left Column: Menu Highlights, Description, Reviews (8 Cols) -->
         <div class="lg:col-span-8 space-y-8">
-
-            <!-- 1. Menü Öne Çıkanları (restoranim.net Menu Section) -->
-            <section class="bg-surface rounded-2xl p-6 shadow-2xs space-y-5">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-lg font-bold text-ink flex items-center gap-2">
-                            <x-ico name="book-open" class="w-5 h-5 text-terracotta" />
-                            <span>Menü</span>
-                        </h2>
-                        <p class="text-xs text-muted mt-0.5">Menü'nün öne çıkan lezzetleri ve fiyatları</p>
-                    </div>
-                    <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
-                       class="inline-flex items-center gap-1 text-xs font-bold text-terracotta hover:underline">
-                        <span>Tüm Menüyü Gör</span>
-                        <x-ico name="chevron-right" class="w-3.5 h-3.5" />
-                    </a>
-                </div>
-
-                <!-- Featured Items list -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    @foreach($featuredItems as $dish)
-                        <div class="p-3 rounded-xl bg-sand flex items-center gap-3.5">
-                            <img src="{{ $dish->image ?: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80' }}" 
-                                 alt="{{ $dish->name }}" 
-                                 class="w-16 h-16 rounded-lg object-cover shrink-0">
-                            <div class="min-w-0 flex-1">
-                                <h3 class="font-bold text-xs sm:text-sm text-ink truncate">{{ $dish->name }}</h3>
-                                @if($dish->description)
-                                    <p class="text-[11px] text-muted truncate mt-0.5">{{ $dish->description }}</p>
-                                @endif
-                                <p class="text-xs font-bold text-terracotta mt-1 font-mono">
-                                    {{ number_format($dish->price, 0) }} {{ $dish->currency }}
-                                </p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="pt-2 text-center">
-                    <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
-                       class="inline-flex items-center justify-center w-full py-3 rounded-xl bg-sand hover:bg-stone-200/60 text-ink text-xs font-bold transition-colors">
-                        <span>Tüm Menü ve Fiyat Listesini Görüntüle →</span>
-                    </a>
-                </div>
-            </section>
-
             <!-- 2. Mekan Hakkında Açıklama -->
             <section class="bg-surface rounded-2xl p-6 shadow-2xs space-y-3">
                 <h2 class="text-lg font-bold text-ink">Mekan Hakkında</h2>
@@ -317,6 +222,52 @@
                     @endif
                 </div>
             </section>
+
+            <!-- 1. Menü Öne Çıkanları (restoranim.net Menu Section) -->
+            <section class="bg-surface rounded-2xl p-6 shadow-2xs space-y-5">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-ink flex items-center gap-2">
+                            <x-ico name="book-open" class="w-5 h-5 text-terracotta" />
+                            <span>Menü</span>
+                        </h2>
+                        <p class="text-xs text-muted mt-0.5">Menü'nün öne çıkan lezzetleri ve fiyatları</p>
+                    </div>
+                    <a href="{{ route('restaurant.menu', $restaurant->slug) }}"
+                       class="inline-flex items-center gap-1 text-xs font-bold text-terracotta hover:underline">
+                        <span>Tüm Menüyü Gör</span>
+                        <x-ico name="chevron-right" class="w-3.5 h-3.5" />
+                    </a>
+                </div>
+
+                <!-- Featured Items list -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @foreach($featuredItems as $dish)
+                        <div class="p-3 rounded-xl bg-sand flex items-center gap-3.5">
+                            <img src="{{ $dish->image ?: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80' }}"
+                                 alt="{{ $dish->name }}"
+                                 class="w-16 h-16 rounded-lg object-cover shrink-0">
+                            <div class="min-w-0 flex-1">
+                                <h3 class="font-bold text-xs sm:text-sm text-ink truncate">{{ $dish->name }}</h3>
+                                @if($dish->description)
+                                    <p class="text-[11px] text-muted truncate mt-0.5">{{ $dish->description }}</p>
+                                @endif
+                                <p class="text-xs font-bold text-terracotta mt-1 font-mono">
+                                    {{ number_format($dish->price, 0) }} {{ $dish->currency }}
+                                </p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="pt-2 text-center">
+                    <a href="{{ route('restaurant.menu', $restaurant->slug) }}"
+                       class="inline-flex items-center justify-center w-full py-3 rounded-xl bg-sand hover:bg-stone-200/60 text-ink text-xs font-bold transition-colors">
+                        <span>Tüm Menü ve Fiyat Listesini Görüntüle →</span>
+                    </a>
+                </div>
+            </section>
+
 
             <!-- 3. Konum & Harita Entegrasyonu -->
             <section id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs border border-stone-100 space-y-4">
@@ -339,7 +290,7 @@
 
                 <!-- Leaflet Interactive Map Container -->
                 <div class="h-64 sm:h-80 w-full rounded-xl overflow-hidden relative shadow-inner border border-stone-200/60 bg-stone-100 z-10"
-                     x-data="{ 
+                     x-data="{
                         mapInstance: null,
                         initMap() {
                             this.$nextTick(() => {
@@ -357,11 +308,11 @@
                             if (this.mapInstance) return;
                             const lat = {{ $restaurant->display_latitude ?? 35.3403 }};
                             const lng = {{ $restaurant->display_longitude ?? 33.3190 }};
-                            
-                            this.mapInstance = L.map($el, { 
-                                center: [lat, lng], 
-                                zoom: 15, 
-                                scrollWheelZoom: false 
+
+                            this.mapInstance = L.map($el, {
+                                center: [lat, lng],
+                                zoom: 15,
+                                scrollWheelZoom: false
                             });
 
                             L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -383,10 +334,11 @@
                              .bindPopup('<b>{{ addslashes($restaurant->name) }}</b><br><small>{{ addslashes($address) }}</small>')
                              .openPopup();
                         }
-                     }" 
+                     }"
                      x-init="initMap()">
                 </div>
             </section>
+
 
             <!-- 4. Yorumlar & Değerlendirme (restoranim.net Style) -->
             <section id="degerlendirmeler" class="bg-surface rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
@@ -704,28 +656,21 @@
 
                 <div class="border-t border-stone-100 my-4"></div>
 
-                <!-- Action Buttons (Ara, Yol Tarifi, Paylaş) -->
-                <div class="grid grid-cols-3 gap-2">
+                <!-- Action Buttons (Ara & Yol Tarifi) -->
+                <div class="grid grid-cols-2 gap-2.5">
                     <!-- Ara -->
                     <a href="tel:{{ $restaurant->phone ?: '03224367666' }}"
-                       class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-white border border-stone-200 hover:bg-stone-50 text-ink text-xs font-bold shadow-2xs transition-colors">
-                        <x-ico name="phone" class="w-3.5 h-3.5 text-stone-700" />
+                       class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-white border border-stone-200 hover:bg-stone-50 text-ink text-xs sm:text-sm font-bold shadow-2xs transition-colors">
+                        <x-ico name="phone" class="w-4 h-4 text-stone-700" />
                         <span>Ara</span>
                     </a>
 
-                    <!-- Yol Tarifi (Terracotta / Amber Primary) -->
+                    <!-- Yol Tarifi -->
                     <a href="{{ $mapsUrl }}" target="_blank" rel="noopener noreferrer"
-                       class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs font-bold shadow-2xs transition-colors">
-                        <x-ico name="navigation" class="w-3.5 h-3.5" />
+                       class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs sm:text-sm font-bold shadow-2xs transition-colors">
+                        <x-ico name="navigation" class="w-4 h-4" />
                         <span>Yol Tarifi</span>
                     </a>
-
-                    <!-- Paylaş -->
-                    <button type="button" @click="copyUrl()"
-                            class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-white border border-stone-200 hover:bg-stone-50 text-ink text-xs font-bold shadow-2xs transition-colors cursor-pointer">
-                        <x-ico name="share" class="w-3.5 h-3.5 text-stone-700" />
-                        <span>Paylaş</span>
-                    </button>
                 </div>
             </div>
 
@@ -794,13 +739,13 @@
 
     <!-- ================= FULLSCREEN LIGHTBOX MODAL ================= -->
     <template x-teleport="body">
-        <div x-show="galleryOpen" 
-             x-cloak 
+        <div x-show="galleryOpen"
+             x-cloak
              @keydown.escape.window="closeGallery()"
              @keydown.arrow-right.window="nextPhoto()"
              @keydown.arrow-left.window="prevPhoto()"
              class="fixed inset-0 z-[9999] bg-stone-950/95 backdrop-blur-md flex flex-col justify-between p-4 select-none overflow-hidden h-screen w-screen">
-            
+
             <!-- Top Bar -->
             <div class="flex items-center justify-between text-white pb-3 border-b border-white/10 w-full shrink-0">
                 <div class="flex items-center gap-3">
@@ -833,7 +778,7 @@
             <!-- Bottom Thumbnails -->
             <div x-show="photos.length > 1" class="w-full shrink-0 flex items-center justify-center gap-2 overflow-x-auto py-2 hide-scrollbar">
                 <template x-for="(p, i) in photos" :key="i">
-                    <button type="button" @click.stop="galleryIndex = i" 
+                    <button type="button" @click.stop="galleryIndex = i"
                             :class="galleryIndex === i ? 'ring-2 ring-terracotta scale-105 opacity-100' : 'opacity-40 hover:opacity-80'"
                             class="h-12 aspect-square rounded-lg overflow-hidden shrink-0 transition-all focus:outline-none cursor-pointer bg-stone-800">
                         <img :src="p" class="w-full h-full object-cover">
