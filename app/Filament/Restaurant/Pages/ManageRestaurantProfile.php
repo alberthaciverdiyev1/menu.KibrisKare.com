@@ -82,7 +82,7 @@ class ManageRestaurantProfile extends Page implements HasForms
                             ->default(true),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Görseller')
+                Forms\Components\Section::make('Görseller & Galeri')
                     ->schema([
                         Forms\Components\FileUpload::make('image')
                             ->label('Restoran Profil / Kapak Görseli')
@@ -92,6 +92,14 @@ class ManageRestaurantProfile extends Page implements HasForms
                             ->label('Geniş Arka Plan Görseli')
                             ->image()
                             ->directory('restaurants'),
+                        Forms\Components\FileUpload::make('gallery')
+                            ->label('Restoran Fotoğraf Galerisi')
+                            ->helperText('Mekan, salon, bahçe ve lezzetlerinizden birden fazla fotoğraf yükleyebilirsiniz.')
+                            ->image()
+                            ->multiple()
+                            ->reorderable()
+                            ->directory('restaurants/gallery')
+                            ->columnSpanFull(),
                     ])->columns(2),
             ])
             ->model($this->getRestaurant())

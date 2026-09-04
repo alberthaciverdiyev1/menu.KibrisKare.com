@@ -65,6 +65,13 @@ class RestaurantResource extends Resource
                     ->image(),
                 Forms\Components\FileUpload::make('cover_image')
                     ->image(),
+                Forms\Components\FileUpload::make('gallery')
+                    ->label('Fotoğraf Galerisi')
+                    ->image()
+                    ->multiple()
+                    ->reorderable()
+                    ->directory('restaurants/gallery')
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('distance')
                     ->required()
                     ->maxLength(255)

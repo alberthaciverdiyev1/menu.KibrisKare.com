@@ -188,6 +188,64 @@
                 </aside>
             </div>
 
+            <!-- ================= RESTAURANT GALLERY ================= -->
+            @php
+                $galleryImages = is_array($restaurant->gallery) ? array_filter($restaurant->gallery) : [];
+            @endphp
+            @if(!empty($galleryImages))
+                <div class="mt-12 pt-10 border-t border-warm space-y-4" x-data="{ activeImage: null }">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-ink">Fotoğraf Galerisi</h2>
+                            <p class="text-xs text-muted mt-0.5">Mekan, ambiyans ve sunumlarımızdan kareler ({{ count($galleryImages) }} Fotoğraf)</p>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
+                        @foreach($galleryImages as $img)
+                            @php
+                                $imgUrl = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://']) ? $img : asset('storage/' . $img);
+                            @endphp
+                            <button type="button" 
+                                    @click="activeImage = '{{ $imgUrl }}'"
+                                    class="group aspect-4/3 rounded-xl overflow-hidden bg-sand border border-warm relative block focus:outline-none focus:ring-2 focus:ring-terracotta">
+                                <img src="{{ $imgUrl }}" 
+                                     alt="{{ $restaurant->name }} Galeri Fotoğrafı" 
+                                     loading="lazy" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span class="p-2 rounded-full bg-surface/90 text-ink shadow-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                                    </span>
+                                </div>
+                            </button>
+                        @endforeach
+                    </div>
+
+                    <!-- Lightbox Modal -->
+                    <template x-teleport="body">
+                        <div x-show="activeImage" 
+                             x-cloak 
+                             @click.self="activeImage = null"
+                             @keydown.escape.window="activeImage = null"
+                             class="fixed inset-0 z-50 bg-ink/90 backdrop-blur-sm flex items-center justify-center p-4">
+                            <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
+                                <button type="button" 
+                                        @click="activeImage = null" 
+                                        class="absolute -top-10 right-0 text-white hover:text-stone-300 font-bold text-sm flex items-center gap-1.5 bg-ink/50 px-3 py-1.5 rounded-full border border-white/20">
+                                    <span>✕</span>
+                                    <span>Kapat</span>
+                                </button>
+                                <img :src="activeImage" 
+                                     alt="Galeri Büyük Görünüm" 
+                                     class="max-h-[85vh] max-w-full rounded-2xl object-contain shadow-2xl border border-white/10">
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            @endif
+
             <!-- Reviews (on the same sheet) -->
             <div class="mt-12 pt-10 border-t border-warm" x-data="{ showForm: false, rating: 5 }">
                 <div class="flex flex-wrap items-end justify-between gap-6">

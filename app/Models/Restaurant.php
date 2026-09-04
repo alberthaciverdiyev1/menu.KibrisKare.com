@@ -27,6 +27,7 @@ class Restaurant extends Model
         'price_range',
         'image',
         'cover_image',
+        'gallery',
         'distance',
         'opening_hours',
         'weekly_hours',
@@ -47,6 +48,7 @@ class Restaurant extends Model
         'latitude' => 'float',
         'longitude' => 'float',
         'weekly_hours' => 'array',
+        'gallery' => 'array',
     ];
 
     public function city(): BelongsTo
