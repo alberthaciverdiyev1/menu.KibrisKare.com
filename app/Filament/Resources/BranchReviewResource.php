@@ -47,9 +47,6 @@ class BranchReviewResource extends Resource
                     ->label('Müşteri / Yazar Adı')
                     ->default('Anonim Misafir')
                     ->maxLength(255),
-                Forms\Components\Toggle::make('is_approved')
-                    ->label('Onaylı')
-                    ->default(true),
                 Forms\Components\Textarea::make('comment')
                     ->label('Yorum Metni')
                     ->columnSpanFull()
@@ -95,8 +92,6 @@ class BranchReviewResource extends Resource
                     ->limit(50)
                     ->searchable()
                     ->tooltip(fn ($record) => $record->comment),
-                Tables\Columns\ToggleColumn::make('is_approved')
-                    ->label('Onaylı'),
                 Tables\Columns\TextColumn::make('delete_request_reason')
                     ->label('Silme Talebi')
                     ->badge()
@@ -126,8 +121,6 @@ class BranchReviewResource extends Resource
                         2 => '2 Yıldız (★★☆☆☆)',
                         1 => '1 Yıldız (★☆☆☆☆)',
                     ]),
-                Tables\Filters\TernaryFilter::make('is_approved')
-                    ->label('Onay Durumu'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

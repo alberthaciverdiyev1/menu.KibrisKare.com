@@ -16,14 +16,12 @@ class BranchReview extends Model
         'author_name',
         'comment',
         'ip_address',
-        'is_approved',
         'delete_requested',
         'delete_request_reason',
     ];
 
     protected $casts = [
         'rating' => 'integer',
-        'is_approved' => 'boolean',
         'delete_requested' => 'boolean',
     ];
 

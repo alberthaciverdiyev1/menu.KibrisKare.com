@@ -309,14 +309,13 @@ class RestaurantController extends Controller
             'comment' => $validated['comment'] ?? null,
             'author_name' => $authorName,
             'ip_address' => $request->ip(),
-            'is_approved' => true,
         ]);
 
         // Restoran genel puan ve yorum sayısını güncelle
         $restaurant = $branch->restaurant;
         if ($restaurant) {
             $allBranchIds = $restaurant->branches()->pluck('id');
-            $allReviews = \App\Models\BranchReview::whereIn('branch_id', $allBranchIds)->where('is_approved', true);
+            $allReviews = \App\Models\BranchReview::whereIn('branch_id', $allBranchIds);
             $avgRating = $allReviews->avg('rating');
             $reviewsCount = $allReviews->count();
 

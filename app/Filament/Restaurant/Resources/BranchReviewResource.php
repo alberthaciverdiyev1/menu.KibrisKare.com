@@ -110,9 +110,6 @@ class BranchReviewResource extends Resource
                     ->limit(65)
                     ->searchable()
                     ->tooltip(fn ($record) => $record->comment),
-                Tables\Columns\IconColumn::make('is_approved')
-                    ->label('Yayında')
-                    ->boolean(),
                 Tables\Columns\TextColumn::make('delete_status')
                     ->label('Silme Talebi')
                     ->badge()
@@ -139,10 +136,6 @@ class BranchReviewResource extends Resource
                         2 => '2 Yıldız (★★☆☆☆)',
                         1 => '1 Yıldız (★☆☆☆☆)',
                     ]),
-                Tables\Filters\TernaryFilter::make('is_approved')
-                    ->label('Yayın Durumu')
-                    ->trueLabel('Yayında Olanlar')
-                    ->falseLabel('Yayında Olmayanlar'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()

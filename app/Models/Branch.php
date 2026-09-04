@@ -124,11 +124,6 @@ class Branch extends Model
 
     public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(BranchReview::class)->where('is_approved', true)->latest();
-    }
-
-    public function allReviews(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
         return $this->hasMany(BranchReview::class)->latest();
     }
 
