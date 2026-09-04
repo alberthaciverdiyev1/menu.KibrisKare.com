@@ -190,7 +190,7 @@
                             this.$nextTick(() => {
                                 if (typeof L !== 'undefined') {
                                     const map = L.map($el, {
-                                        center: [{{ $restaurant->latitude }}, {{ $restaurant->longitude }}],
+                                        center: [{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}],
                                         zoom: 15,
                                         scrollWheelZoom: false,
                                         zoomControl: false
@@ -205,7 +205,7 @@
                                         iconSize: [80, 26],
                                         iconAnchor: [40, 13]
                                     });
-                                    L.marker([{{ $restaurant->latitude }}, {{ $restaurant->longitude }}], { icon: pin }).addTo(map);
+                                    L.marker([{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], { icon: pin }).addTo(map);
                                 }
                             });
                         }
@@ -216,11 +216,11 @@
                 <!-- Address & Directions -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
                     <div class="space-y-1 text-xs">
-                        <span class="font-bold text-ink text-sm block">{{ $restaurant->address }}</span>
-                        <span class="text-muted block">{{ $restaurant->city->name }}, Kuzey Kıbrıs • Merkezden {{ $restaurant->distance }}</span>
+                        <span class="font-bold text-ink text-sm block">{{ $restaurant->display_address }}</span>
+                        <span class="text-muted block">{{ $restaurant->display_city->name ?? $restaurant->city->name }}, Kuzey Kıbrıs • Merkezden {{ $restaurant->distance }}</span>
                     </div>
 
-                    <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->latitude }},{{ $restaurant->longitude }}" 
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->display_latitude }},{{ $restaurant->display_longitude }}" 
                        target="_blank"
                        rel="noopener"
                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-ink hover:bg-terracotta text-white font-bold text-xs uppercase tracking-wider shrink-0 shadow-xs">

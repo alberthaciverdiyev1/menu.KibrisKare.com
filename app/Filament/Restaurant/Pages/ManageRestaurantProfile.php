@@ -63,16 +63,6 @@ class ManageRestaurantProfile extends Page implements HasForms
                             ->label('Hakkında / Açıklama')
                             ->rows(3)
                             ->columnSpanFull(),
-                        Forms\Components\Select::make('city_id')
-                            ->label('Şehir')
-                            ->options(\App\Models\City::pluck('name', 'id'))
-                            ->searchable()
-                            ->preload()
-                            ->required(),
-                        Forms\Components\TextInput::make('address')
-                            ->label('Açık Adres')
-                            ->required()
-                            ->maxLength(255),
                         Forms\Components\TextInput::make('phone')
                             ->label('Telefon Numarası')
                             ->tel()
@@ -92,26 +82,6 @@ class ManageRestaurantProfile extends Page implements HasForms
                             ->label('Geniş Arka Plan Görseli')
                             ->image()
                             ->directory('restaurants'),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Harita ve Koordinatlar')
-                    ->description('OpenStreetMap üzerinden restoranınızın tam konumunu işaretleyin.')
-                    ->schema([
-                        Forms\Components\ViewField::make('map')
-                            ->view('filament.forms.components.osm-map-picker')
-                            ->viewData([
-                                'latStatePath' => 'data.latitude',
-                                'lngStatePath' => 'data.longitude',
-                            ])
-                            ->columnSpanFull(),
-                        Forms\Components\TextInput::make('latitude')
-                            ->label('Enlem (Latitude)')
-                            ->numeric()
-                            ->required(),
-                        Forms\Components\TextInput::make('longitude')
-                            ->label('Boylam (Longitude)')
-                            ->numeric()
-                            ->required(),
                     ])->columns(2),
             ])
             ->model($this->getRestaurant())

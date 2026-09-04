@@ -152,4 +152,35 @@ class Restaurant extends Model
 
         return $this->opening_hours ?? '10:00 - 23:00';
     }
+
+    /**
+     * Restoranın ana şubesini (veya ilk aktif şubesini) döner
+     */
+    public function getPrimaryBranchAttribute(): ?Branch
+    {
+        return $this->branches->where('is_main', true)->first() ?? $this->branches->first();
+    }
+
+    /**
+     * Konum, Adres ve Şehir bilgilerini şubeden dinamik olarak okur
+     */
+    public function getDisplayAddressAttribute(): string
+    {
+        return $this->primary_branch?->address ?? $this->attributes['address'] ?? '';
+    }
+
+    public function getDisplayLatitudeAttribute(): ?float
+    {
+        return $this->primary_branch?->latitude ?? (float) ($this->attributes['latitude'] ?? 35.3403);
+    }
+
+    public function getDisplayLongitudeAttribute(): ?float
+    {
+        return $this->primary_branch?->longitude ?? (float) ($this->attributes['longitude'] ?? 33.3190);
+    }
+
+    public function getDisplayCityAttribute(): ?City
+    {
+        return $this->primary_branch?->city ?? $this->city;
+    }
 }
