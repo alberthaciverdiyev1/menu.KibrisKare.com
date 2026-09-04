@@ -121,4 +121,20 @@ class Branch extends Model
     {
         return $this->belongsToMany(MenuItem::class, 'branch_menu_item');
     }
+
+    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(BranchReview::class)->where('is_approved', true)->latest();
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        $avg = $this->reviews()->avg('rating');
+        return $avg ? round($avg, 1) : 5.0;
+    }
+
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->reviews()->count();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Restaurant;
@@ -159,7 +160,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        $restaurant->load(['city', 'categories', 'menuCategories.items', 'branches.city']);
+        $restaurant->load(['city', 'categories', 'menuCategories.items', 'branches.city', 'branches.reviews']);
 
         $featuredItems = $restaurant->menuItems()
             ->where(function ($q) {
@@ -273,5 +274,47 @@ class RestaurantController extends Controller
                 'menu_url' => route('restaurant.menu', $r->slug),
             ];
         });
+    }
+
+    /**
+     * Şube için anonim puan ve yorum kaydetme
+     */
+    public function storeBranchReview(Request $request, Branch $branch)
+    {
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+            'author_name' => 'nullable|string|max:100',
+        ]);
+
+        $authorName = !empty(trim($validated['author_name'] ?? '')) 
+            ? trim($validated['author_name']) 
+            : 'Anonim Misafir';
+
+        $branch->reviews()->create([
+            'rating' => $validated['rating'],
+            'comment' => $validated['comment'] ?? null,
+            'author_name' => $authorName,
+            'ip_address' => $request->ip(),
+            'is_approved' => true,
+        ]);
+
+        // Restoran genel puan ve yorum sayısını güncelle
+        $restaurant = $branch->restaurant;
+        if ($restaurant) {
+            $allBranchIds = $restaurant->branches()->pluck('id');
+            $allReviews = \App\Models\BranchReview::whereIn('branch_id', $allBranchIds)->where('is_approved', true);
+            $avgRating = $allReviews->avg('rating');
+            $reviewsCount = $allReviews->count();
+
+            if ($avgRating) {
+                $restaurant->update([
+                    'rating' => round($avgRating, 1),
+                    'reviews_count' => $reviewsCount,
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Değerlendirmeniz ve yorumunuz başarıyla kaydedildi! Teşekkür ederiz.');
     }
 }

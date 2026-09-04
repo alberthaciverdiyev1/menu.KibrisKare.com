@@ -153,6 +153,11 @@ class BranchResource extends Resource
                     ->limit(35),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon'),
+                Tables\Columns\TextColumn::make('average_rating')
+                    ->label('Puan')
+                    ->formatStateUsing(fn ($record) => '★ ' . number_format($record->average_rating, 1) . ' (' . $record->reviews_count . ')')
+                    ->badge()
+                    ->color('warning'),
                 Tables\Columns\TextColumn::make('opening_hours')
                     ->label('Saatler'),
                 Tables\Columns\IconColumn::make('is_main')

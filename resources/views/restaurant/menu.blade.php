@@ -66,11 +66,11 @@
     </div>
 
     <!-- DIGITAL MENU INTERACTIVE CONTAINER (Alpine.js) -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8" 
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6" 
          x-data="{
             activeCategory: 'all',
             searchQuery: '',
-            
+
             matchesFilter(item, categoryId) {
                 // Category match
                 if (this.activeCategory !== 'all' && this.activeCategory != categoryId) {
@@ -94,6 +94,13 @@
                 return true;
             }
          }">
+
+        @if(session('success'))
+            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-bold flex items-center gap-3 shadow-2xs">
+                <span class="text-lg">✅</span>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
 
         <!-- CONTROLS: SEARCH & CATEGORY TABS -->
         <div class="sticky top-18 z-30 bg-sand/95 backdrop-blur-md pt-2 pb-4 space-y-3">
@@ -178,6 +185,98 @@
                 </div>
             @endforeach
         </div>
+
+        <!-- BRANCH REVIEW & RATING BOX (When viewing branch menu) -->
+        @if(isset($currentBranch) && $currentBranch)
+            <div class="mt-12 p-6 sm:p-8 rounded-3xl bg-surface border border-warm shadow-xs space-y-6"
+                 x-data="{
+                    selectedRating: 5,
+                    showForm: false
+                 }">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-warm">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-muted block">{{ $currentBranch->name }}</span>
+                        <h3 class="text-xl font-black text-ink mt-0.5">Deneyiminizi Puanlayın</h3>
+                        <p class="text-xs text-muted mt-1">Bu şubedeki yemeğinizi veya servisinizi anonim olarak değerlendirebilirsiniz.</p>
+                    </div>
+
+                    <button type="button" 
+                            @click="showForm = !showForm"
+                            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-xs shadow-xs transition-colors shrink-0">
+                        <span x-text="showForm ? 'Kapat' : '★ Puan & Yorum Bırak'"></span>
+                    </button>
+                </div>
+
+                <!-- Review Form -->
+                <div x-show="showForm" x-collapse class="p-5 rounded-2xl bg-sand/60 border border-warm space-y-4">
+                    <form action="{{ route('branches.reviews.store', $currentBranch->id) }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Puanınız (1 - 5)</label>
+                                <div class="flex items-center gap-2">
+                                    <template x-for="star in [1, 2, 3, 4, 5]" :key="star">
+                                        <button type="button" 
+                                                @click="selectedRating = star"
+                                                class="text-2xl transition-transform hover:scale-110 focus:outline-none">
+                                            <span :class="star <= selectedRating ? 'text-amber-500' : 'text-stone-300'">★</span>
+                                        </button>
+                                    </template>
+                                    <span class="text-xs font-bold text-ink font-mono ml-2" x-text="selectedRating + ' / 5'"></span>
+                                </div>
+                                <input type="hidden" name="rating" :value="selectedRating">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-muted uppercase tracking-wider mb-2">İsim (İsteğe Bağlı)</label>
+                                <input type="text" 
+                                       name="author_name" 
+                                       placeholder="Anonim Misafir veya Adınız" 
+                                       class="w-full px-4 py-2.5 bg-surface border border-warm rounded-xl text-xs text-ink focus:outline-none focus:border-terracotta font-medium">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Yorumunuz</label>
+                            <textarea name="comment" 
+                                      rows="2" 
+                                      placeholder="Masa servisi, lezzet ve deneyiminiz nasıldı?" 
+                                      class="w-full px-4 py-2.5 bg-surface border border-warm rounded-xl text-xs text-ink focus:outline-none focus:border-terracotta font-medium"></textarea>
+                        </div>
+
+                        <div class="flex justify-end gap-2">
+                            <button type="button" @click="showForm = false" class="px-4 py-2 rounded-xl text-xs font-bold text-muted hover:text-ink">İptal</button>
+                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-terracotta text-white font-bold text-xs shadow-xs">Gönder</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Recent Reviews -->
+                @if($currentBranch->reviews->isNotEmpty())
+                    <div class="space-y-3 pt-2">
+                        <span class="text-xs font-bold text-muted uppercase tracking-wider block">Son Yorumlar ({{ $currentBranch->reviews_count }})</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            @foreach($currentBranch->reviews->take(4) as $rev)
+                                <div class="p-3.5 rounded-2xl bg-sand/40 border border-warm/70 space-y-1.5">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="font-bold text-ink">{{ $rev->author_name }}</span>
+                                        <div class="flex items-center gap-0.5 text-amber-500">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <span class="{{ $i <= $rev->rating ? 'text-amber-500' : 'text-stone-300' }}">★</span>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    @if($rev->comment)
+                                        <p class="text-xs text-ink/80">{{ $rev->comment }}</p>
+                                    @endif
+                                    <span class="text-[10px] text-muted block">{{ $rev->created_at->diffForHumans() }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
+        @endif
 
         <!-- MENU FOOTNOTE / ALLERGEN NOTICE -->
         <div class="mt-16 pt-8 border-t border-warm text-center text-xs text-muted space-y-1">

@@ -16,6 +16,9 @@ Route::get('/restaurant/{restaurant:slug}', [RestaurantController::class, 'show'
 // Restoran Özel Dijital Menü Sayfası
 Route::get('/restaurant/{restaurant:slug}/menu', [RestaurantController::class, 'menu'])->name('restaurant.menu');
 
+// Şube Anonim Puan & Yorum Ekleme
+Route::post('/branches/{branch}/reviews', [RestaurantController::class, 'storeBranchReview'])->name('branches.reviews.store');
+
 // Haritada Keşfet Sayfası
 Route::get('/harita', [RestaurantController::class, 'mapView'])->name('map');
 

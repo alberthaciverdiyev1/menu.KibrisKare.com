@@ -21,6 +21,13 @@
             </div>
         </div>
 
+        @if(session('success'))
+            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-bold flex items-center gap-3 shadow-2xs">
+                <span class="text-lg">✅</span>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
         <!-- 1. EDITORIAL RESTAURANT SHOWCASE (Hero Profile) -->
         <section class="bg-surface rounded-3xl border border-warm p-6 sm:p-10 shadow-xs">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -238,7 +245,7 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             @foreach($restaurant->branches as $branch)
-                                <div class="p-3.5 rounded-2xl bg-sand/60 border border-warm/80 space-y-2">
+                                <div class="p-3.5 rounded-2xl bg-sand/60 border border-warm/80 space-y-2.5">
                                     <div class="flex items-center justify-between gap-2">
                                         <div class="flex items-center gap-1.5 min-w-0">
                                             <span class="font-bold text-xs text-ink truncate">{{ $branch->name }}</span>
@@ -246,16 +253,28 @@
                                                 <span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-terracotta/10 text-terracotta shrink-0">Merkez</span>
                                             @endif
                                         </div>
-                                        @if($branch->city)
-                                            <span class="text-[11px] font-semibold text-muted shrink-0">{{ $branch->city->name }}</span>
-                                        @endif
+                                        <div class="flex items-center gap-2">
+                                            <span class="inline-flex items-center gap-1 text-[11px] font-bold text-ink bg-surface px-1.5 py-0.5 rounded border border-warm/80">
+                                                <span class="text-star">★</span>
+                                                <span>{{ number_format($branch->average_rating, 1) }}</span>
+                                                <span class="text-stone-400 font-normal">({{ $branch->reviews_count }})</span>
+                                            </span>
+                                            @if($branch->city)
+                                                <span class="text-[11px] font-semibold text-muted shrink-0">{{ $branch->city->name }}</span>
+                                            @endif
+                                        </div>
                                     </div>
                                     <p class="text-[11px] text-muted line-clamp-1">{{ $branch->address }}</p>
                                     <div class="flex items-center justify-between pt-1 text-[11px] border-t border-warm/60">
                                         <span class="text-muted font-mono">{{ $branch->opening_hours ?? '10:00 - 23:00' }}</span>
-                                        @if($branch->phone)
-                                            <a href="tel:{{ $branch->phone }}" class="text-terracotta hover:underline font-bold">{{ $branch->phone }}</a>
-                                        @endif
+                                        <div class="flex items-center gap-3">
+                                            @if($branch->phone)
+                                                <a href="tel:{{ $branch->phone }}" class="text-terracotta hover:underline font-bold">{{ $branch->phone }}</a>
+                                            @endif
+                                            <a href="#branch-reviews-section" class="text-ink hover:text-terracotta font-semibold text-[10px] underline">
+                                                Puanla & Yorumlar
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -382,6 +401,159 @@
                 </div>
 
             </div>
+
+        </section>
+
+        <!-- 3.5 BRANCH REVIEWS & ANONYMOUS RATING SECTION -->
+        <section id="branch-reviews-section" 
+                 class="bg-surface rounded-3xl border border-warm p-6 sm:p-10 shadow-xs space-y-8"
+                 x-data="{
+                    activeBranchId: '{{ $restaurant->branches->first()->id ?? 0 }}',
+                    selectedRating: 5,
+                    showForm: false
+                 }">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-warm">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-muted block">Misafir Deneyimleri</span>
+                    <h2 class="text-2xl font-black text-ink mt-0.5 flex items-center gap-2">
+                        <span>⭐ Şube Puanları ve Yorumlar</span>
+                    </h2>
+                    <p class="text-xs text-muted mt-1">Ziyaret ettiğiniz şubeyi seçip anonim olarak yıldız ve yorum bırakabilirsiniz.</p>
+                </div>
+
+                <button type="button"
+                        @click="showForm = !showForm"
+                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-xs shadow-xs transition-colors shrink-0">
+                    <span x-text="showForm ? 'Vazgeç' : '+ Yorum & Puan Ekle'"></span>
+                </button>
+            </div>
+
+            <!-- Branch Selector Tabs -->
+            @if($restaurant->branches->count() > 1)
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 hide-scrollbar">
+                    @foreach($restaurant->branches as $b)
+                        <button type="button"
+                                @click="activeBranchId = '{{ $b->id }}'"
+                                :class="activeBranchId == '{{ $b->id }}' ? 'bg-ink text-white font-bold' : 'bg-sand text-ink hover:bg-sand/80 font-semibold border border-warm'"
+                                class="px-4 py-2.5 rounded-xl text-xs shrink-0 flex items-center gap-2 transition-colors cursor-pointer">
+                            <span>{{ $b->name }}</span>
+                            <span class="text-[11px] px-1.5 py-0.2 rounded font-bold" :class="activeBranchId == '{{ $b->id }}' ? 'bg-white/20 text-white' : 'bg-surface text-ink border border-warm'">
+                                ★ {{ number_format($b->average_rating, 1) }}
+                            </span>
+                        </button>
+                    @endforeach
+                </div>
+            @endif
+
+            <!-- Review Submission Form (Accordion / Dropdown) -->
+            <div x-show="showForm" x-collapse class="p-6 rounded-2xl bg-sand/60 border border-warm space-y-4">
+                <h3 class="text-sm font-extrabold text-ink">Şubeyi Değerlendir (Anonim)</h3>
+                
+                @foreach($restaurant->branches as $b)
+                    <form x-show="activeBranchId == '{{ $b->id }}'" 
+                          action="{{ route('branches.reviews.store', $b->id) }}" 
+                          method="POST" 
+                          class="space-y-4">
+                        @csrf
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Star Selection -->
+                            <div>
+                                <label class="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Puanınız (1 - 5 Yıldız)</label>
+                                <div class="flex items-center gap-2">
+                                    <template x-for="star in [1, 2, 3, 4, 5]" :key="star">
+                                        <button type="button" 
+                                                @click="selectedRating = star"
+                                                class="text-2xl transition-transform hover:scale-110 focus:outline-none">
+                                            <span :class="star <= selectedRating ? 'text-amber-500' : 'text-stone-300'">★</span>
+                                        </button>
+                                    </template>
+                                    <span class="text-xs font-bold text-ink font-mono ml-2" x-text="selectedRating + ' / 5 Yıldız'"></span>
+                                </div>
+                                <input type="hidden" name="rating" :value="selectedRating">
+                            </div>
+
+                            <!-- Author Name (Optional) -->
+                            <div>
+                                <label class="block text-xs font-bold text-muted uppercase tracking-wider mb-2">İsim veya Rumuz (İsteğe Bağlı)</label>
+                                <input type="text" 
+                                       name="author_name" 
+                                       placeholder="Örn: Mehmet K. veya boş bırakın (Anonim)" 
+                                       class="w-full px-4 py-2.5 bg-surface border border-warm rounded-xl text-xs text-ink focus:outline-none focus:border-terracotta font-medium">
+                            </div>
+                        </div>
+
+                        <!-- Comment Textarea -->
+                        <div>
+                            <label class="block text-xs font-bold text-muted uppercase tracking-wider mb-2">Yorumunuz & Deneyiminiz</label>
+                            <textarea name="comment" 
+                                      rows="3" 
+                                      placeholder="{{ $b->name }} şubesindeki lezzet, servis, ambiyans hakkında düşünceleriniz..." 
+                                      class="w-full px-4 py-3 bg-surface border border-warm rounded-xl text-xs text-ink focus:outline-none focus:border-terracotta font-medium"></textarea>
+                        </div>
+
+                        <div class="flex justify-end gap-3 pt-2">
+                            <button type="button" @click="showForm = false" class="px-4 py-2 rounded-xl text-xs font-bold text-muted hover:text-ink">
+                                İptal
+                            </button>
+                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-xs shadow-xs">
+                                Yorumu Gönder
+                            </button>
+                        </div>
+                    </form>
+                @endforeach
+            </div>
+
+            <!-- Branch Reviews Display List -->
+            @foreach($restaurant->branches as $b)
+                <div x-show="activeBranchId == '{{ $b->id }}'" class="space-y-4">
+                    <div class="flex items-center justify-between pb-2 border-b border-warm/60">
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-sm text-ink">{{ $b->name }}</span>
+                            <span class="text-xs text-muted">({{ $b->reviews_count }} yorum)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-xs font-bold text-ink">
+                            <span class="text-star text-sm">★</span>
+                            <span>{{ number_format($b->average_rating, 1) }} Ort. Puan</span>
+                        </div>
+                    </div>
+
+                    @if($b->reviews->isEmpty())
+                        <div class="p-8 text-center bg-sand/40 rounded-2xl border border-dashed border-warm text-muted text-xs space-y-2">
+                            <span class="text-2xl block">💬</span>
+                            <p class="font-semibold text-ink">Bu şube için henüz yorum yapılmamış.</p>
+                            <p>İlk puan veren ve deneyimini paylaşan siz olun!</p>
+                        </div>
+                    @else
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @foreach($b->reviews as $rev)
+                                <div class="p-4 rounded-2xl bg-sand/40 border border-warm/80 space-y-2.5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-7 h-7 rounded-full bg-terracotta/10 text-terracotta font-bold text-xs flex items-center justify-center">
+                                                {{ mb_substr($rev->author_name, 0, 1) }}
+                                            </div>
+                                            <span class="text-xs font-bold text-ink">{{ $rev->author_name }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-1 text-xs">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <span class="{{ $i <= $rev->rating ? 'text-amber-500' : 'text-stone-300' }}">★</span>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    @if($rev->comment)
+                                        <p class="text-xs text-ink/90 leading-relaxed">{{ $rev->comment }}</p>
+                                    @endif
+                                    <div class="text-[10px] text-muted font-mono pt-1">
+                                        {{ $rev->created_at->diffForHumans() }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @endforeach
 
         </section>
 
