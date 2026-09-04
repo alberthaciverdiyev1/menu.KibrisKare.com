@@ -51,21 +51,6 @@
 
     <div class="qr-card-root space-y-6">
 
-        <!-- Top Header Card -->
-        <div style="background: linear-gradient(135deg, #2C1810 0%, #1A0D08 100%); color: #FFFFFF; padding: 28px 32px; border-radius: 24px; box-shadow: 0 12px 28px rgba(0,0,0,0.12);">
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; background: rgba(232, 93, 63, 0.2); border: 1px solid rgba(232, 93, 63, 0.4); padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; color: #FF886F;">
-                    <span>✨ Masaya Özel Hazır QR Stant Tasarımı</span>
-                </div>
-                <h2 style="font-size: 26px; font-weight: 800; margin: 0; color: #FFFFFF; letter-spacing: -0.5px;">
-                    Şubeleriniz İçin Özel QR Menüler
-                </h2>
-                <p style="font-size: 13px; color: #C5BAAF; margin: 0; max-width: 680px; line-height: 1.5;">
-                    Müşterilerinizin masada kamerayla okutup anında sipariş verebileceği ve şubenizin puanlarını inceleyebileceği yüksek kaliteli, şık stant kartları. <b>Yazdır</b> butonu ile anında A5/A6 formatında çıktı alabilirsiniz.
-                </p>
-            </div>
-        </div>
-
         @if(!$restaurant)
             <div style="padding: 32px; text-align: center; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 20px; color: #92400E; font-size: 14px; font-weight: 600;">
                 Lütfen önce restoran profilinizi kaydedin.
