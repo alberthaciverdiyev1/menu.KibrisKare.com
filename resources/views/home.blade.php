@@ -127,7 +127,7 @@
         <div class="bg-surface rounded-2xl border border-warm p-5 sm:p-6 shadow-2xs">
             <div class="flex items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2.5 min-w-0">
-                    <span class="w-1.5 h-6 rounded-full bg-terracotta shrink-0"></span>
+                    
                     <h2 class="text-lg sm:text-xl font-extrabold text-ink truncate">Mutfak türüne göre seçin</h2>
                     @if($selectedCategorySlug)
                         <a href="?city={{ $selectedCity->slug ?? 'girne' }}"

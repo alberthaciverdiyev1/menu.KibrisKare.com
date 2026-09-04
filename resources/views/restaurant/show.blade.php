@@ -148,7 +148,7 @@
             <!-- About -->
             <section class="bg-surface rounded-2xl border border-warm shadow-sm p-6 sm:p-8">
                 <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 rounded-full bg-terracotta"></span>
+                    
                     <h2 class="text-xl font-extrabold text-ink">Mekan Hakkında</h2>
                 </div>
                 <p class="mt-4 text-sm sm:text-base text-muted leading-relaxed">{{ $restaurant->description }}</p>
@@ -159,7 +159,7 @@
                 <section>
                     <div class="flex items-end justify-between gap-4 px-1">
                         <div class="flex items-center gap-3">
-                            <span class="w-1 h-6 rounded-full bg-terracotta"></span>
+                            
                             <h2 class="text-xl font-extrabold text-ink">Öne Çıkan Lezzetler</h2>
                         </div>
                         <a href="{{ route('restaurant.menu', $restaurant->slug) }}"
@@ -185,7 +185,7 @@
             <section class="bg-surface rounded-2xl border border-warm shadow-sm p-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <span class="w-1 h-6 rounded-full bg-terracotta"></span>
+                        
                         <h2 class="text-base font-extrabold text-ink">Çalışma Saatleri</h2>
                     </div>
                     <span class="w-2.5 h-2.5 rounded-full {{ $todayOpen ? 'bg-open' : 'bg-muted' }}"></span>
@@ -216,7 +216,7 @@
             <!-- Map -->
             <section class="bg-surface rounded-2xl border border-warm shadow-sm p-6 space-y-4">
                 <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 rounded-full bg-terracotta"></span>
+                    
                     <h2 class="text-base font-extrabold text-ink">Konum</h2>
                 </div>
                 <div class="h-52 rounded-xl overflow-hidden border border-warm"
@@ -242,7 +242,7 @@
 
             <div class="lg:col-span-4 lg:border-r lg:border-warm lg:pr-8">
                 <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 rounded-full bg-terracotta"></span>
+                    
                     <h2 class="text-xl font-extrabold text-ink">Değerlendirmeler</h2>
                 </div>
                 <div class="mt-5 flex items-end gap-3">
@@ -344,7 +344,7 @@
         <section class="mt-10">
             <div class="flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
-                    <span class="w-1 h-6 rounded-full bg-terracotta"></span>
+                    
                     <h2 class="text-xl font-extrabold text-ink">{{ $restaurant->city->name }} çevresindekiler</h2>
                 </div>
                 <a href="{{ route('restaurants.index', ['city' => $restaurant->city->slug]) }}"
