@@ -86,7 +86,7 @@
 
         @if(!$hasGallery || count($allPhotos) <= 1)
             <!-- Single Full Photo -->
-            <div class="relative w-full aspect-[16/9] sm:aspect-[21/9] max-h-[460px] rounded-3xl overflow-hidden bg-stone-200 group cursor-pointer"
+            <div class="relative w-full h-[260px] sm:h-[380px] md:h-[460px] rounded-3xl overflow-hidden bg-stone-200 group cursor-pointer"
                  @click="openModal(0)">
                 <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
@@ -98,7 +98,7 @@
             </div>
         @elseif(count($allPhotos) === 2)
             <!-- 2 Photos Side by Side -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 aspect-[16/9] sm:aspect-[21/9] max-h-[460px]">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 h-[260px] sm:h-[380px] md:h-[460px]">
                 <div @click="openModal(0)" class="relative h-full rounded-2xl sm:rounded-3xl overflow-hidden bg-stone-200 group cursor-pointer">
                     <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
@@ -114,7 +114,7 @@
             </div>
         @elseif(count($allPhotos) === 3 || count($allPhotos) === 4)
             <!-- 3 Photos: 1 Main (60%) + 2 Right Stacked (40%) -->
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 aspect-[16/9] sm:aspect-[21/9] max-h-[460px]">
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 h-[260px] sm:h-[380px] md:h-[460px]">
                 <div @click="openModal(0)" class="sm:col-span-8 h-full rounded-2xl sm:rounded-l-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
                     <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
@@ -135,7 +135,7 @@
             </div>
         @else
             <!-- 5+ Photos Grid: 1 Large Left + 4 Grid Right (2x2) -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 aspect-[16/9] sm:aspect-[21/9] max-h-[460px]">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 h-[260px] sm:h-[380px] md:h-[460px]">
                 <!-- Main Large Photo (Col 1-2) -->
                 <div @click="openModal(0)" class="md:col-span-2 h-full rounded-2xl md:rounded-l-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
                     <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
