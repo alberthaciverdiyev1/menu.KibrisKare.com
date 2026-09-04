@@ -156,11 +156,18 @@ class MenuItemResource extends Resource
                     ->relationship('menuCategory', 'name', fn(Builder $query) => 
                         Auth::user()?->restaurant_id ? $query->where('restaurant_id', Auth::user()->restaurant_id) : $query
                     ),
-                Tables\Filters\SelectFilter::make('branches')
+                Tables\Filters\SelectFilter::make('branch_id')
                     ->label('Şubeye Göre')
-                    ->relationship('branches', 'name', fn(Builder $query) => 
-                        Auth::user()?->restaurant_id ? $query->where('restaurant_id', Auth::user()->restaurant_id) : $query
-                    ),
+                    ->options(function () {
+                        $user = Auth::user();
+                        return \App\Models\Branch::when($user?->restaurant_id, fn($q) => $q->where('restaurant_id', $user->restaurant_id))
+                            ->pluck('name', 'id');
+                    })
+                    ->query(function (Builder $query, array $data) {
+                        if (!empty($data['value'])) {
+                            $query->whereHas('branches', fn($b) => $b->where('branches.id', $data['value']));
+                        }
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
