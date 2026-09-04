@@ -65,7 +65,9 @@ class ManageRestaurantProfile extends Page implements HasForms
                             ->columnSpanFull(),
                         Forms\Components\Select::make('city_id')
                             ->label('Şehir')
-                            ->relationship('city', 'name')
+                            ->options(\App\Models\City::pluck('name', 'id'))
+                            ->searchable()
+                            ->preload()
                             ->required(),
                         Forms\Components\TextInput::make('address')
                             ->label('Açık Adres')
@@ -122,6 +124,7 @@ class ManageRestaurantProfile extends Page implements HasForms
                             ->required(),
                     ])->columns(2),
             ])
+            ->model($this->getRestaurant())
             ->statePath('data');
     }
 
