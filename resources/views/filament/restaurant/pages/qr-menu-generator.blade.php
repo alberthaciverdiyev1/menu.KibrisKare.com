@@ -137,30 +137,21 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <a href="{{ route('restaurant.print-card', ['restaurant' => $restaurant->slug, 'branch' => $branch->id]) }}" 
+                               target="_blank"
+                               style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; background: #2C1810; color: #FFFFFF; border: none; border-radius: 14px; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer; box-shadow: 0 4px 12px rgba(44, 24, 16, 0.15); transition: all 0.2s;">
+                                <span>🖨️</span>
+                                <span>Masa Stant Kartını Yazdır (A5 / A6)</span>
+                            </a>
+
                             <a href="{{ $menuUrl }}" 
                                target="_blank" 
-                               style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #FFFFFF; color: #374151; border: 1px solid #D1D5DB; border-radius: 12px; font-size: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.2s;">
+                               style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #FFFFFF; color: #4B5563; border: 1px solid #E5E7EB; border-radius: 12px; font-size: 12px; font-weight: 600; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: all 0.2s;">
                                 <span>📱</span>
-                                <span>Menüyü Aç</span>
-                            </a>
-
-                            <a href="{{ $qrCodeUrl }}" 
-                               download="{{ Str::slug($restaurant->name . '-' . $branch->name) }}-qr.png"
-                               target="_blank"
-                               style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #E85D3F; color: #FFFFFF; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 10px rgba(232, 93, 63, 0.25); transition: all 0.2s;">
-                                <span>⬇️</span>
-                                <span>QR İndir</span>
+                                <span>Menüyü Önizle</span>
                             </a>
                         </div>
-
-                        <!-- Full Print Button (Opens clean printable stand card in new tab) -->
-                        <a href="{{ route('restaurant.print-card', ['restaurant' => $restaurant->slug, 'branch' => $branch->id]) }}" 
-                           target="_blank"
-                           style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #2C1810; color: #FFFFFF; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s;">
-                            <span>🖨️</span>
-                            <span>Masa Stant Kartını Yazdır (A5 / A6)</span>
-                        </a>
 
                     </div>
                 @endforeach
