@@ -95,7 +95,15 @@ class ManageRestaurantProfile extends Page implements HasForms
                     ])->columns(2),
 
                 Forms\Components\Section::make('Harita ve Koordinatlar')
+                    ->description('OpenStreetMap üzerinden restoranınızın tam konumunu işaretleyin.')
                     ->schema([
+                        Forms\Components\ViewField::make('map')
+                            ->view('filament.forms.components.osm-map-picker')
+                            ->viewData([
+                                'latStatePath' => 'data.latitude',
+                                'lngStatePath' => 'data.longitude',
+                            ])
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('latitude')
                             ->label('Enlem (Latitude)')
                             ->numeric()

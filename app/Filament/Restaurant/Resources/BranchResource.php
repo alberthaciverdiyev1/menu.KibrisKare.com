@@ -111,12 +111,23 @@ class BranchResource extends Resource
                                 Forms\Components\Toggle::make('weekly_hours.sunday.is_closed')->label('Kapalı')->inline(false),
                             ])->columns(3),
                     ]),
-                Forms\Components\TextInput::make('latitude')
-                    ->label('Harita Enlem (Lat)')
-                    ->numeric(),
-                Forms\Components\TextInput::make('longitude')
-                    ->label('Harita Boylam (Lng)')
-                    ->numeric(),
+                Forms\Components\Section::make('Harita Konumu (OpenStreetMap)')
+                    ->description('Haritaya tıklayarak veya pini sürükleyerek şubenin kesin konumunu seçebilirsiniz.')
+                    ->schema([
+                        Forms\Components\ViewField::make('map')
+                            ->view('filament.forms.components.osm-map-picker')
+                            ->viewData([
+                                'latStatePath' => 'data.latitude',
+                                'lngStatePath' => 'data.longitude',
+                            ])
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('latitude')
+                            ->label('Harita Enlem (Lat)')
+                            ->numeric(),
+                        Forms\Components\TextInput::make('longitude')
+                            ->label('Harita Boylam (Lng)')
+                            ->numeric(),
+                    ])->columns(2),
                 Forms\Components\Toggle::make('is_main')
                     ->label('Ana / Merkez Şube')
                     ->default(false),
