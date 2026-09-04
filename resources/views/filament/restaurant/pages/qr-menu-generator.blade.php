@@ -68,7 +68,7 @@
                 <p style="font-size: 13px; color: #6B7280; max-width: 420px; margin: 0 auto 20px;">
                     Şubelere özel QR menüler oluşturabilmek için önce Şubeler sekmesinden en az bir şube eklemelisiniz.
                 </p>
-                <a href="{{ route('filament.restaurant.resources.branches.create') }}" 
+                <a href="{{ route('filament.restaurant.resources.branches.create') }}"
                    style="display: inline-flex; align-items: center; gap: 8px; background: #E85D3F; color: #FFFFFF; padding: 10px 24px; border-radius: 14px; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 12px rgba(232,93,63,0.3);">
                     + Yeni Şube Ekle
                 </a>
@@ -79,7 +79,6 @@
                 @foreach($branches as $branch)
                     @php
                         $menuUrl = route('restaurant.menu', ['restaurant' => $restaurant->slug, 'branch' => $branch->id]);
-                        // High quality crisp dark terracotta QR code
                         $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=8&color=2C1810&bgcolor=FFFFFF&data=" . urlencode($menuUrl);
                         $cardId = "branch-qr-card-" . $branch->id;
                     @endphp
@@ -88,19 +87,10 @@
 
                         <!-- PHYSICAL TABLE STAND CARD -->
                         <div id="{{ $cardId }}" class="qr-card-container" style="padding: 28px 24px; text-align: center;">
-                            
-                            <!-- Top Colored Strip -->
-                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #E85D3F, #F4A261, #E85D3F);"></div>
 
                             <!-- Header: Logo & Restaurant Title -->
                             <div style="margin-bottom: 20px;">
-                                <div style="width: 56px; height: 56px; margin: 0 auto 12px; border-radius: 18px; background: #FFFFFF; border: 1.5px solid #E8E3DC; box-shadow: 0 4px 10px rgba(0,0,0,0.06); overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                                    @if($restaurant->image)
-                                        <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" style="width: 100%; height: 100%; object-fit: cover;">
-                                    @else
-                                        <span style="font-size: 24px;">🍽️</span>
-                                    @endif
-                                </div>
+
 
                                 <h3 style="font-size: 19px; font-weight: 900; color: #2C1810; margin: 0; letter-spacing: -0.5px; text-transform: uppercase;">
                                     {{ $restaurant->name }}
@@ -110,9 +100,6 @@
                                     <span style="font-size: 12px; font-weight: 800; color: #E85D3F;">
                                         📍 {{ $branch->name }}
                                     </span>
-                                    @if($branch->is_main)
-                                        <span style="font-size: 9px; font-weight: 800; text-transform: uppercase; background: #E85D3F; color: #FFFFFF; padding: 1px 6px; border-radius: 6px;">Merkez</span>
-                                    @endif
                                 </div>
 
                                 <div style="font-size: 11px; color: #8C827A; margin-top: 4px; font-weight: 500;">
@@ -123,8 +110,8 @@
                             <!-- Center: QR Code with Framing and Watermark -->
                             <div style="margin: 20px 0;">
                                 <div class="qr-code-box">
-                                    <img src="{{ $qrCodeUrl }}" 
-                                         alt="{{ $branch->name }} QR Menü" 
+                                    <img src="{{ $qrCodeUrl }}"
+                                         alt="{{ $branch->name }} QR Menü"
                                          style="width: 190px; height: 190px; display: block; border-radius: 12px;">
 
                                     <div class="qr-center-badge">
@@ -158,13 +145,30 @@
                                 <span>Menüyü Aç</span>
                             </a>
 
-                            <button type="button" 
-                                    onclick="printStandCard('{{ $cardId }}', '{{ addslashes($restaurant->name) }} - {{ addslashes($branch->name) }}')"
-                                    style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #E85D3F; color: #FFFFFF; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(232, 93, 63, 0.25); transition: all 0.2s;">
-                                <span>🖨️</span>
-                                <span>Yazdır / İndir</span>
-                            </button>
+                            <a href="{{ $qrCodeUrl }}" 
+                               download="{{ Str::slug($restaurant->name . '-' . $branch->name) }}-qr.png"
+                               target="_blank"
+                               style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #E85D3F; color: #FFFFFF; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 10px rgba(232, 93, 63, 0.25); transition: all 0.2s;">
+                                <span>⬇️</span>
+                                <span>QR İndir</span>
+                            </a>
                         </div>
+
+                        <!-- Full Print Button (Opens clean printable stand card in new tab) -->
+                        <button type="button" 
+                                x-on:click="
+                                    const cardEl = document.getElementById('{{ $cardId }}');
+                                    if (!cardEl) return;
+                                    const w = window.open('', '_blank');
+                                    if (!w) return;
+                                    w.document.write('<!DOCTYPE html><html><head><meta charset=\'utf-8\'><title>{{ addslashes($restaurant->name) }} - {{ addslashes($branch->name) }} QR Menü</title><style>@page{size:A5 portrait;margin:10mm;}body{margin:0;padding:24px;background:#FAF8F5;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,sans-serif;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}.card-wrap{width:320px;margin:auto;}@media print{body{background:white!important;padding:0!important;min-height:auto!important;}.card-wrap{width:320px!important;box-shadow:none!important;}}</style></head><body><div class=\'card-wrap\'>' + cardEl.outerHTML + '</div></body></html>');
+                                    w.document.close();
+                                    setTimeout(() => { w.focus(); w.print(); }, 400);
+                                "
+                                style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #2C1810; color: #FFFFFF; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s;">
+                            <span>🖨️</span>
+                            <span>Masa Stant Kartını Yazdır (A5 / A6)</span>
+                        </button>
 
                     </div>
                 @endforeach
@@ -172,35 +176,4 @@
         @endif
 
     </div>
-
-    @push('scripts')
-        <script>
-            window.printStandCard = function(elementId, title) {
-                var card = document.getElementById(elementId);
-                if (!card) return;
-
-                var printWindow = window.open('', '_blank', 'width=800,height=900');
-                if (!printWindow) return;
-
-                var cardHtml = card.outerHTML;
-                var doc = printWindow.document;
-                doc.open();
-                doc.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title + ' Masa Karti</title>' +
-                    '<style>' +
-                    '@page { size: A5 portrait; margin: 10mm; }' +
-                    'body { margin: 0; padding: 20px; background: #F4F0E8; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }' +
-                    '.print-wrapper { width: 320px; margin: auto; }' +
-                    '@media print { body { background: white !important; padding: 0 !important; min-height: auto !important; } .print-wrapper { width: 320px !important; } }' +
-                    '</style></head><body>' +
-                    '<div class="print-wrapper">' + cardHtml + '</div>' +
-                    '</body></html>');
-                doc.close();
-
-                printWindow.focus();
-                setTimeout(function() {
-                    printWindow.print();
-                }, 500);
-            };
-        </script>
-    @endpush
 </x-filament-panels::page>
