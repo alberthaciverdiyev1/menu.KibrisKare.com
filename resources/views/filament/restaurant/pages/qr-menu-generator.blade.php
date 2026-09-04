@@ -139,18 +139,6 @@
                                 </div>
                             </div>
 
-                            <!-- Footer: Hours and Rating Info -->
-                            <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid #ECE7DF; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #6E645D;">
-                                <div style="display: flex; align-items: center; gap: 4px; font-weight: 700; color: #2C1810;">
-                                    <span style="color: #F59E0B;">★</span>
-                                    <span>{{ number_format($branch->average_rating, 1) }}</span>
-                                    <span style="font-size: 10px; color: #9C948D; font-weight: normal;">({{ $branch->reviews_count }} Yorum)</span>
-                                </div>
-                                <div style="font-weight: 600; font-family: monospace; color: #5A514B;">
-                                    🕒 {{ $branch->getTodayHours() }}
-                                </div>
-                            </div>
-
                         </div>
 
                         <!-- Action Buttons -->
