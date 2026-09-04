@@ -33,8 +33,8 @@
         }
         .qr-center-badge {
             position: absolute;
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: #FFFFFF;
             border: 2.5px solid #E85D3F;
@@ -42,10 +42,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
-            font-weight: 900;
-            color: #E85D3F;
-            letter-spacing: -0.5px;
+            overflow: hidden;
+            padding: 2px;
+        }
+        .qr-center-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
     </style>
 
@@ -124,7 +128,11 @@
                                          style="width: 190px; height: 190px; display: block; border-radius: 12px;">
 
                                     <div class="qr-center-badge">
-                                        MENÜ
+                                        @if($restaurant->image)
+                                            <img src="{{ Str::startsWith($restaurant->image, ['http://', 'https://']) ? $restaurant->image : asset('storage/' . $restaurant->image) }}" alt="{{ $restaurant->name }}">
+                                        @else
+                                            <span style="font-size: 18px;">🍽️</span>
+                                        @endif
                                     </div>
                                 </div>
 
