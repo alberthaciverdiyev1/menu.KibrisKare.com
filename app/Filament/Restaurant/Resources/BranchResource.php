@@ -53,6 +53,7 @@ class BranchResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('address')
                     ->label('Açık Adres')
+                    ->live(onBlur: true)
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('phone')
@@ -113,14 +114,19 @@ class BranchResource extends Resource
                             ->viewData([
                                 'latStatePath' => 'data.latitude',
                                 'lngStatePath' => 'data.longitude',
+                                'addressStatePath' => 'data.address',
                             ])
                             ->columnSpanFull(),
                         Forms\Components\TextInput::make('latitude')
                             ->label('Harita Enlem (Lat)')
-                            ->numeric(),
+                            ->numeric()
+                            ->disabled()
+                            ->dehydrated(),
                         Forms\Components\TextInput::make('longitude')
                             ->label('Harita Boylam (Lng)')
-                            ->numeric(),
+                            ->numeric()
+                            ->disabled()
+                            ->dehydrated(),
                     ])->columns(2),
                 Forms\Components\Toggle::make('is_main')
                     ->label('Ana / Merkez Şube')
