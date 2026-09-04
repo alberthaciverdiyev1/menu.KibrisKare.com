@@ -284,193 +284,291 @@
         </div>
     </section>
 
-    <!-- ================= CONTENT SHEET (single readable surface) ================= -->
-    <section class="bg-surface rounded-2xl border border-warm shadow-sm mt-6">
-        <div class="p-6 sm:p-10">
+    <!-- ================= CONTENT SECTION (Modern Vilka / Editorial Layout) ================= -->
+    <div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-10">
-
-                <!-- About + reviews -->
-                <div class="lg:col-span-7 space-y-10">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-ink">Mekan Hakkında</h2>
-                        <p class="mt-3 text-sm sm:text-base text-ink/85 leading-relaxed">{{ $restaurant->description }}</p>
+        <!-- Left Column: Main Content (8 Cols on LG) -->
+        <div class="lg:col-span-8 space-y-8">
+            
+            <!-- 1. Mekan Hakkında (About Card) -->
+            <div class="bg-surface rounded-2xl border border-warm p-6 sm:p-8 shadow-xs">
+                <div class="flex items-center gap-2.5 pb-4 border-b border-warm/80">
+                    <div class="w-8 h-8 rounded-xl bg-orange-50 text-terracotta flex items-center justify-center">
+                        <x-ico name="info" class="w-4 h-4" />
                     </div>
-
-                    @if($featuredItems->isNotEmpty())
-                        <div>
-                            <div class="flex items-end justify-between gap-4">
-                                <h2 class="text-lg font-extrabold text-ink">Öne Çıkan Lezzetler</h2>
-                                <a href="{{ route('restaurant.menu', $restaurant->slug) }}"
-                                   class="inline-flex items-center gap-1 text-xs font-bold text-terracotta hover:text-terracotta-dark shrink-0">
-                                    Tüm menü
-                                    <x-ico name="chevron-right" class="w-4 h-4" />
-                                </a>
-                            </div>
-                            <div class="mt-4 grid grid-cols-1 xl:grid-cols-2 gap-4">
-                                @foreach($featuredItems as $dish)
-                                    <x-menu-item-card :dish="$dish" :showMenuLink="false" />
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
+                    <h2 class="text-xl font-bold text-ink tracking-tight">{{ $restaurant->name }} Hakkında</h2>
                 </div>
+                <p class="mt-4 text-sm sm:text-base text-ink/80 leading-relaxed font-normal">
+                    {{ $restaurant->description ?: 'Misafirlerimize eşsiz lezzetler ve samimi bir atmosfer sunuyoruz.' }}
+                </p>
 
-                <!-- Hours + map + reservations -->
-                <aside class="lg:col-span-5 space-y-8">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-ink">Çalışma Saatleri</h2>
-                        <ul class="mt-3">
-                            @foreach($days as $key => $name)
-                                @php
-                                    $cfg = is_array($weekly) ? ($weekly[$key] ?? null) : null;
-                                    $isToday = $key === $todayKey;
-                                    $closed = is_array($cfg) && !empty($cfg['is_closed']);
-                                    $range = !empty($cfg['open']) && !empty($cfg['close']) ? $cfg['open'] . ' – ' . $cfg['close'] : null;
-                                    $time = $closed ? 'Kapalı' : ($range ?? ($schedule->opening_hours ?? '10:00 – 23:00'));
-                                @endphp
-                                <li class="flex items-center justify-between gap-6 py-2.5 border-b border-warm/70 {{ $isToday ? 'text-ink' : 'text-muted' }}">
-                                    <span class="flex items-center gap-2 text-sm">
-                                        <span class="{{ $isToday ? 'font-bold' : 'font-medium' }}">{{ $name }}</span>
-                                        @if($isToday)
-                                            <span class="px-1.5 py-0.5 rounded bg-terracotta/10 text-terracotta text-[10px] font-bold">Bugün</span>
-                                        @endif
-                                    </span>
-                                    <span class="text-sm {{ $closed ? 'italic' : 'font-mono' }}">{{ $time }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-extrabold text-ink">Konum</h2>
-                        <div class="mt-3 h-56 rounded-xl overflow-hidden border border-warm"
-                             x-data="{ init() { this.$nextTick(() => { if (typeof L === 'undefined') return;
-                                 const m = L.map($el, { center: [{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], zoom: 15, scrollWheelZoom: false, zoomControl: false });
-                                 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(m);
-                                 L.marker([{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], { icon: L.divIcon({ className: 'custom-pin', html: '<div style=\'background:#E85D3F;color:#fff;padding:4px 8px;border-radius:9999px;font-weight:800;font-size:11px;border:2px solid #fff;\'>★</div>', iconSize: [28,22], iconAnchor: [14,11] }) }).addTo(m);
-                             }); } }" x-init="init()"></div>
-                        @if($address)
-                            <p class="mt-3 text-sm text-muted">{{ $address }}</p>
-                        @endif
-                        <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->display_latitude }},{{ $restaurant->display_longitude }}"
-                           target="_blank" rel="noopener"
-                           class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-terracotta hover:text-terracotta-dark">
-                            <x-ico name="map-pin" class="w-4 h-4" />
-                            Google Haritalar'da aç
-                        </a>
-                    </div>
-
-                    @if($restaurant->phone)
-                        <div class="pt-6 border-t border-warm">
-                            <p class="text-xs font-bold uppercase tracking-wider text-muted">Rezervasyon &amp; Sipariş</p>
-                            <a href="tel:{{ $restaurant->phone }}" class="mt-2 block text-2xl font-extrabold text-ink hover:text-terracotta">{{ $restaurant->phone }}</a>
-                        </div>
+                <!-- Restoran Hızlı Özellikleri (Tags / Highlights) -->
+                <div class="mt-6 pt-5 border-t border-warm/70 flex flex-wrap gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sand border border-warm text-xs font-semibold text-ink">
+                        <span class="w-1.5 h-1.5 rounded-full bg-terracotta"></span>
+                        {{ $restaurant->cuisine }}
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sand border border-warm text-xs font-semibold text-ink">
+                        <x-ico name="map-pin" class="w-3.5 h-3.5 text-muted" />
+                        {{ $restaurant->city->name }}
+                    </span>
+                    @if($restaurant->price_range)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sand border border-warm text-xs font-semibold text-ink">
+                            <span class="font-mono text-terracotta">{{ $restaurant->price_range }}</span>
+                            <span class="text-muted">Fiyat Aralığı</span>
+                        </span>
                     @endif
-                </aside>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg {{ $todayOpen ? 'bg-emerald-50 text-open border border-emerald-200/60' : 'bg-rose-50 text-rose-700 border border-rose-200/60' }} text-xs font-bold">
+                        <span class="w-2 h-2 rounded-full {{ $todayOpen ? 'bg-open animate-pulse' : 'bg-rose-500' }}"></span>
+                        {{ $todayOpen ? 'Şu An Açık' : 'Şu An Kapalı' }}
+                    </span>
+                </div>
             </div>
 
-            <!-- Reviews (on the same sheet) -->
-            <div class="mt-12 pt-10 border-t border-warm" x-data="{ showForm: false, rating: 5 }">
-                <div class="flex flex-wrap items-end justify-between gap-6">
-                    <div class="flex items-end gap-4">
-                        <h2 class="text-lg font-extrabold text-ink pb-1">Değerlendirmeler</h2>
-                        <span class="flex items-end gap-1.5 pb-1">
-                            <span class="text-3xl font-extrabold text-ink leading-none">{{ number_format($restaurant->rating, 1) }}</span>
-                            <span class="text-star"><x-ico name="star" filled class="w-5 h-5" /></span>
-                        </span>
+            <!-- 2. Öne Çıkan Lezzetler (Featured Dishes Grid) -->
+            @if($featuredItems->isNotEmpty())
+                <div class="bg-surface rounded-2xl border border-warm p-6 sm:p-8 shadow-xs">
+                    <div class="flex items-center justify-between pb-4 border-b border-warm/80">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-orange-50 text-terracotta flex items-center justify-center">
+                                <x-ico name="star" filled class="w-4 h-4" />
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-ink tracking-tight">Öne Çıkan Lezzetler</h2>
+                                <p class="text-xs text-muted">Şefin tavsiyeleri ve misafirlerimizin favorileri</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('restaurant.menu', $restaurant->slug) }}"
+                           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-sand hover:bg-orange-50 border border-warm text-xs font-bold text-terracotta transition-colors shrink-0">
+                            <span>Tüm Menü</span>
+                            <x-ico name="chevron-right" class="w-3.5 h-3.5" />
+                        </a>
+                    </div>
+                    
+                    <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-4">
+                        @foreach($featuredItems as $dish)
+                            <x-menu-item-card :dish="$dish" :showMenuLink="false" />
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- 3. Değerlendirmeler & Yorumlar (Reviews & Review Form) -->
+            <div class="bg-surface rounded-2xl border border-warm p-6 sm:p-8 shadow-xs" x-data="{ showForm: false, rating: 5 }">
+                <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-warm/80">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/60 text-star flex items-center justify-center">
+                            <x-ico name="star" filled class="w-5 h-5" />
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-xl font-bold text-ink tracking-tight">Değerlendirmeler</h2>
+                                <span class="px-2 py-0.5 rounded-md bg-sand border border-warm text-xs font-extrabold text-ink font-mono">
+                                    ★ {{ number_format($restaurant->rating, 1) }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-muted mt-0.5">{{ $restaurant->reviews_count }} doğrulanmış misafir yorumu</p>
+                        </div>
                     </div>
                     <button type="button" @click="showForm = !showForm"
-                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-ink hover:bg-terracotta text-white font-bold text-sm">
-                        <span x-text="showForm ? 'Formu Kapat' : 'Değerlendirme Bırak'"></span>
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-ink hover:bg-terracotta text-white font-bold text-xs shadow-xs transition-colors">
+                        <x-ico name="pencil" class="w-3.5 h-3.5" />
+                        <span x-text="showForm ? 'Formu Gizle' : 'Yorum Yap & Puan Ver'"></span>
                     </button>
                 </div>
 
-                @if($allReviews->isEmpty())
-                    <p class="mt-4 text-sm text-muted leading-relaxed">Henüz değerlendirme yapılmamış. Gittiğinizde lezzeti ve ortamı değerlendirerek diğer misafirlere yol gösterin.</p>
-                @else
-                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 divide-y md:divide-y-0 md:divide-x divide-warm">
-                        <div class="md:pr-8 divide-y divide-warm">
-                            @foreach($allReviews->take(2) as $rev)
-                                <article class="py-4">
-                                    <span class="font-bold text-ink">{{ $rev->author_name ?: 'Anonim misafir' }}</span>
-                                    <span class="flex items-center gap-0.5 mt-1">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <x-ico name="star" filled class="w-3.5 h-3.5 {{ $i <= $rev->rating ? 'text-star' : 'text-muted/25' }}" />
-                                        @endfor
-                                    </span>
-                                    @if($rev->comment)<p class="mt-2 text-sm text-ink/85">{{ $rev->comment }}</p>@endif
-                                    <p class="mt-1 text-xs text-muted">{{ $rev->created_at->diffForHumans() }}</p>
-                                </article>
-                            @endforeach
-                        </div>
-                        <div class="md:pl-8 divide-y divide-warm">
-                            @foreach($allReviews->slice(2, 2) as $rev)
-                                <article class="py-4">
-                                    <span class="font-bold text-ink">{{ $rev->author_name ?: 'Anonim misafir' }}</span>
-                                    <span class="flex items-center gap-0.5 mt-1">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <x-ico name="star" filled class="w-3.5 h-3.5 {{ $i <= $rev->rating ? 'text-star' : 'text-muted/25' }}" />
-                                        @endfor
-                                    </span>
-                                    @if($rev->comment)<p class="mt-2 text-sm text-ink/85">{{ $rev->comment }}</p>@endif
-                                    <p class="mt-1 text-xs text-muted">{{ $rev->created_at->diffForHumans() }}</p>
-                                </article>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
+                <!-- Review Form Dropdown -->
                 <form id="review-form" x-show="showForm" x-cloak method="POST"
                       action="{{ $firstBranchId ? route('branches.reviews.store', $firstBranchId) : '#' }}"
-                      class="mt-6 space-y-5">
+                      class="mt-6 p-5 rounded-xl bg-sand/60 border border-warm space-y-4">
                     @csrf
                     <div class="flex flex-wrap items-center gap-2">
-                        <span class="text-sm font-bold text-ink">Puanınız</span>
+                        <span class="text-xs font-bold text-ink">Puanınız:</span>
                         <template x-for="s in [1,2,3,4,5]" :key="s">
                             <button type="button" @click="rating = s" :aria-label="'Puan ' + s"
-                                    :class="s <= rating ? 'text-star' : 'text-muted/30'" class="focus:outline-none">
-                                <x-ico name="star" filled class="w-6 h-6" />
+                                    :class="s <= rating ? 'text-star' : 'text-muted/30'" class="focus:outline-none transition-transform hover:scale-110">
+                                <x-ico name="star" filled class="w-5 h-5" />
                             </button>
                         </template>
                         <input type="hidden" name="rating" :value="rating">
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="review-author" class="block text-xs font-bold text-muted mb-1.5">Adınız / Rumuz</label>
+                            <label for="review-author" class="block text-xs font-bold text-muted mb-1">Adınız / Rumuz</label>
                             <input id="review-author" type="text" name="author_name" placeholder="Anonim misafir"
-                                   class="w-full px-4 py-2.5 rounded-xl bg-sand border border-warm text-sm text-ink focus:outline-none focus:border-terracotta placeholder:text-muted/60">
+                                   class="w-full px-3.5 py-2 rounded-xl bg-surface border border-warm text-xs text-ink focus:outline-none focus:border-terracotta placeholder:text-muted/60">
                         </div>
                         <div>
-                            <label for="review-branch" class="block text-xs font-bold text-muted mb-1.5">Şube</label>
+                            <label for="review-branch" class="block text-xs font-bold text-muted mb-1">Şube</label>
                             @if($hasMultipleBranches)
                                 <select id="review-branch"
                                         @change="document.getElementById('review-form').action = $event.target.selectedOptions[0].dataset.url"
-                                        class="w-full px-4 py-2.5 rounded-xl bg-sand border border-warm text-sm text-ink focus:outline-none focus:border-terracotta">
+                                        class="w-full px-3.5 py-2 rounded-xl bg-surface border border-warm text-xs text-ink focus:outline-none focus:border-terracotta">
                                     @foreach($restaurant->branches as $b)
                                         <option value="{{ $b->id }}" data-url="{{ route('branches.reviews.store', $b->id) }}" {{ $b->is_main ? 'selected' : '' }}>{{ $b->name }}</option>
                                     @endforeach
                                 </select>
                             @else
-                                <p class="py-2.5 text-sm text-muted">{{ $primary->name }}</p>
+                                <p class="py-2 text-xs font-semibold text-ink">{{ $primary->name }}</p>
                             @endif
                         </div>
                     </div>
                     <div>
-                        <label for="review-comment" class="block text-xs font-bold text-muted mb-1.5">Yorumunuz</label>
+                        <label for="review-comment" class="block text-xs font-bold text-muted mb-1">Yorumunuz</label>
                         <textarea id="review-comment" name="comment" rows="3"
-                                  placeholder="Lezzet, servis ve ortam nasıldı?"
-                                  class="w-full px-4 py-2.5 rounded-xl bg-sand border border-warm text-sm text-ink focus:outline-none focus:border-terracotta placeholder:text-muted/60 resize-none"></textarea>
+                                  placeholder="Lezzet, servis ve atmosfer hakkındaki deneyiminizi paylaşın..."
+                                  class="w-full px-3.5 py-2 rounded-xl bg-surface border border-warm text-xs text-ink focus:outline-none focus:border-terracotta placeholder:text-muted/60 resize-none"></textarea>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <button type="button" @click="showForm = false" class="px-4 py-2 rounded-xl text-sm font-bold text-muted hover:text-ink">İptal</button>
-                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white text-sm font-bold">Gönder</button>
+                    <div class="flex items-center justify-end gap-3 pt-2">
+                        <button type="button" @click="showForm = false" class="px-3.5 py-2 rounded-lg text-xs font-bold text-muted hover:text-ink">İptal</button>
+                        <button type="submit" class="px-5 py-2 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white text-xs font-bold shadow-xs">Gönder</button>
                     </div>
                 </form>
+
+                <!-- Reviews List -->
+                @if($allReviews->isEmpty())
+                    <div class="mt-6 py-8 text-center bg-sand/30 rounded-xl border border-dashed border-warm">
+                        <p class="text-sm font-semibold text-ink">Henüz yorum yapılmamış</p>
+                        <p class="text-xs text-muted mt-1 max-w-sm mx-auto">İlk değerlendirmeyi siz bırakarak diğer misafirlere deneyimlerinizi aktarın.</p>
+                    </div>
+                @else
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach($allReviews->take(4) as $rev)
+                            <article class="p-4 rounded-xl bg-sand/40 border border-warm/80 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-7 h-7 rounded-full bg-ink/10 text-ink font-bold text-xs flex items-center justify-center">
+                                                {{ mb_substr($rev->author_name ?: 'A', 0, 1) }}
+                                            </div>
+                                            <span class="font-bold text-xs text-ink">{{ $rev->author_name ?: 'Anonim misafir' }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-0.5">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <x-ico name="star" filled class="w-3 h-3 {{ $i <= $rev->rating ? 'text-star' : 'text-stone-300' }}" />
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    @if($rev->comment)
+                                        <p class="mt-2.5 text-xs text-ink/85 leading-relaxed font-normal">{{ $rev->comment }}</p>
+                                    @endif
+                                </div>
+                                <p class="mt-3 text-[11px] text-muted">{{ $rev->created_at->diffForHumans() }}</p>
+                            </article>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
         </div>
-    </section>
+
+        <!-- Right Column: Sticky Sidebar (Hours, Location & Contact) (4 Cols on LG) -->
+        <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+            
+            <!-- Quick Contact / Reservation Box -->
+            <div class="bg-surface rounded-2xl border border-warm p-6 shadow-xs space-y-4">
+                <div class="flex items-center gap-3 pb-3 border-b border-warm/80">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-50 text-open flex items-center justify-center">
+                        <x-ico name="phone" class="w-4 h-4" />
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-ink uppercase tracking-wider">İletişim & Rezervasyon</h3>
+                        <p class="text-xs text-muted">Doğrudan mekanla irtibata geçin</p>
+                    </div>
+                </div>
+
+                @if($restaurant->phone)
+                    <a href="tel:{{ $restaurant->phone }}" 
+                       class="w-full flex items-center justify-between p-3.5 rounded-xl bg-sand hover:bg-orange-50/70 border border-warm transition-colors group">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-terracotta text-white flex items-center justify-center">
+                                <x-ico name="phone" class="w-4 h-4" />
+                            </span>
+                            <div>
+                                <span class="block text-[11px] font-bold uppercase text-muted">Telefon</span>
+                                <span class="font-mono font-bold text-sm text-ink group-hover:text-terracotta">{{ $restaurant->phone }}</span>
+                            </div>
+                        </div>
+                        <x-ico name="chevron-right" class="w-4 h-4 text-muted group-hover:text-terracotta group-hover:translate-x-0.5 transition-transform" />
+                    </a>
+                @endif
+
+                <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
+                   class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-xs sm:text-sm shadow-xs transition-colors">
+                    <x-ico name="book-open" class="w-4 h-4" />
+                    <span>Dijital Menüyü İncele</span>
+                </a>
+            </div>
+
+            <!-- Working Hours Card -->
+            <div class="bg-surface rounded-2xl border border-warm p-6 shadow-xs">
+                <div class="flex items-center justify-between pb-3 border-b border-warm/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-orange-50 text-terracotta flex items-center justify-center">
+                            <x-ico name="clock" class="w-4 h-4" />
+                        </div>
+                        <h3 class="text-sm font-bold text-ink">Çalışma Saatleri</h3>
+                    </div>
+                    <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full {{ $todayOpen ? 'bg-emerald-50 text-open border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200' }}">
+                        {{ $todayOpen ? 'ŞU AN AÇIK' : 'KAPALI' }}
+                    </span>
+                </div>
+
+                <ul class="mt-3 divide-y divide-warm/60">
+                    @foreach($days as $key => $name)
+                        @php
+                            $cfg = is_array($weekly) ? ($weekly[$key] ?? null) : null;
+                            $isToday = $key === $todayKey;
+                            $closed = is_array($cfg) && !empty($cfg['is_closed']);
+                            $range = !empty($cfg['open']) && !empty($cfg['close']) ? $cfg['open'] . ' – ' . $cfg['close'] : null;
+                            $time = $closed ? 'Kapalı' : ($range ?? ($schedule->opening_hours ?? '10:00 – 23:00'));
+                        @endphp
+                        <li class="flex items-center justify-between py-2 text-xs {{ $isToday ? 'font-bold text-terracotta bg-orange-50/40 -mx-2 px-2 rounded-lg' : 'text-stone-600' }}">
+                            <span class="flex items-center gap-1.5">
+                                <span>{{ $name }}</span>
+                                @if($isToday)
+                                    <span class="text-[9px] uppercase px-1 py-0.2 rounded bg-terracotta text-white font-bold">Bugün</span>
+                                @endif
+                            </span>
+                            <span class="{{ $closed ? 'italic text-stone-400' : 'font-mono text-ink font-semibold' }}">{{ $time }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <!-- Location & Map Card -->
+            <div class="bg-surface rounded-2xl border border-warm p-6 shadow-xs">
+                <div class="flex items-center justify-between pb-3 border-b border-warm/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-orange-50 text-terracotta flex items-center justify-center">
+                            <x-ico name="map-pin" class="w-4 h-4" />
+                        </div>
+                        <h3 class="text-sm font-bold text-ink">Konum ve Ulaşım</h3>
+                    </div>
+                </div>
+
+                <div class="mt-3.5 h-48 rounded-xl overflow-hidden border border-warm relative shadow-2xs"
+                     x-data="{ init() { this.$nextTick(() => { if (typeof L === 'undefined') return;
+                         const m = L.map($el, { center: [{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], zoom: 15, scrollWheelZoom: false, zoomControl: false });
+                         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(m);
+                         L.marker([{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], { icon: L.divIcon({ className: 'custom-pin', html: '<div style=\'background:#E85D3F;color:#fff;padding:3px 7px;border-radius:9999px;font-weight:800;font-size:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.2);\'>★</div>', iconSize: [26,20], iconAnchor: [13,10] }) }).addTo(m);
+                     }); } }" x-init="init()"></div>
+                
+                @if($address)
+                    <p class="mt-3 text-xs text-muted leading-relaxed font-normal">{{ $address }}</p>
+                @endif
+                
+                <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->display_latitude }},{{ $restaurant->display_longitude }}"
+                   target="_blank" rel="noopener"
+                   class="mt-3 w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-sand hover:bg-orange-50 border border-warm text-xs font-bold text-ink hover:text-terracotta transition-colors">
+                    <x-ico name="map" class="w-3.5 h-3.5 text-terracotta" />
+                    <span>Google Haritalar'da Aç</span>
+                </a>
+            </div>
+
+        </aside>
+
+    </div>
 
     <!-- ================= RELATED ================= -->
     @if($relatedRestaurants->isNotEmpty())
