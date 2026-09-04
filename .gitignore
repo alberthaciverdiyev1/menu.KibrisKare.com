@@ -22,10 +22,14 @@
 # AI Assistants & Agents
 AGENTS.md
 CLAUDE.md
-.gemini
-.gemini/
 .claude/
 .clauderules
+.claudeignore
+ANTIGRAVITY.md
+.antigravity/
+.antigravityignore
+.gemini
+.gemini/
 .cursor/
 .cursorrules
 .windsurf/
