@@ -429,6 +429,19 @@ class CyprusFoodSeeder extends Seeder
                 );
             }
 
+            if ($restaurant->slug === 'ezic-peanuts-girne') {
+                // Create a restaurant manager login for Eziç
+                User::updateOrCreate(
+                    ['email' => 'ezic@menu.cy'],
+                    [
+                        'name' => 'Eziç Peanuts Manager',
+                        'password' => bcrypt('password'),
+                        'role' => 'restaurant',
+                        'restaurant_id' => $restaurant->id,
+                    ]
+                );
+            }
+
             // Add menus
             $orderCat = 1;
             foreach ($item['menu'] as $menuCatName => $menuItems) {
