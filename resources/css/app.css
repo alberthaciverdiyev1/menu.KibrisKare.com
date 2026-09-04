@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+
+@theme {
+    --color-terracotta: #E85D3F;
+    --color-terracotta-dark: #C9472F;
+    --color-sand: #FAF8F4;
+    --color-surface: #FFFFFF;
+    --color-ink: #191919;
+    --color-muted: #737373;
+    --color-border-warm: #E8E3DC;
+    --color-open: #2E7D5B;
+    --color-star: #D99A24;
+    --color-warning: #D99A24;
+
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Custom Semantic Utility Classes */
+.bg-sand { background-color: var(--color-sand); }
+.bg-surface { background-color: var(--color-surface); }
+.bg-terracotta { background-color: var(--color-terracotta); }
+.bg-terracotta-dark { background-color: var(--color-terracotta-dark); }
+.bg-ink { background-color: var(--color-ink); }
+.bg-open { background-color: var(--color-open); }
+
+.text-ink { color: var(--color-ink); }
+.text-muted { color: var(--color-muted); }
+.text-terracotta { color: var(--color-terracotta); }
+.text-terracotta-dark { color: var(--color-terracotta-dark); }
+.text-open { color: var(--color-open); }
+.text-star { color: var(--color-star); }
+
+.border-warm { border-color: var(--color-border-warm); }
+.border-muted { border-color: var(--color-muted); }
+.border-ink { border-color: var(--color-ink); }
+.border-terracotta { border-color: var(--color-terracotta); }
+
+/* Interactive Hover & Focus Helpers */
+.hover\:bg-terracotta:hover { background-color: var(--color-terracotta); }
+.hover\:bg-terracotta-dark:hover { background-color: var(--color-terracotta-dark); }
+.hover\:bg-sand:hover { background-color: var(--color-sand); }
+.hover\:bg-surface:hover { background-color: var(--color-surface); }
+.hover\:bg-ink:hover { background-color: var(--color-ink); }
+
+.hover\:text-terracotta:hover { color: var(--color-terracotta); }
+.hover\:text-terracotta-dark:hover { color: var(--color-terracotta-dark); }
+.hover\:text-ink:hover { color: var(--color-ink); }
+.hover\:text-muted:hover { color: var(--color-muted); }
+
+.hover\:border-warm:hover { border-color: var(--color-border-warm); }
+.hover\:border-muted:hover { border-color: var(--color-muted); }
+.hover\:border-terracotta:hover { border-color: var(--color-terracotta); }
+.hover\:border-ink:hover { border-color: var(--color-ink); }
+
+.focus\:border-terracotta:focus { border-color: var(--color-terracotta); }
+
+body {
+    background-color: var(--color-sand);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+}

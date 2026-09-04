@@ -1,0 +1,65 @@
+<!-- FOOTER (Neutral Charcoal with Warm Terracotta Accent) -->
+<footer class="bg-ink text-muted border-t border-stone-800 pt-16 pb-12 mt-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-stone-800">
+            
+            <div class="md:col-span-5 space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-terracotta text-white flex items-center justify-center font-black text-sm">
+                        M
+                    </div>
+                    <span class="font-extrabold text-2xl tracking-tight text-white uppercase">
+                        ADA<span class="text-terracotta">MENÜ</span>
+                    </span>
+                </div>
+                <p class="text-sm text-stone-400 leading-relaxed max-w-sm font-normal">
+                    Kuzey Kıbrıs genelindeki restoranların, meyhanelerin ve kafelerin doğrulanmış dijital menü ve fiyat rehberi.
+                </p>
+                <div class="text-xs font-semibold text-stone-500">
+                    Girne • Lefkoşa • Gazimağusa • İskele • Güzelyurt • Lefke
+                </div>
+            </div>
+
+            <div class="md:col-span-2 space-y-3">
+                <div class="text-xs font-bold text-white uppercase tracking-wider">Hızlı Erişim</div>
+                <ul class="space-y-2.5 text-sm text-stone-400 font-medium">
+                    <li><a href="{{ route('restaurants.index') }}" class="hover:text-white transition-colors">Tüm Restoranlar</a></li>
+                    <li><a href="{{ route('map') }}" class="hover:text-white transition-colors">Kıbrıs Haritası</a></li>
+                    <li><a href="{{ route('categories') }}" class="hover:text-white transition-colors">Mutfak Türleri</a></li>
+                    <li><a href="{{ route('restaurants.index', ['city' => 'girne']) }}" class="hover:text-white transition-colors">Girne Restoranları</a></li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-2 space-y-3">
+                <div class="text-xs font-bold text-white uppercase tracking-wider">Popüler Mutfaklar</div>
+                <ul class="space-y-2.5 text-sm text-stone-400 font-medium">
+                    <li><a href="{{ route('restaurants.index', ['category' => 'kebap']) }}" class="hover:text-white transition-colors">Kıbrıs Şeftali Kebabı</a></li>
+                    <li><a href="{{ route('restaurants.index', ['category' => 'deniz-urunleri']) }}" class="hover:text-white transition-colors">Deniz Ürünleri & Balık</a></li>
+                    <li><a href="{{ route('restaurants.index', ['category' => 'pizza']) }}" class="hover:text-white transition-colors">Taş Fırın Pizza</a></li>
+                    <li><a href="{{ route('restaurants.index', ['category' => 'burger']) }}" class="hover:text-white transition-colors">Gurme Burger</a></li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-3 space-y-3">
+                <div class="text-xs font-bold text-white uppercase tracking-wider">Restoran Sahipleri</div>
+                <p class="text-xs text-stone-400 leading-relaxed font-normal">
+                    Mekanınızı listemize ekleyin, misafirlerinize güncel QR ve web menünüzü sunun.
+                </p>
+                <a href="/admin" class="inline-block mt-2 px-4 py-2.5 rounded-lg bg-stone-800 hover:bg-terracotta text-white text-xs font-bold border border-stone-700 transition-colors">
+                    Yönetim Paneli Girişi →
+                </a>
+            </div>
+
+        </div>
+
+        <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
+            <p>© {{ date('Y') }} AdaMenü Kıbrıs. Tüm hakları saklıdır.</p>
+            <div class="flex items-center gap-6 font-medium">
+                <a href="{{ route('home') }}" class="hover:text-white">Ana Sayfa</a>
+                <a href="{{ route('restaurants.index') }}" class="hover:text-white">Restoranlar</a>
+                <a href="{{ route('map') }}" class="hover:text-white">Harita</a>
+                <a href="/admin" class="hover:text-white">Panel</a>
+            </div>
+        </div>
+    </div>
+</footer>
