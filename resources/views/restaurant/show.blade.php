@@ -57,68 +57,133 @@
         }
      }">
 
-    <!-- ================= BREADCRUMB (restoranim.net style) ================= -->
-    <nav class="flex items-center gap-2 py-3 text-xs text-muted font-medium flex-wrap">
-        <a href="{{ route('home') }}" class="hover:text-ink transition-colors">Ana Sayfa</a>
-        <span>/</span>
+    <!-- ================= BREADCRUMB ================= -->
+    <nav class="flex items-center gap-1.5 py-3 text-xs text-muted font-medium flex-wrap">
+        <a href="{{ route('home') }}" class="text-terracotta font-semibold hover:underline">Keşfet</a>
+        <span class="text-stone-300">›</span>
         <a href="{{ route('restaurants.index', ['city' => $restaurant->city->slug]) }}" class="hover:text-ink transition-colors">{{ $restaurant->city->name }}</a>
-        <span>/</span>
+        <span class="text-stone-300">›</span>
         <span class="text-muted">{{ $restaurant->cuisine }}</span>
-        <span>/</span>
-        <span class="text-ink font-semibold truncate">{{ $restaurant->name }}</span>
+        <span class="text-stone-300">›</span>
+        <span class="text-ink font-bold truncate">{{ $restaurant->name }}</span>
     </nav>
 
     @if(session('success'))
-        <div class="mb-5 p-4 rounded-xl bg-emerald-50 text-open text-xs font-semibold flex items-center gap-2 border border-emerald-200">
+        <div class="mb-4 p-4 rounded-xl bg-emerald-50 text-open text-xs font-semibold flex items-center gap-2 border border-emerald-200">
             <x-ico name="check" class="w-4 h-4 shrink-0" />
             <span>{{ session('success') }}</span>
         </div>
     @endif
 
-    <!-- ================= RESTORANIM.NET HERO COVER & AVATAR ================= -->
-    <div class="relative w-full rounded-2xl overflow-hidden bg-stone-200 aspect-[21/9] min-h-[220px] max-h-[380px] shadow-xs group cursor-pointer"
-         @click="openGallery(0)">
-        <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-101 transition-transform duration-500">
+    <!-- ================= RESTORANIM.NET 3-COLUMN HERO PHOTO GRID ================= -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-2.5 h-[280px] sm:h-[340px] md:h-[360px] rounded-2xl overflow-hidden mt-1">
         
-        <!-- Subtle gradient overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
-
-        <!-- Top Right Photo Count Badge -->
-        <div class="absolute top-4 right-4 z-10">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/60 hover:bg-black/80 text-white text-xs font-bold backdrop-blur-md transition-all">
-                <x-ico name="camera" class="w-3.5 h-3.5 text-terracotta" />
-                <span>{{ $totalPhotos }} Fotoğraf</span>
-            </span>
+        <!-- Column 1: Left Big Photo (md:col-span-5) -->
+        <div @click="openGallery(0)" 
+             class="md:col-span-5 h-full rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative">
+            <img src="{{ $allPhotos[0] ?? $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
         </div>
 
-        <!-- Bottom Left Header Info directly over/in hero -->
-        <div class="absolute bottom-4 left-4 right-4 text-white z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-            <div>
-                <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-terracotta text-white mb-1.5 uppercase tracking-wide">
-                    {{ $restaurant->cuisine }}
-                </span>
-                <h1 class="text-2xl sm:text-4xl font-bold tracking-tight text-white drop-shadow-sm">
-                    {{ $restaurant->name }}
-                </h1>
-                <p class="text-xs sm:text-sm text-white/90 mt-1 flex items-center gap-1.5 drop-shadow-sm">
-                    <x-ico name="map-pin" class="w-3.5 h-3.5 text-terracotta" />
-                    <span>{{ $address ?: $restaurant->city->name }}</span>
-                </p>
+        <!-- Column 2: Middle 2 Stacked Photos (md:col-span-3 or 4) -->
+        <div class="hidden md:grid md:col-span-3 grid-rows-2 gap-2 sm:gap-2.5 h-full">
+            <div @click="openGallery(1)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                <img src="{{ $allPhotos[1] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
             </div>
+            <div @click="openGallery(2)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                <img src="{{ $allPhotos[2] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+            </div>
+        </div>
 
-            <!-- Rating badge on cover -->
-            <div class="flex items-center gap-2 bg-black/50 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/10 shrink-0">
-                <div class="flex items-center text-star">
-                    <x-ico name="star" filled class="w-4 h-4 text-star" />
-                </div>
-                <span class="font-bold text-sm text-white">{{ number_format($restaurant->rating, 1) }}</span>
-                <span class="text-xs text-white/70">/ 5 ({{ $restaurant->reviews_count }} yorum)</span>
+        <!-- Column 3: Right 2 Stacked Photos with +X Overlay (md:col-span-4) -->
+        <div class="hidden md:grid md:col-span-4 grid-rows-2 gap-2 sm:gap-2.5 h-full">
+            <div @click="openGallery(3)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                <img src="{{ $allPhotos[3] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+            </div>
+            <div @click="openGallery(4)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                <img src="{{ $allPhotos[4] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                
+                @if($totalPhotos > 4)
+                    <div class="absolute inset-0 bg-black/55 group-hover:bg-black/65 transition-colors flex flex-col items-center justify-center text-white text-center p-2">
+                        <x-ico name="camera" class="w-5 h-5 mb-1 text-white" />
+                        <span class="text-xs sm:text-sm font-bold">+{{ $totalPhotos - 4 }}</span>
+                        <span class="text-[10px] text-stone-200 font-medium">fotoğraf daha</span>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
 
-    <!-- ================= ACTION BUTTONS ROW (restoranim.net 5 Quick Buttons) ================= -->
-    <div class="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+    <!-- ================= RESTAURANT TITLE & SUBTITLE & META ================= -->
+    <div class="mt-5 space-y-1.5">
+        <div class="flex items-center gap-2.5">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+                {{ $restaurant->name }}
+            </h1>
+            <button type="button" @click="copyUrl()" aria-label="Favorilere ekle / Paylaş" class="text-stone-400 hover:text-rose-500 transition-colors p-1 cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            </button>
+        </div>
+
+        @if($restaurant->description)
+            <p class="text-xs sm:text-sm text-stone-600 font-normal">
+                {{ \Illuminate\Support\Str::limit($restaurant->description, 90) }}
+            </p>
+        @endif
+
+        <!-- Rating & Details Meta Line -->
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-stone-700 pt-1">
+            <div class="flex items-center text-star">
+                @for($i = 1; $i <= 5; $i++)
+                    <x-ico name="star" filled class="w-4 h-4 {{ $i <= round($restaurant->rating) ? 'text-star' : 'text-stone-300' }}" />
+                @endfor
+            </div>
+            <span class="font-bold text-ink">{{ number_format($restaurant->rating, 1) }}</span>
+            <span class="text-muted">({{ $restaurant->reviews_count }} değerlendirme)</span>
+            <span class="text-stone-300">•</span>
+            @if($restaurant->price_range)
+                <span class="font-medium text-stone-700 font-mono">{{ $restaurant->price_range }}</span>
+                <span class="text-stone-300">•</span>
+            @endif
+            <span class="font-medium text-stone-700">{{ $restaurant->cuisine }}</span>
+            <span class="text-stone-300">•</span>
+            <span class="font-bold {{ $todayOpen ? 'text-open' : 'text-rose-600' }}">
+                {{ $todayOpen ? 'Şu an Açık' : 'Kapalı' }}
+            </span>
+            @if($todayOpen)
+                <span class="text-stone-300">•</span>
+                <span class="text-muted">Hizmete hazır</span>
+            @endif
+        </div>
+    </div>
+
+    <!-- ================= SUB-NAVIGATION TABS (restoranim.net Style) ================= -->
+    <div class="mt-6 border-b border-stone-200/80 sticky top-[72px] z-20 bg-sand/95 backdrop-blur-md -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div class="flex items-center gap-6 sm:gap-8 overflow-x-auto hide-scrollbar text-xs sm:text-sm whitespace-nowrap font-semibold">
+            <a href="#genel-bakis" class="inline-flex items-center gap-2 py-3 border-b-2 border-terracotta text-terracotta font-bold">
+                <x-ico name="clock" class="w-4 h-4" />
+                <span>Genel Bakış</span>
+            </a>
+            <button type="button" @click="openGallery(0)" class="inline-flex items-center gap-2 py-3 border-b-2 border-transparent text-stone-600 hover:text-ink cursor-pointer">
+                <x-ico name="camera" class="w-4 h-4" />
+                <span>Fotoğraflar</span>
+            </button>
+            <a href="{{ route('restaurant.menu', $restaurant->slug) }}" class="inline-flex items-center gap-2 py-3 border-b-2 border-transparent text-stone-600 hover:text-ink">
+                <x-ico name="book-open" class="w-4 h-4" />
+                <span>Menü</span>
+            </a>
+            <a href="#konum" class="inline-flex items-center gap-2 py-3 border-b-2 border-transparent text-stone-600 hover:text-ink">
+                <x-ico name="map-pin" class="w-4 h-4" />
+                <span>Konum</span>
+            </a>
+            <a href="#degerlendirmeler" class="inline-flex items-center gap-2 py-3 border-b-2 border-transparent text-stone-600 hover:text-ink">
+                <x-ico name="star" class="w-4 h-4" />
+                <span>Değerlendirmeler</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ================= ACTION BUTTONS ROW ================= -->
+    <div id="genel-bakis" class="mt-6 grid grid-cols-2 sm:grid-cols-5 gap-2.5">
         <!-- 1. Menü -->
         <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
            class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white text-xs sm:text-sm font-bold shadow-xs transition-colors">
@@ -148,7 +213,7 @@
         </a>
 
         <!-- 4. Değerlendir -->
-        <button type="button" @click="reviewFormOpen = true; $nextTick(() => document.getElementById('review-form-section').scrollIntoView({ behavior: 'smooth' }))"
+        <button type="button" @click="reviewFormOpen = true; $nextTick(() => document.getElementById('degerlendirmeler').scrollIntoView({ behavior: 'smooth' }))"
                 class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-surface hover:bg-sand text-ink text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer">
             <x-ico name="star" filled class="w-4 h-4 text-star" />
             <span>Değerlendir</span>
@@ -236,7 +301,7 @@
 
             <!-- 3. Fotoğraf Galerisi Önizleme (restoranim.net Style) -->
             @if(count($allPhotos) > 1)
-                <section class="bg-surface rounded-2xl p-6 shadow-2xs space-y-4">
+                <section id="fotograflar" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-4">
                     <div class="flex items-center justify-between">
                         <h2 class="text-lg font-bold text-ink">Fotoğraflar ({{ $totalPhotos }})</h2>
                         <button type="button" @click="openGallery(0)" class="text-xs font-bold text-terracotta hover:underline cursor-pointer">
@@ -247,7 +312,7 @@
                         @foreach(array_slice($allPhotos, 0, 4) as $idx => $p)
                             <div @click="openGallery({{ $idx }})" 
                                  class="aspect-square rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative">
-                                <img src="{{ $p }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                 <img src="{{ $p }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                 @if($idx === 3 && $totalPhotos > 4)
                                     <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xs font-bold">
                                         +{{ $totalPhotos - 4 }} Fotoğraf
@@ -260,7 +325,7 @@
             @endif
 
             <!-- 4. Yorumlar & Değerlendirme (restoranim.net Style) -->
-            <section id="review-form-section" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-6">
+            <section id="degerlendirmeler" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-6">
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <div>
                         <h2 class="text-lg font-bold text-ink">Yorumlar & Değerlendirmeler</h2>
@@ -385,7 +450,7 @@
             </div>
 
             <!-- 2. İletişim Bilgileri (restoranim.net Style) -->
-            <div class="bg-surface rounded-2xl p-6 shadow-2xs space-y-3.5">
+            <div id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-3.5">
                 <h3 class="text-base font-bold text-ink">İletişim</h3>
                 
                 @if($address)
