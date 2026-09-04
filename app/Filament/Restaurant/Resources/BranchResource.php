@@ -60,56 +60,50 @@ class BranchResource extends Resource
                     ->tel()
                     ->maxLength(255),
                 Forms\Components\Section::make('Haftalık Çalışma Saatleri (7 Gün)')
-                    ->description('Şubenin açık veya kapalı durumu bu saatlere göre otomatik belirlenir.')
+                    ->description('Şubenin açık/kapalı durumu bu saatlere göre belirlenir.')
+                    ->collapsible()
                     ->schema([
-                        Forms\Components\Fieldset::make('Pazartesi')
+                        Forms\Components\Grid::make(12)
                             ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.monday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.monday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.monday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
+                                Forms\Components\Placeholder::make('header_day')->label('Gün')->content('')->columnSpan(3)->extraAttributes(['class' => 'font-semibold text-sm text-gray-500']),
+                                Forms\Components\Placeholder::make('header_open')->label('Açılış')->content('')->columnSpan(3)->extraAttributes(['class' => 'font-semibold text-sm text-gray-500']),
+                                Forms\Components\Placeholder::make('header_close')->label('Kapanış')->content('')->columnSpan(3)->extraAttributes(['class' => 'font-semibold text-sm text-gray-500']),
+                                Forms\Components\Placeholder::make('header_closed')->label('Tüm Gün Kapalı')->content('')->columnSpan(3)->extraAttributes(['class' => 'font-semibold text-sm text-gray-500']),
+                            ])->extraAttributes(['class' => 'hidden md:grid border-b pb-1 mb-1']),
 
-                        Forms\Components\Fieldset::make('Salı')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.tuesday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.tuesday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.tuesday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Çarşamba')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.wednesday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.wednesday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.wednesday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Perşembe')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.thursday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.thursday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.thursday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Cuma')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.friday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.friday.close')->label('Kapanış')->default('23:30')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.friday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Cumartesi')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.saturday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.saturday.close')->label('Kapanış')->default('23:30')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.saturday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Pazar')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.sunday.open')->label('Açılış')->default('11:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.sunday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.sunday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
+                        ...collect([
+                            ['key' => 'monday', 'name' => 'Pazartesi', 'open' => '10:00', 'close' => '23:00'],
+                            ['key' => 'tuesday', 'name' => 'Salı', 'open' => '10:00', 'close' => '23:00'],
+                            ['key' => 'wednesday', 'name' => 'Çarşamba', 'open' => '10:00', 'close' => '23:00'],
+                            ['key' => 'thursday', 'name' => 'Perşembe', 'open' => '10:00', 'close' => '23:00'],
+                            ['key' => 'friday', 'name' => 'Cuma', 'open' => '10:00', 'close' => '23:30'],
+                            ['key' => 'saturday', 'name' => 'Cumartesi', 'open' => '10:00', 'close' => '23:30'],
+                            ['key' => 'sunday', 'name' => 'Pazar', 'open' => '11:00', 'close' => '23:00'],
+                        ])->map(function ($day) {
+                            return Forms\Components\Grid::make(12)
+                                ->extraAttributes(['class' => 'items-center py-1 border-b border-gray-100 dark:border-gray-800 last:border-0'])
+                                ->schema([
+                                    Forms\Components\Placeholder::make("label_{$day['key']}")
+                                        ->hiddenLabel()
+                                        ->content($day['name'])
+                                        ->columnSpan(['default' => 12, 'md' => 3])
+                                        ->extraAttributes(['class' => 'font-medium text-gray-700 dark:text-gray-200']),
+                                    Forms\Components\TimePicker::make("weekly_hours.{$day['key']}.open")
+                                        ->hiddenLabel()
+                                        ->default($day['open'])
+                                        ->seconds(false)
+                                        ->columnSpan(['default' => 6, 'md' => 3]),
+                                    Forms\Components\TimePicker::make("weekly_hours.{$day['key']}.close")
+                                        ->hiddenLabel()
+                                        ->default($day['close'])
+                                        ->seconds(false)
+                                        ->columnSpan(['default' => 6, 'md' => 3]),
+                                    Forms\Components\Toggle::make("weekly_hours.{$day['key']}.is_closed")
+                                        ->label('Kapalı')
+                                        ->inline(true)
+                                        ->columnSpan(['default' => 12, 'md' => 3]),
+                                ]);
+                        })->toArray(),
                     ]),
                 Forms\Components\Section::make('Harita Konumu (OpenStreetMap)')
                     ->description('Haritaya tıklayarak veya pini sürükleyerek şubenin kesin konumunu seçebilirsiniz.')
