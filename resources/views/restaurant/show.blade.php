@@ -75,42 +75,89 @@
         </div>
     @endif
 
-    <!-- ================= RESTORANIM.NET 3-COLUMN HERO PHOTO GRID ================= -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-2.5 h-[280px] sm:h-[340px] md:h-[360px] rounded-2xl overflow-hidden mt-1">
-        
-        <!-- Column 1: Left Big Photo (md:col-span-5) -->
-        <div @click="openGallery(0)" 
-             class="md:col-span-5 h-full rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative">
-            <img src="{{ $allPhotos[0] ?? $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
-        </div>
-
-        <!-- Column 2: Middle 2 Stacked Photos (md:col-span-3 or 4) -->
-        <div class="hidden md:grid md:col-span-3 grid-rows-2 gap-2 sm:gap-2.5 h-full">
-            <div @click="openGallery(1)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
-                <img src="{{ $allPhotos[1] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+    <!-- ================= HERO PHOTO GALLERY (Vilka / Airbnb Editorial Grid) ================= -->
+    <div class="relative mt-1">
+        @if(!$hasGallery || count($allPhotos) <= 1)
+            <!-- Single Full Photo -->
+            <div class="relative w-full h-[280px] sm:h-[360px] md:h-[420px] rounded-2xl sm:rounded-3xl overflow-hidden bg-stone-200 group cursor-pointer"
+                 @click="openGallery(0)">
+                <img src="{{ $allPhotos[0] ?? $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface/90 text-ink text-xs font-bold backdrop-blur-md">
+                        <x-ico name="camera" class="w-4 h-4 text-terracotta" />
+                        Büyük Boyutta Gör
+                    </span>
+                </div>
             </div>
-            <div @click="openGallery(2)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
-                <img src="{{ $allPhotos[2] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
-            </div>
-        </div>
-
-        <!-- Column 3: Right 2 Stacked Photos with +X Overlay (md:col-span-4) -->
-        <div class="hidden md:grid md:col-span-4 grid-rows-2 gap-2 sm:gap-2.5 h-full">
-            <div @click="openGallery(3)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
-                <img src="{{ $allPhotos[3] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
-            </div>
-            <div @click="openGallery(4)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
-                <img src="{{ $allPhotos[4] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
-                
-                @if($totalPhotos > 4)
-                    <div class="absolute inset-0 bg-black/55 group-hover:bg-black/65 transition-colors flex flex-col items-center justify-center text-white text-center p-2">
-                        <x-ico name="camera" class="w-5 h-5 mb-1 text-white" />
-                        <span class="text-xs sm:text-sm font-bold">+{{ $totalPhotos - 4 }}</span>
-                        <span class="text-[10px] text-stone-200 font-medium">fotoğraf daha</span>
+        @elseif(count($allPhotos) === 2)
+            <!-- 2 Photos Side by Side -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 h-[280px] sm:h-[360px] md:h-[400px]">
+                <div @click="openGallery(0)" class="relative h-full rounded-2xl sm:rounded-3xl overflow-hidden bg-stone-200 group cursor-pointer">
+                    <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                </div>
+                <div @click="openGallery(1)" class="relative h-full rounded-2xl sm:rounded-3xl overflow-hidden bg-stone-200 group cursor-pointer">
+                    <img src="{{ $allPhotos[1] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                    <div class="absolute bottom-4 right-4">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ink/85 hover:bg-ink text-white text-xs font-bold backdrop-blur-md transition-all shadow-md">
+                            <x-ico name="camera" class="w-3.5 h-3.5" />
+                            2 Fotoğraf
+                        </span>
                     </div>
-                @endif
+                </div>
             </div>
-        </div>
+        @elseif(count($allPhotos) === 3 || count($allPhotos) === 4)
+            <!-- 3-4 Photos: 1 Main (60%) + Right Stacked -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 h-[280px] sm:h-[360px] md:h-[400px]">
+                <div @click="openGallery(0)" class="md:col-span-8 h-full rounded-2xl md:rounded-l-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
+                    <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                </div>
+                <div class="hidden md:grid md:col-span-4 grid-rows-2 gap-2.5 h-full">
+                    <div @click="openGallery(1)" class="rounded-tr-2xl md:rounded-tr-3xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                        <img src="{{ $allPhotos[1] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                    </div>
+                    <div @click="openGallery(2)" class="rounded-br-2xl md:rounded-br-3xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                        <img src="{{ $allPhotos[2] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                        <div class="absolute bottom-4 right-4">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ink/85 hover:bg-ink text-white text-xs font-bold backdrop-blur-md transition-all shadow-md">
+                                <x-ico name="camera" class="w-3.5 h-3.5" />
+                                Tümünü Gör ({{ $totalPhotos }})
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <!-- 5+ Photos Grid (1 Large Left + 4 Right Grid) -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 h-[280px] sm:h-[360px] md:h-[420px]">
+                <!-- Main Large Photo (Col 1-2) -->
+                <div @click="openGallery(0)" class="md:col-span-2 h-full rounded-2xl md:rounded-l-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
+                    <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                </div>
+
+                <!-- Right 4 Photos (Col 3-4, 2x2 Grid) -->
+                <div class="hidden md:grid md:col-span-2 grid-cols-2 grid-rows-2 gap-2.5 h-full">
+                    <div @click="openGallery(1)" class="overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                        <img src="{{ $allPhotos[1] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                    </div>
+                    <div @click="openGallery(2)" class="rounded-tr-2xl md:rounded-tr-3xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                        <img src="{{ $allPhotos[2] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                    </div>
+                    <div @click="openGallery(3)" class="overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                        <img src="{{ $allPhotos[3] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                    </div>
+                    <div @click="openGallery(4)" class="rounded-br-2xl md:rounded-br-3xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
+                        <img src="{{ $allPhotos[4] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
+                        
+                        <div class="absolute bottom-4 right-4">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ink/85 hover:bg-ink text-white text-xs font-bold backdrop-blur-md transition-all shadow-md">
+                                <x-ico name="camera" class="w-3.5 h-3.5" />
+                                Tümünü Gör ({{ $totalPhotos }})
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
     <!-- ================= RESTAURANT TITLE & SUBTITLE & META ================= -->
@@ -299,32 +346,7 @@
                 </div>
             </section>
 
-            <!-- 3. Fotoğraf Galerisi Önizleme (restoranim.net Style) -->
-            @if(count($allPhotos) > 1)
-                <section id="fotograflar" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-lg font-bold text-ink">Fotoğraflar ({{ $totalPhotos }})</h2>
-                        <button type="button" @click="openGallery(0)" class="text-xs font-bold text-terracotta hover:underline cursor-pointer">
-                            Tümünü Gör
-                        </button>
-                    </div>
-                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
-                        @foreach(array_slice($allPhotos, 0, 4) as $idx => $p)
-                            <div @click="openGallery({{ $idx }})" 
-                                 class="aspect-square rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative">
-                                 <img src="{{ $p }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                @if($idx === 3 && $totalPhotos > 4)
-                                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xs font-bold">
-                                        +{{ $totalPhotos - 4 }} Fotoğraf
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    </div>
-                </section>
-            @endif
-
-            <!-- 4. Yorumlar & Değerlendirme (restoranim.net Style) -->
+            <!-- 3. Yorumlar & Değerlendirme (restoranim.net Style) -->
             <section id="degerlendirmeler" class="bg-surface rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold text-ink">Değerlendirmeler</h2>
