@@ -54,6 +54,17 @@ class MenuItemResource extends Resource
                     ->required()
                     ->searchable(),
 
+                Forms\Components\Select::make('branches')
+                    ->label('Geçerli Şubeler')
+                    ->relationship('branches', 'name', fn(Builder $query) => 
+                        $restaurantId ? $query->where('restaurant_id', $restaurantId) : $query
+                    )
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->helperText('Bu yemeğin hangi şubelerde servis edildiğini seçin. Boş bırakırsanız tüm şubeler için geçerli sayılabilir.')
+                    ->columnSpanFull(),
+
                 Forms\Components\TextInput::make('name')
                     ->label('Yemek / Ürün Adı')
                     ->placeholder('Örn: Kıbrıs Şeftali Kebabı')
@@ -120,6 +131,11 @@ class MenuItemResource extends Resource
                 Tables\Columns\TextColumn::make('menuCategory.name')
                     ->label('Kategori')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('branches.name')
+                    ->label('Şubeler')
+                    ->badge()
+                    ->color('primary')
+                    ->placeholder('Tüm Şubeler'),
                 Tables\Columns\TextColumn::make('price')
                     ->label('Fiyat')
                     ->money('TRY')
@@ -138,6 +154,11 @@ class MenuItemResource extends Resource
                 Tables\Filters\SelectFilter::make('menu_category_id')
                     ->label('Kategoriye Göre')
                     ->relationship('menuCategory', 'name', fn(Builder $query) => 
+                        Auth::user()?->restaurant_id ? $query->where('restaurant_id', Auth::user()->restaurant_id) : $query
+                    ),
+                Tables\Filters\SelectFilter::make('branches')
+                    ->label('Şubeye Göre')
+                    ->relationship('branches', 'name', fn(Builder $query) => 
                         Auth::user()?->restaurant_id ? $query->where('restaurant_id', Auth::user()->restaurant_id) : $query
                     ),
             ])

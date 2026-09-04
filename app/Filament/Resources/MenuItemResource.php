@@ -25,10 +25,20 @@ class MenuItemResource extends Resource
             ->schema([
                 Forms\Components\Select::make('restaurant_id')
                     ->relationship('restaurant', 'name')
+                    ->live()
                     ->required(),
                 Forms\Components\Select::make('menu_category_id')
                     ->relationship('menuCategory', 'name')
                     ->required(),
+                Forms\Components\Select::make('branches')
+                    ->label('Geçerli Şubeler')
+                    ->relationship('branches', 'name', fn(Builder $query, Forms\Get $get) => 
+                        $get('restaurant_id') ? $query->where('restaurant_id', $get('restaurant_id')) : $query
+                    )
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -37,7 +47,7 @@ class MenuItemResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('₺'),
                 Forms\Components\TextInput::make('currency')
                     ->required()
                     ->maxLength(255)
@@ -66,15 +76,17 @@ class MenuItemResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('restaurant.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('menuCategory.name')
-                    ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('branches.name')
+                    ->label('Şubeler')
+                    ->badge()
+                    ->placeholder('Tüm Şubeler'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('price')
-                    ->money()
+                    ->money('TRY')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('currency')
                     ->searchable(),

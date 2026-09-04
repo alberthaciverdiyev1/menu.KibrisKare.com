@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Branch extends Model
 {
@@ -60,6 +61,7 @@ class Branch extends Model
                     if ($open <= $close) {
                         return $currentTime >= $open && $currentTime <= $close;
                     } else {
+                        // Gece yarısını geçen saatler örn: 18:00 - 02:00
                         return $currentTime >= $open || $currentTime <= $close;
                     }
                 }
@@ -82,7 +84,7 @@ class Branch extends Model
     }
 
     /**
-     * Şubenin bugünkü çalışma saatini döner
+     * Bugünün çalışma saatini döner
      */
     public function getTodayHours(): string
     {
@@ -91,6 +93,7 @@ class Branch extends Model
 
         if (!empty($this->weekly_hours) && is_array($this->weekly_hours)) {
             $todayConfig = $this->weekly_hours[$dayKey] ?? null;
+
             if ($todayConfig) {
                 if (!empty($todayConfig['is_closed'])) {
                     return 'Bugün Kapalı';
@@ -112,5 +115,10 @@ class Branch extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function menuItems(): BelongsToMany
+    {
+        return $this->belongsToMany(MenuItem::class, 'branch_menu_item');
     }
 }
