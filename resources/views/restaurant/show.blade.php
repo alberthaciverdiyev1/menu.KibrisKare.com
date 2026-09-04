@@ -98,7 +98,7 @@
             </div>
         @elseif(count($allPhotos) === 2)
             <!-- 2 Photos Side by Side -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 h-[300px] sm:h-[400px]">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 aspect-[16/9] sm:aspect-[21/9] max-h-[460px]">
                 <div @click="openModal(0)" class="relative h-full rounded-2xl sm:rounded-3xl overflow-hidden bg-stone-200 group cursor-pointer">
                     <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
@@ -114,15 +114,15 @@
             </div>
         @elseif(count($allPhotos) === 3 || count($allPhotos) === 4)
             <!-- 3 Photos: 1 Main (60%) + 2 Right Stacked (40%) -->
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 h-[320px] sm:h-[420px]">
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 aspect-[16/9] sm:aspect-[21/9] max-h-[460px]">
                 <div @click="openModal(0)" class="sm:col-span-8 h-full rounded-2xl sm:rounded-l-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
                     <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
                 <div class="hidden sm:grid sm:col-span-4 grid-rows-2 gap-3 h-full">
-                    <div @click="openModal(1)" class="rounded-tr-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
+                    <div @click="openModal(1)" class="rounded-tr-3xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
                         <img src="{{ $allPhotos[1] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                     </div>
-                    <div @click="openModal(2)" class="rounded-br-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
+                    <div @click="openModal(2)" class="rounded-br-3xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full">
                         <img src="{{ $allPhotos[2] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                         <div class="absolute bottom-4 right-4">
                             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ink/85 hover:bg-ink text-white text-xs font-bold backdrop-blur-md transition-all shadow-md">
@@ -134,15 +134,15 @@
                 </div>
             </div>
         @else
-            <!-- 5+ Photos Grid (Vilka / Airbnb Layout: 1 Large Left + 4 Grid Right) -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 h-[320px] sm:h-[420px]">
+            <!-- 5+ Photos Grid: 1 Large Left + 4 Grid Right (2x2) -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 aspect-[16/9] sm:aspect-[21/9] max-h-[460px]">
                 <!-- Main Large Photo (Col 1-2) -->
                 <div @click="openModal(0)" class="md:col-span-2 h-full rounded-2xl md:rounded-l-3xl overflow-hidden bg-stone-200 group cursor-pointer relative">
                     <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
 
-                <!-- 4 Smaller Grid Photos (Col 3-4) -->
-                <div class="hidden md:grid md:col-span-2 grid-cols-2 gap-3 h-full">
+                <!-- 4 Smaller Grid Photos (Col 3-4) in a 2x2 subgrid -->
+                <div class="hidden md:grid md:col-span-2 grid-cols-2 grid-rows-2 gap-3 h-full">
                     @for($i = 1; $i <= 4; $i++)
                         @if(isset($allPhotos[$i]))
                             @php
@@ -247,7 +247,7 @@
     </div>
 
     <!-- ================= RESTAURANT MASTHEAD & ACTIONS ================= -->
-    <header class="mt-8 pb-8 border-b border-stone-200/70">
+    <header class="mt-8 pb-4">
         <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
 
             <!-- Left Info Area -->
