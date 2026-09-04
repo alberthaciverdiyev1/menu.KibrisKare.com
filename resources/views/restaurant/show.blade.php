@@ -292,7 +292,12 @@
                         </span>
                     </div>
 
-                    @if(!empty($restaurant->weekly_hours) && is_array($restaurant->weekly_hours))
+                    @php
+                        $scheduleSource = $restaurant->branches->where('is_main', true)->first() ?? $restaurant->branches->first() ?? $restaurant;
+                        $weeklyHours = $scheduleSource->weekly_hours ?? $restaurant->weekly_hours;
+                    @endphp
+
+                    @if(!empty($weeklyHours) && is_array($weeklyHours))
                         <!-- 7 Günlük Açılış - Kapanış Tablosu -->
                         <div class="pt-3 border-t border-warm space-y-2">
                             <span class="text-xs font-bold uppercase tracking-wider text-muted block pb-1">Haftalık Saatler</span>
@@ -312,7 +317,7 @@
                             <div class="space-y-1.5 text-xs">
                                 @foreach($daysMap as $dayKey => $dayName)
                                     @php
-                                        $dayConfig = $restaurant->weekly_hours[$dayKey] ?? null;
+                                        $dayConfig = $weeklyHours[$dayKey] ?? null;
                                         $isToday = ($dayKey === $currentDayKey);
                                     @endphp
                                     <div class="flex items-center justify-between py-1 px-2.5 rounded-lg {{ $isToday ? 'bg-sand font-bold text-ink border border-warm' : 'text-muted' }}">
@@ -328,7 +333,7 @@
                                             @elseif(!empty($dayConfig['open']) && !empty($dayConfig['close']))
                                                 <span class="font-mono text-ink">{{ $dayConfig['open'] }} - {{ $dayConfig['close'] }}</span>
                                             @else
-                                                <span class="font-mono text-ink">{{ $restaurant->opening_hours }}</span>
+                                                <span class="font-mono text-ink">{{ $scheduleSource->opening_hours ?? '10:00 - 23:00' }}</span>
                                             @endif
                                         </div>
                                     </div>

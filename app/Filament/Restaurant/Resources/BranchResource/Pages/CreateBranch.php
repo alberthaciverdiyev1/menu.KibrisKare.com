@@ -17,6 +17,10 @@ class CreateBranch extends CreateRecord
             $data['restaurant_id'] = $user->restaurant_id;
         }
 
+        if (!empty($data['weekly_hours']['monday']['open']) && !empty($data['weekly_hours']['monday']['close'])) {
+            $data['opening_hours'] = $data['weekly_hours']['monday']['open'] . ' - ' . $data['weekly_hours']['monday']['close'];
+        }
+
         return $data;
     }
 }

@@ -29,22 +29,7 @@ class ManageRestaurantProfile extends Page implements HasForms
         $restaurant = $this->getRestaurant();
 
         if ($restaurant) {
-            $formData = $restaurant->attributesToArray();
-
-            if (empty($formData['weekly_hours'])) {
-                $defaultSchedule = [];
-                $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-                foreach ($days as $day) {
-                    $defaultSchedule[$day] = [
-                        'open' => in_array($day, ['friday', 'saturday']) ? '10:00' : ($day === 'sunday' ? '11:00' : '10:00'),
-                        'close' => in_array($day, ['friday', 'saturday']) ? '23:30' : '23:00',
-                        'is_closed' => false,
-                    ];
-                }
-                $formData['weekly_hours'] = $defaultSchedule;
-            }
-
-            $this->form->fill($formData);
+            $this->form->fill($restaurant->attributesToArray());
         }
     }
 
@@ -92,64 +77,10 @@ class ManageRestaurantProfile extends Page implements HasForms
                             ->label('Telefon Numarası')
                             ->tel()
                             ->maxLength(255),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Haftalık Çalışma Saatleri (7 Gün)')
-                    ->description('Restoranın açık veya kapalı durumu girdiğiniz bu saatlere ve güncel saate göre otomatik belirlenir.')
-                    ->schema([
-                        Forms\Components\Fieldset::make('Pazartesi')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.monday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.monday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.monday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Salı')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.tuesday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.tuesday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.tuesday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Çarşamba')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.wednesday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.wednesday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.wednesday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Perşembe')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.thursday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.thursday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.thursday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Cuma')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.friday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.friday.close')->label('Kapanış')->default('23:30')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.friday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Cumartesi')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.saturday.open')->label('Açılış')->default('10:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.saturday.close')->label('Kapanış')->default('23:30')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.saturday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
-                        Forms\Components\Fieldset::make('Pazar')
-                            ->schema([
-                                Forms\Components\TimePicker::make('weekly_hours.sunday.open')->label('Açılış')->default('11:00')->seconds(false),
-                                Forms\Components\TimePicker::make('weekly_hours.sunday.close')->label('Kapanış')->default('23:00')->seconds(false),
-                                Forms\Components\Toggle::make('weekly_hours.sunday.is_closed')->label('Kapalı')->inline(false),
-                            ])->columns(3),
-
                         Forms\Components\Toggle::make('has_delivery')
                             ->label('Paket Servis Mevcut mu?')
                             ->default(true),
-                    ]),
+                    ])->columns(2),
 
                 Forms\Components\Section::make('Görseller')
                     ->schema([
@@ -185,17 +116,10 @@ class ManageRestaurantProfile extends Page implements HasForms
         $restaurant = $this->getRestaurant();
 
         if ($restaurant) {
-            // Haftalık saatlerden opening_hours özetini oluştur (örn: 10:00 - 23:00)
-            if (!empty($data['weekly_hours']['monday']['open']) && !empty($data['weekly_hours']['monday']['close'])) {
-                $data['opening_hours'] = $data['weekly_hours']['monday']['open'] . ' - ' . $data['weekly_hours']['monday']['close'];
-            }
-
-            $restaurant->fill($data);
-            $restaurant->is_open = $restaurant->isOpenNow();
-            $restaurant->save();
+            $restaurant->update($data);
 
             Notification::make()
-                ->title('Restoran bilgileri ve çalışma saatleri başarıyla kaydedildi!')
+                ->title('Restoran bilgileri başarıyla güncellendi!')
                 ->success()
                 ->send();
         }

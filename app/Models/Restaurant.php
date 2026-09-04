@@ -75,19 +75,24 @@ class Restaurant extends Model
     }
 
     /**
-     * Güncel saate ve haftalık çalışma planına göre restoranın açık olup olmadığını döner
+     * Güncel saate ve şube çalışma planına göre restoranın açık olup olmadığını döner
      */
     public function isOpenNow(): bool
     {
+        // Öncelik: Restorana bağlı ana şube veya ilk şubenin çalışma saatleri
+        $branch = $this->branches->where('is_main', true)->first() ?? $this->branches->first();
+        if ($branch) {
+            return $branch->isOpenNow();
+        }
+
         $now = now();
-        $dayKey = strtolower($now->format('l')); // monday, tuesday, etc.
+        $dayKey = strtolower($now->format('l'));
         $currentTime = $now->format('H:i');
 
         if (!empty($this->weekly_hours) && is_array($this->weekly_hours)) {
             $todayConfig = $this->weekly_hours[$dayKey] ?? null;
 
             if ($todayConfig) {
-                // Eğer gün kapalı olarak işaretlenmişse
                 if (!empty($todayConfig['is_closed'])) {
                     return false;
                 }
@@ -99,14 +104,12 @@ class Restaurant extends Model
                     if ($open <= $close) {
                         return $currentTime >= $open && $currentTime <= $close;
                     } else {
-                        // Gece yarısını geçen saatler (örn: 18:00 - 02:00)
                         return $currentTime >= $open || $currentTime <= $close;
                     }
                 }
             }
         }
 
-        // Eğer haftalık saat girilmemişse opening_hours dizesini ayrıştırmayı dene
         if (!empty($this->opening_hours) && str_contains($this->opening_hours, '-')) {
             $parts = explode('-', $this->opening_hours);
             $open = trim($parts[0]);
@@ -123,10 +126,15 @@ class Restaurant extends Model
     }
 
     /**
-     * Bugünün çalışma saatini döner
+     * Bugünün çalışma saatini döner (şube bazlı)
      */
     public function getTodayHours(): string
     {
+        $branch = $this->branches->where('is_main', true)->first() ?? $this->branches->first();
+        if ($branch) {
+            return $branch->getTodayHours();
+        }
+
         $now = now();
         $dayKey = strtolower($now->format('l'));
 
