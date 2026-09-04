@@ -59,28 +59,26 @@
             <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-7">
 
                 <div class="min-w-0">
-                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-                        <span class="inline-flex items-center gap-1.5 font-bold text-ink">
+                    <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                        <h1 class="font-display text-3xl sm:text-4xl lg:text-[2.6rem] font-semibold text-ink tracking-tight leading-tight">
+                            {{ $restaurant->name }}
+                        </h1>
+                        <span class="inline-flex items-center gap-1.5 shrink-0">
                             <x-ico name="star" filled class="w-4 h-4 text-star" />
-                            {{ number_format($restaurant->rating, 1) }}
-                            <span class="font-semibold text-muted">({{ $restaurant->reviews_count }})</span>
-                        </span>
-                        <span class="inline-flex items-center gap-2 {{ $todayOpen ? 'text-open' : 'text-muted' }}">
-                            <span class="w-2 h-2 rounded-full {{ $todayOpen ? 'bg-open' : 'bg-muted' }}"></span>
-                            <span class="font-bold">{{ $todayOpen ? 'Şu anda açık' : 'Şu anda kapalı' }}</span>
+                            <span class="font-extrabold text-ink text-lg">{{ number_format($restaurant->rating, 1) }}</span>
+                            <span class="text-sm font-semibold text-muted">({{ $restaurant->reviews_count }})</span>
                         </span>
                     </div>
 
-                    <h1 class="mt-3 font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold text-ink tracking-tight leading-tight">
-                        {{ $restaurant->name }}
-                    </h1>
-                    <p class="mt-2 text-sm text-muted">{{ $restaurant->cuisine }} · {{ $restaurant->city->name }}{{ $restaurant->price_range ? ' · ' . $restaurant->price_range : '' }}</p>
-                    @if($address)
-                        <p class="mt-3 flex items-start gap-2 text-sm text-muted">
-                            <x-ico name="map-pin" class="w-4 h-4 text-terracotta shrink-0 mt-0.5" />
-                            <span>{{ $address }}{{ $restaurant->city->name ? ', ' . $restaurant->city->name : '' }}</span>
-                        </p>
-                    @endif
+                    <p class="mt-2 text-sm text-muted">
+                        {{ $restaurant->cuisine }} · {{ $restaurant->city->name }}{{ $restaurant->price_range ? ' · ' . $restaurant->price_range : '' }}
+                    </p>
+
+                    <p class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm {{ $todayOpen ? 'text-open' : 'text-muted' }}">
+                        <span class="w-2 h-2 rounded-full {{ $todayOpen ? 'bg-open' : 'bg-muted' }}"></span>
+                        <span class="font-bold">{{ $todayOpen ? 'Şu anda açık' : 'Şu anda kapalı' }}</span>
+                        <span class="text-muted">· Bugün {{ $restaurant->getTodayHours() }}</span>
+                    </p>
                 </div>
 
                 <div class="shrink-0 w-full xl:w-60 space-y-2.5">
@@ -176,6 +174,9 @@
                                  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(m);
                                  L.marker([{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], { icon: L.divIcon({ className: 'custom-pin', html: '<div style=\'background:#E85D3F;color:#fff;padding:4px 8px;border-radius:9999px;font-weight:800;font-size:11px;border:2px solid #fff;\'>★</div>', iconSize: [28,22], iconAnchor: [14,11] }) }).addTo(m);
                              }); } }" x-init="init()"></div>
+                        @if($address)
+                            <p class="mt-3 text-sm text-muted">{{ $address }}</p>
+                        @endif
                         <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->display_latitude }},{{ $restaurant->display_longitude }}"
                            target="_blank" rel="noopener"
                            class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-terracotta hover:text-terracotta-dark">
