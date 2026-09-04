@@ -97,7 +97,7 @@
 
     <!-- Main Content Grid (8 cols Left / 4 cols Sidebar) -->
     <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-        
+
         <!-- Left Content Column -->
         <div class="lg:col-span-8 space-y-8">
             @include('restaurant.partials.about-section')
@@ -111,7 +111,6 @@
         <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
             @include('restaurant.partials.sidebar-contact')
             @include('restaurant.partials.sidebar-hours')
-            @include('restaurant.partials.sidebar-claim')
         </aside>
     </div>
 
