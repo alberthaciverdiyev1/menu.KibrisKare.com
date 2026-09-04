@@ -58,8 +58,8 @@
         <div class="p-6 sm:p-8">
             <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-7">
 
-                <div class="min-w-0">
-                    <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                         <h1 class="font-display text-3xl sm:text-4xl lg:text-[2.6rem] font-semibold text-ink tracking-tight leading-tight">
                             {{ $restaurant->name }}
                         </h1>
