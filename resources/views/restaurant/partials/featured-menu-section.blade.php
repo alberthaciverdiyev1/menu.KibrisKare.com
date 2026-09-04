@@ -15,14 +15,14 @@
         </a>
     </div>
 
-    <!-- Featured Items List -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- Featured Items List (2 columns on mobile & desktop) -->
+    <div class="grid grid-cols-2 gap-2.5 sm:gap-4">
         @foreach($featuredItems as $dish)
-            <div class="p-3 rounded-xl bg-sand flex items-center gap-3.5">
+            <div class="p-2.5 sm:p-3 rounded-xl bg-sand flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3.5">
                 <img src="{{ $dish->image ?: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80' }}"
                      alt="{{ $dish->name }}"
-                     class="w-16 h-16 rounded-lg object-cover shrink-0">
-                <div class="min-w-0 flex-1">
+                     class="w-full sm:w-16 h-24 sm:h-16 rounded-lg object-cover shrink-0">
+                <div class="min-w-0 w-full flex-1">
                     <h3 class="font-bold text-xs sm:text-sm text-ink truncate">{{ $dish->name }}</h3>
                     @if($dish->description)
                         <p class="text-[11px] text-muted truncate mt-0.5">{{ $dish->description }}</p>

@@ -12,7 +12,7 @@
                 <x-ico name="chevron-right" class="w-3.5 h-3.5" />
             </a>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             @foreach($relatedRestaurants as $rel)
                 <x-restaurant-card :restaurant="$rel" />
             @endforeach

@@ -36,7 +36,7 @@
                             :actionUrl="route('restaurants.index', ['category' => $cat->slug])" 
                         />
 
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
                             @foreach($cat->restaurants as $rest)
                                 <x-restaurant-card :restaurant="$rest" />
                             @endforeach
