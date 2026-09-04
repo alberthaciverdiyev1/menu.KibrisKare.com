@@ -138,16 +138,7 @@
             <h1 class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
                 {{ $restaurant->name }}
             </h1>
-            <button type="button" @click="copyUrl()" aria-label="Favorilere ekle / Paylaş" class="text-stone-400 hover:text-rose-500 transition-colors p-1 cursor-pointer">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-            </button>
         </div>
-
-        @if($restaurant->description)
-            <p class="text-xs sm:text-sm text-stone-600 font-normal">
-                {{ \Illuminate\Support\Str::limit($restaurant->description, 90) }}
-            </p>
-        @endif
 
         <!-- Rating & Details Meta Line -->
         <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-stone-700 pt-1">
@@ -168,10 +159,6 @@
             <span class="font-bold {{ $todayOpen ? 'text-open' : 'text-rose-600' }}">
                 {{ $todayOpen ? 'Şu an Açık' : 'Kapalı' }}
             </span>
-            @if($todayOpen)
-                <span class="text-stone-300">•</span>
-                <span class="text-muted">Hizmete hazır</span>
-            @endif
         </div>
     </div>
 
@@ -388,86 +375,93 @@
                 @endphp
 
                 <!-- Leaflet Interactive Map Container -->
-                <div class="h-64 sm:h-80 w-full rounded-xl overflow-hidden relative shadow-inner border border-stone-200/60 bg-stone-100 z-10"
-                     x-data="{
-                        mapInstance: null,
-                        branches: @json($branchMarkers),
-                        initMap() {
-                            this.$nextTick(() => {
-                                if (typeof L === 'undefined') {
-                                    const script = document.createElement('script');
-                                    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-                                    script.onload = () => this.renderMap();
-                                    document.head.appendChild(script);
-                                } else {
-                                    this.renderMap();
-                                }
-                            });
-                        },
-                        renderMap() {
-                            if (this.mapInstance) return;
-                            const defaultLat = {{ $restaurant->display_latitude ?? 35.3403 }};
-                            const defaultLng = {{ $restaurant->display_longitude ?? 33.3190 }};
+                <div id="restaurant-detail-map" class="h-64 sm:h-80 w-full rounded-xl overflow-hidden relative shadow-inner border border-stone-200/60 bg-stone-100 z-10"></div>
 
-                            this.mapInstance = L.map($el, {
+                <script>
+                    (function() {
+                        function initRestaurantDetailMap() {
+                            if (typeof L === 'undefined') {
+                                const script = document.createElement('script');
+                                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                                script.onload = renderRestaurantDetailMap;
+                                document.head.appendChild(script);
+                            } else {
+                                renderRestaurantDetailMap();
+                            }
+                        }
+
+                        function renderRestaurantDetailMap() {
+                            const container = document.getElementById('restaurant-detail-map');
+                            if (!container || container._leaflet_id) return;
+
+                            const defaultLat = {{ (float) ($restaurant->display_latitude ?? 35.3403) }};
+                            const defaultLng = {{ (float) ($restaurant->display_longitude ?? 33.3190) }};
+                            const branches = @json($branchMarkers);
+
+                            const map = L.map(container, {
                                 center: [defaultLat, defaultLng],
-                                zoom: this.branches.length > 1 ? 12 : 15,
+                                zoom: branches.length > 1 ? 12 : 15,
                                 scrollWheelZoom: false
                             });
 
                             L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                                 attribution: '&copy; OpenStreetMap &copy; CARTO',
                                 maxZoom: 19
-                            }).addTo(this.mapInstance);
+                            }).addTo(map);
 
-                            if (this.branches.length > 0) {
+                            if (branches.length > 0) {
                                 const bounds = [];
-                                this.branches.forEach(b => {
+                                branches.forEach(b => {
                                     const customPin = L.divIcon({
                                         className: 'custom-restaurant-pin',
-                                        html: `<div style='background: ${b.is_main ? '#E85D3F' : '#191919'}; color: white; padding: 4px 9px; border-radius: 9999px; font-weight: 800; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 2px solid white; white-space: nowrap;'>
-                                                <span style='color: #FFD278;'>★</span>
-                                                <span>${b.name}</span>
-                                               </div>`,
+                                        html: '<div style="background: ' + (b.is_main ? '#E85D3F' : '#191919') + '; color: white; padding: 4px 9px; border-radius: 9999px; font-weight: 800; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 2px solid white; white-space: nowrap; cursor: pointer;">' +
+                                                '<span style="color: #FFD278;">★</span>' +
+                                                '<span>' + b.name + '</span>' +
+                                              '</div>',
                                         iconSize: [110, 26],
                                         iconAnchor: [55, 13]
                                     });
 
-                                    const marker = L.marker([b.lat, b.lng], { icon: customPin }).addTo(this.mapInstance);
-                                    marker.bindPopup(`
-                                        <div style='font-family: sans-serif; min-width: 160px;'>
-                                            <b style='font-size: 13px;'>${b.name}</b>
-                                            ${b.address ? `<p style='font-size: 11px; color: #666; margin: 3px 0 6px;'>${b.address}</p>` : ''}
-                                            <a href='${b.menu_url}' style='display: inline-block; background: #E85D3F; color: white; text-decoration: none; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 6px;'>Menüyü Aç →</a>
-                                        </div>
-                                    `);
+                                    const marker = L.marker([b.lat, b.lng], { icon: customPin }).addTo(map);
+                                    marker.bindPopup(
+                                        '<div style="font-family: sans-serif; min-width: 160px; padding: 2px;">' +
+                                            '<b style="font-size: 13px; color: #191919;">' + b.name + '</b>' +
+                                            (b.address ? '<p style="font-size: 11px; color: #666; margin: 3px 0 6px;">' + b.address + '</p>' : '') +
+                                            '<a href="' + b.menu_url + '" style="display: inline-block; background: #E85D3F; color: white; text-decoration: none; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px;">Menüyü Aç →</a>' +
+                                        '</div>'
+                                    );
                                     bounds.push([b.lat, b.lng]);
                                 });
 
                                 if (bounds.length > 1) {
-                                    this.mapInstance.fitBounds(bounds, { padding: [30, 30] });
+                                    map.fitBounds(bounds, { padding: [30, 30] });
                                 } else if (bounds.length === 1) {
-                                    this.mapInstance.setView(bounds[0], 15);
+                                    map.setView(bounds[0], 15);
                                 }
                             } else {
                                 const customPin = L.divIcon({
                                     className: 'custom-restaurant-pin',
-                                    html: `<div style='background: #E85D3F; color: white; padding: 5px 11px; border-radius: 9999px; font-weight: 800; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(232, 93, 63, 0.4); border: 2px solid white; white-space: nowrap;'>
-                                            <span style='color: #FFD278;'>★</span>
-                                            <span>{{ addslashes($restaurant->name) }}</span>
-                                           </div>`,
+                                    html: '<div style="background: #E85D3F; color: white; padding: 5px 11px; border-radius: 9999px; font-weight: 800; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(232, 93, 63, 0.4); border: 2px solid white; white-space: nowrap;">' +
+                                            '<span style="color: #FFD278;">★</span>' +
+                                            '<span>{{ addslashes($restaurant->name) }}</span>' +
+                                          '</div>',
                                     iconSize: [120, 28],
                                     iconAnchor: [60, 14]
                                 });
 
-                                L.marker([defaultLat, defaultLng], { icon: customPin }).addTo(this.mapInstance)
+                                L.marker([defaultLat, defaultLng], { icon: customPin }).addTo(map)
                                  .bindPopup('<b>{{ addslashes($restaurant->name) }}</b><br><small>{{ addslashes($address) }}</small>')
                                  .openPopup();
                             }
                         }
-                     }"
-                     x-init="initMap()">
-                </div>
+
+                        if (document.readyState === 'loading') {
+                            document.addEventListener('DOMContentLoaded', initRestaurantDetailMap);
+                        } else {
+                            initRestaurantDetailMap();
+                        }
+                    })();
+                </script>
             </section>
 
 
