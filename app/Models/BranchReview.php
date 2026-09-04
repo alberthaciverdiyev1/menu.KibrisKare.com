@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BranchReview extends Model
 {
@@ -15,7 +16,6 @@ class BranchReview extends Model
         'rating',
         'author_name',
         'comment',
-        'photos',
         'ip_address',
         'delete_requested',
         'delete_request_reason',
@@ -23,12 +23,16 @@ class BranchReview extends Model
 
     protected $casts = [
         'rating' => 'integer',
-        'photos' => 'array',
         'delete_requested' => 'boolean',
     ];
 
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(BranchReviewImage::class, 'branch_review_id');
     }
 }

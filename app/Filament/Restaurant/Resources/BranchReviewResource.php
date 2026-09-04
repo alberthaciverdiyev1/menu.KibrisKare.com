@@ -77,6 +77,21 @@ class BranchReviewResource extends Resource
                     ->label('Yorum Metni')
                     ->columnSpanFull()
                     ->disabled(),
+                Forms\Components\Repeater::make('images')
+                    ->relationship('images')
+                    ->schema([
+                        Forms\Components\FileUpload::make('image_path')
+                            ->label('Görsel')
+                            ->disk('public')
+                            ->directory('reviews')
+                            ->image()
+                            ->disabled(),
+                    ])
+                    ->columnSpanFull()
+                    ->label('Eklenen Fotoğraflar')
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->collapsible(),
             ]);
     }
 

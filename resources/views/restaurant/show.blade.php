@@ -607,11 +607,11 @@
                             @endif
 
                             <!-- Photos Row (Uploaded User Photos) -->
-                            @if(is_array($rev->photos) && count($rev->photos) > 0)
+                            @if($rev->images && $rev->images->isNotEmpty())
                                 <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 pt-1">
-                                    @foreach($rev->photos as $pUrl)
+                                    @foreach($rev->images as $img)
                                         @php
-                                            $fullPhotoUrl = \Illuminate\Support\Str::startsWith($pUrl, ['http://', 'https://', '/']) ? $pUrl : asset('storage/' . $pUrl);
+                                            $fullPhotoUrl = $img->url;
                                         @endphp
                                         <a href="{{ $fullPhotoUrl }}" target="_blank" rel="noopener noreferrer" class="aspect-square rounded-xl overflow-hidden bg-sand shadow-2xs group block">
                                             <img src="{{ $fullPhotoUrl }}" alt="Yorum Fotoğrafı" class="w-full h-full object-cover group-hover:scale-105 transition-transform">

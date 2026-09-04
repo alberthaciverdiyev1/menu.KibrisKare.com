@@ -160,7 +160,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        $restaurant->load(['city', 'categories', 'menuCategories.items', 'branches.city', 'branches.reviews']);
+        $restaurant->load(['city', 'categories', 'menuCategories.items', 'branches.city', 'branches.reviews.images']);
 
         $featuredItems = $restaurant->menuItems()
             ->where(function ($q) {
@@ -306,23 +306,23 @@ class RestaurantController extends Controller
             ? trim($validated['author_name']) 
             : 'Anonim Misafir';
 
-        $photoPaths = [];
+        $review = $branch->reviews()->create([
+            'rating' => $validated['rating'],
+            'comment' => $validated['comment'] ?? null,
+            'author_name' => $authorName,
+            'ip_address' => $request->ip(),
+        ]);
+
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photoFile) {
                 if ($photoFile->isValid()) {
                     $path = $photoFile->store('reviews', 'public');
-                    $photoPaths[] = $path;
+                    $review->images()->create([
+                        'image_path' => $path,
+                    ]);
                 }
             }
         }
-
-        $branch->reviews()->create([
-            'rating' => $validated['rating'],
-            'comment' => $validated['comment'] ?? null,
-            'author_name' => $authorName,
-            'photos' => !empty($photoPaths) ? $photoPaths : null,
-            'ip_address' => $request->ip(),
-        ]);
 
         // Restoran genel puan ve yorum sayısını güncelle
         $restaurant = $branch->restaurant;
