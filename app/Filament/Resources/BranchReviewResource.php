@@ -97,8 +97,18 @@ class BranchReviewResource extends Resource
                     ->tooltip(fn ($record) => $record->comment),
                 Tables\Columns\ToggleColumn::make('is_approved')
                     ->label('Onaylı'),
+                Tables\Columns\TextColumn::make('delete_request_reason')
+                    ->label('Silme Talebi')
+                    ->badge()
+                    ->state(fn (BranchReview $record): string => $record->delete_requested ? ($record->delete_request_reason ?: 'Silme İstendi') : 'Yok')
+                    ->color(fn (BranchReview $record): string => $record->delete_requested ? 'danger' : 'gray')
+                    ->tooltip(fn ($record) => $record->delete_request_reason),
             ])
             ->filters([
+                Tables\Filters\TernaryFilter::make('delete_requested')
+                    ->label('Silme Talebi Olanlar')
+                    ->trueLabel('Yalnızca Silme İsteyenler')
+                    ->falseLabel('Talep Olmayanlar'),
                 Tables\Filters\SelectFilter::make('restaurant')
                     ->label('Restorana Göre')
                     ->relationship('branch.restaurant', 'name'),

@@ -17,11 +17,14 @@ class BranchReview extends Model
         'comment',
         'ip_address',
         'is_approved',
+        'delete_requested',
+        'delete_request_reason',
     ];
 
     protected $casts = [
         'rating' => 'integer',
         'is_approved' => 'boolean',
+        'delete_requested' => 'boolean',
     ];
 
     public function branch(): BelongsTo

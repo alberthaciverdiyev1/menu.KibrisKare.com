@@ -23,6 +23,26 @@ class BranchReviewResource extends Resource
     protected static ?string $pluralModelLabel = 'Yorumlar ve Puanlar';
     protected static ?int $navigationSort = 4;
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return false;
+    }
+
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
@@ -41,42 +61,22 @@ class BranchReviewResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('branch_id')
+                Forms\Components\TextInput::make('branch.name')
                     ->label('Şube')
-                    ->options(function () {
-                        $user = Auth::user();
-                        $q = Branch::query();
-                        if ($user && $user->restaurant_id) {
-                            $q->where('restaurant_id', $user->restaurant_id);
-                        }
-                        return $q->pluck('name', 'id');
-                    })
-                    ->required(),
-                Forms\Components\Select::make('rating')
+                    ->disabled(),
+                Forms\Components\TextInput::make('rating')
                     ->label('Puan')
-                    ->options([
-                        5 => '★★★★★ (5 Yıldız)',
-                        4 => '★★★★☆ (4 Yıldız)',
-                        3 => '★★★☆☆ (3 Yıldız)',
-                        2 => '★★☆☆☆ (2 Yıldız)',
-                        1 => '★☆☆☆☆ (1 Yıldız)',
-                    ])
-                    ->required(),
+                    ->disabled(),
                 Forms\Components\TextInput::make('author_name')
-                    ->label('Müşteri / Yazar Adı')
-                    ->default('Anonim Misafir')
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('is_approved')
-                    ->label('Onaylı (Menüde Görünsün)')
-                    ->default(true),
+                    ->label('Müşteri / Yazar')
+                    ->disabled(),
+                Forms\Components\TextInput::make('created_at')
+                    ->label('Tarih')
+                    ->disabled(),
                 Forms\Components\Textarea::make('comment')
                     ->label('Yorum Metni')
                     ->columnSpanFull()
-                    ->rows(3),
-                Forms\Components\TextInput::make('ip_address')
-                    ->label('IP Adresi')
-                    ->disabled()
-                    ->dehydrated(false),
+                    ->disabled(),
             ]);
     }
 
@@ -107,11 +107,17 @@ class BranchReviewResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('comment')
                     ->label('Yorum')
-                    ->limit(60)
+                    ->limit(65)
                     ->searchable()
                     ->tooltip(fn ($record) => $record->comment),
-                Tables\Columns\ToggleColumn::make('is_approved')
-                    ->label('Onaylı'),
+                Tables\Columns\IconColumn::make('is_approved')
+                    ->label('Yayında')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('delete_status')
+                    ->label('Silme Talebi')
+                    ->badge()
+                    ->state(fn (BranchReview $record): string => $record->delete_requested ? 'Talep İletildi' : 'Yok')
+                    ->color(fn (BranchReview $record): string => $record->delete_requested ? 'danger' : 'gray'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('branch_id')
@@ -134,27 +140,48 @@ class BranchReviewResource extends Resource
                         1 => '1 Yıldız (★☆☆☆☆)',
                     ]),
                 Tables\Filters\TernaryFilter::make('is_approved')
-                    ->label('Onay Durumu')
-                    ->trueLabel('Yalnızca Onaylananlar')
-                    ->falseLabel('Onaysızlar'),
+                    ->label('Yayın Durumu')
+                    ->trueLabel('Yayında Olanlar')
+                    ->falseLabel('Yayında Olmayanlar'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('İncele'),
+                Tables\Actions\Action::make('request_deletion')
+                    ->label('Silme Talebi Gönder')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->visible(fn (BranchReview $record) => !$record->delete_requested)
+                    ->form([
+                        Forms\Components\Textarea::make('reason')
+                            ->label('Silme Talebi Gerekçesi (Admine İletilecek)')
+                            ->placeholder('Örn: Hakaret, asılsız iddia veya spam içeriyor...')
+                            ->required()
+                            ->rows(3),
+                    ])
+                    ->action(function (BranchReview $record, array $data): void {
+                        $record->update([
+                            'delete_requested' => true,
+                            'delete_request_reason' => $data['reason'] ?? 'Restoran tarafından silinmesi talep edildi.',
+                        ]);
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Silme Talebi İletildi')
+                            ->body('Yorum silme talebiniz site yöneticilerine (Admine) iletildi.')
+                            ->success()
+                            ->send();
+                    })
+                    ->modalHeading('Yorumu Silme Talebi')
+                    ->modalDescription('Bu yorumun sistemden kaldırılması için Admine gerekçenizle birlikte talep gönderilecektir.')
+                    ->modalSubmitActionLabel('Talebi Gönder'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->bulkActions([]);
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListBranchReviews::route('/'),
-            'create' => Pages\CreateBranchReview::route('/create'),
-            'edit' => Pages\EditBranchReview::route('/{record}/edit'),
         ];
     }
 }
