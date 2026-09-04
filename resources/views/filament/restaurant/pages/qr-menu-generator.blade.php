@@ -1,142 +1,186 @@
 <x-filament-panels::page>
-    <div class="space-y-6">
+    <style>
+        .qr-card-root {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .qr-gradient-badge {
+            background: linear-gradient(135deg, #E85D3F 0%, #C9472F 100%);
+        }
+        .qr-card-container {
+            background: linear-gradient(180deg, #FFFFFF 0%, #FDFBF7 100%);
+            border: 1px solid #EAE5DC;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px -5px rgba(44, 24, 16, 0.08), 0 4px 12px -2px rgba(44, 24, 16, 0.04);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .qr-card-container:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -8px rgba(232, 93, 63, 0.15), 0 8px 16px -4px rgba(44, 24, 16, 0.06);
+            border-color: #E85D3F55;
+        }
+        .qr-code-box {
+            background: #FFFFFF;
+            padding: 16px;
+            border-radius: 22px;
+            border: 2px dashed #E5DFD5;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qr-center-badge {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 2.5px solid #E85D3F;
+            box-shadow: 0 4px 12px rgba(232, 93, 63, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 900;
+            color: #E85D3F;
+            letter-spacing: -0.5px;
+        }
+    </style>
 
-        <!-- Header Info Card -->
-        <div class="relative overflow-hidden rounded-3xl border border-stone-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 sm:p-8 shadow-xs">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-                <div class="space-y-2 max-w-2xl">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-[#E85D3F]/10 text-[#E85D3F]">
-                        <span>✦ Tasarım Masaya Hazır QR Kartları</span>
-                    </div>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                        Şubelere Özel Premium QR Menüler
-                    </h2>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                        Sıradan siyah-beyaz barkodlar yerine; restoranınızın logosunu, şube adını ve şık Akdeniz terracotta tonlarını taşıyan masaya hazır QR stant kartları. Yazdırıp masalarınıza, kapınıza veya akrilik ayaklıklara hemen yerleştirebilirsiniz.
-                    </p>
+    <div class="qr-card-root space-y-6">
+
+        <!-- Top Header Card -->
+        <div style="background: linear-gradient(135deg, #2C1810 0%, #1A0D08 100%); color: #FFFFFF; padding: 28px 32px; border-radius: 24px; box-shadow: 0 12px 28px rgba(0,0,0,0.12);">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; background: rgba(232, 93, 63, 0.2); border: 1px solid rgba(232, 93, 63, 0.4); padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; color: #FF886F;">
+                    <span>✨ Masaya Özel Hazır QR Stant Tasarımı</span>
                 </div>
+                <h2 style="font-size: 26px; font-weight: 800; margin: 0; color: #FFFFFF; letter-spacing: -0.5px;">
+                    Şubeleriniz İçin Özel QR Menüler
+                </h2>
+                <p style="font-size: 13px; color: #C5BAAF; margin: 0; max-width: 680px; line-height: 1.5;">
+                    Müşterilerinizin masada kamerayla okutup anında sipariş verebileceği ve şubenizin puanlarını inceleyebileceği yüksek kaliteli, şık stant kartları. <b>Yazdır</b> butonu ile anında A5/A6 formatında çıktı alabilirsiniz.
+                </p>
             </div>
         </div>
 
         @if(!$restaurant)
-            <div class="p-8 text-center bg-amber-50 dark:bg-amber-950/30 rounded-2xl border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200">
+            <div style="padding: 32px; text-align: center; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 20px; color: #92400E; font-size: 14px; font-weight: 600;">
                 Lütfen önce restoran profilinizi kaydedin.
             </div>
         @elseif($branches->isEmpty())
-            <div class="p-12 text-center bg-white dark:bg-gray-900 rounded-3xl border border-stone-200 dark:border-gray-800 space-y-4 shadow-xs">
-                <div class="w-16 h-16 mx-auto rounded-2xl bg-stone-100 dark:bg-gray-800 flex items-center justify-center text-3xl">
+            <div style="padding: 48px 24px; text-align: center; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                <div style="width: 64px; height: 64px; margin: 0 auto 16px; background: #F3F4F6; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 28px;">
                     🏢
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Henüz Şube Eklenmemiş</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-                    Şubelere özel QR menüler üretebilmek için önce Şubeler (Branches) sekmesinden en az bir şube eklemelisiniz.
+                <h3 style="font-size: 18px; font-weight: 700; color: #1F2937; margin-bottom: 8px;">Henüz Şube Eklenmemiş</h3>
+                <p style="font-size: 13px; color: #6B7280; max-width: 420px; margin: 0 auto 20px;">
+                    Şubelere özel QR menüler oluşturabilmek için önce Şubeler sekmesinden en az bir şube eklemelisiniz.
                 </p>
-                <div class="pt-2">
-                    <a href="{{ route('filament.restaurant.resources.branches.create') }}" 
-                       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#E85D3F] hover:bg-[#d04e32] text-white font-bold text-sm shadow-xs transition-colors">
-                        + Yeni Şube Ekle
-                    </a>
-                </div>
+                <a href="{{ route('filament.restaurant.resources.branches.create') }}" 
+                   style="display: inline-flex; align-items: center; gap: 8px; background: #E85D3F; color: #FFFFFF; padding: 10px 24px; border-radius: 14px; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 12px rgba(232,93,63,0.3);">
+                    + Yeni Şube Ekle
+                </a>
             </div>
         @else
-            <!-- Branches QR Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            <!-- Grid of Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px;">
                 @foreach($branches as $branch)
                     @php
                         $menuUrl = route('restaurant.menu', ['restaurant' => $restaurant->slug, 'branch' => $branch->id]);
-                        // High resolution QR code rendered with terracotta dark color (4A1E17 / 2C1810) on warm white background
-                        $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=450x450&margin=10&color=2C1810&bgcolor=FFFFFF&data=" . urlencode($menuUrl);
-                        $cardElementId = "qr-stand-card-" . $branch->id;
+                        // High quality crisp dark terracotta QR code
+                        $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=8&color=2C1810&bgcolor=FFFFFF&data=" . urlencode($menuUrl);
+                        $cardId = "branch-qr-card-" . $branch->id;
                     @endphp
 
-                    <div class="flex flex-col justify-between space-y-4">
-                        
-                        <!-- PREMIUM TABLE STAND CARD (Ready for Print & Capture) -->
-                        <div id="{{ $cardElementId }}" 
-                             class="relative rounded-3xl p-6 sm:p-7 border border-stone-200/90 dark:border-stone-800 bg-[#FAF7F2] dark:bg-stone-900 text-stone-900 dark:text-stone-100 shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1">
-                            
-                            <!-- Top Decorative Accent -->
-                            <div class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#E85D3F] via-[#F4A261] to-[#E85D3F]"></div>
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
 
-                            <!-- Card Header: Restaurant & Branch Branding -->
-                            <div class="text-center space-y-2 pt-2">
-                                <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white dark:bg-stone-800 shadow-xs border border-stone-200/80 dark:border-stone-700 mx-auto overflow-hidden">
+                        <!-- PHYSICAL TABLE STAND CARD -->
+                        <div id="{{ $cardId }}" class="qr-card-container" style="padding: 28px 24px; text-align: center;">
+                            
+                            <!-- Top Colored Strip -->
+                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #E85D3F, #F4A261, #E85D3F);"></div>
+
+                            <!-- Header: Logo & Restaurant Title -->
+                            <div style="margin-bottom: 20px;">
+                                <div style="width: 56px; height: 56px; margin: 0 auto 12px; border-radius: 18px; background: #FFFFFF; border: 1.5px solid #E8E3DC; box-shadow: 0 4px 10px rgba(0,0,0,0.06); overflow: hidden; display: flex; align-items: center; justify-content: center;">
                                     @if($restaurant->image)
-                                        <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover">
+                                        <img src="{{ $restaurant->image }}" alt="{{ $restaurant->name }}" style="width: 100%; height: 100%; object-fit: cover;">
                                     @else
-                                        <span class="text-xl">🍽️</span>
+                                        <span style="font-size: 24px;">🍽️</span>
                                     @endif
                                 </div>
 
-                                <div>
-                                    <h3 class="text-lg font-black tracking-tight text-[#2C1810] dark:text-white uppercase">
-                                        {{ $restaurant->name }}
-                                    </h3>
-                                    <div class="flex items-center justify-center gap-1.5 mt-0.5">
-                                        <span class="text-xs font-bold text-[#E85D3F]">
-                                            📍 {{ $branch->name }}
-                                        </span>
-                                        @if($branch->is_main)
-                                            <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-amber-200/80 text-amber-900 dark:bg-amber-900/60 dark:text-amber-200">Merkez</span>
-                                        @endif
-                                    </div>
-                                    <p class="text-[11px] text-stone-500 dark:text-stone-400">
-                                        {{ $branch->city->name ?? 'Kıbrıs' }} • {{ $restaurant->cuisine }}
-                                    </p>
+                                <h3 style="font-size: 19px; font-weight: 900; color: #2C1810; margin: 0; letter-spacing: -0.5px; text-transform: uppercase;">
+                                    {{ $restaurant->name }}
+                                </h3>
+
+                                <div style="display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding: 3px 10px; background: #FAF0ED; border-radius: 9999px;">
+                                    <span style="font-size: 12px; font-weight: 800; color: #E85D3F;">
+                                        📍 {{ $branch->name }}
+                                    </span>
+                                    @if($branch->is_main)
+                                        <span style="font-size: 9px; font-weight: 800; text-transform: uppercase; background: #E85D3F; color: #FFFFFF; padding: 1px 6px; border-radius: 6px;">Merkez</span>
+                                    @endif
+                                </div>
+
+                                <div style="font-size: 11px; color: #8C827A; margin-top: 4px; font-weight: 500;">
+                                    {{ $branch->city->name ?? 'Kuzey Kıbrıs' }} • {{ $restaurant->cuisine }}
                                 </div>
                             </div>
 
-                            <!-- Styled QR Graphic Frame -->
-                            <div class="my-5 flex flex-col items-center justify-center">
-                                <div class="relative p-3.5 rounded-2xl bg-white shadow-sm border border-stone-200/80 max-w-[210px] w-full aspect-square flex items-center justify-center">
-                                    
-                                    <!-- QR Image -->
+                            <!-- Center: QR Code with Framing and Watermark -->
+                            <div style="margin: 20px 0;">
+                                <div class="qr-code-box">
                                     <img src="{{ $qrCodeUrl }}" 
                                          alt="{{ $branch->name }} QR Menü" 
-                                         class="w-full h-full object-contain rounded-lg">
+                                         style="width: 190px; height: 190px; display: block; border-radius: 12px;">
 
-                                    <!-- Center Brand Logo Watermark Badge -->
-                                    <div class="absolute inset-0 m-auto w-10 h-10 rounded-full bg-white border-2 border-[#E85D3F] shadow-md flex items-center justify-center p-0.5">
-                                        <div class="w-full h-full rounded-full bg-[#E85D3F] flex items-center justify-center text-white text-[10px] font-black tracking-tighter">
-                                            MENÜ
-                                        </div>
+                                    <div class="qr-center-badge">
+                                        MENÜ
                                     </div>
                                 </div>
 
-                                <!-- Scan instructions CTA -->
-                                <div class="mt-3 text-center space-y-0.5">
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-[#E85D3F]">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                                        <span>Kameranızla Okutun</span>
-                                    </span>
-                                    <p class="text-[10px] text-stone-500 dark:text-stone-400">
+                                <div style="margin-top: 14px;">
+                                    <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #2C1810; letter-spacing: 0.3px;">
+                                        <span>📷</span>
+                                        <span>KAMERANIZLA OKUTUN</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #8C827A; margin-top: 2px;">
                                         Temassız Dijital Menü & Fiyat Listesi
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Card Footer: Fast Facts -->
-                            <div class="pt-3 border-t border-stone-200/60 dark:border-stone-800 flex items-center justify-between text-[10px] text-stone-600 dark:text-stone-400">
-                                <span class="font-semibold">★ {{ number_format($branch->average_rating, 1) }} ({{ $branch->reviews_count }} Yorum)</span>
-                                <span class="font-mono">{{ $branch->getTodayHours() }}</span>
+                            <!-- Footer: Hours and Rating Info -->
+                            <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid #ECE7DF; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #6E645D;">
+                                <div style="display: flex; align-items: center; gap: 4px; font-weight: 700; color: #2C1810;">
+                                    <span style="color: #F59E0B;">★</span>
+                                    <span>{{ number_format($branch->average_rating, 1) }}</span>
+                                    <span style="font-size: 10px; color: #9C948D; font-weight: normal;">({{ $branch->reviews_count }} Yorum)</span>
+                                </div>
+                                <div style="font-weight: 600; font-family: monospace; color: #5A514B;">
+                                    🕒 {{ $branch->getTodayHours() }}
+                                </div>
                             </div>
 
                         </div>
 
-                        <!-- Card Action Buttons -->
-                        <div class="grid grid-cols-2 gap-2.5">
+                        <!-- Action Buttons -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                             <a href="{{ $menuUrl }}" 
                                target="_blank" 
-                               class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-gray-700 dark:text-gray-200 bg-white hover:bg-stone-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-stone-200 dark:border-gray-700 transition-colors shadow-2xs">
-                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                <span>Menüyü Test Et</span>
+                               style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #FFFFFF; color: #374151; border: 1px solid #D1D5DB; border-radius: 12px; font-size: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.2s;">
+                                <span>📱</span>
+                                <span>Menüyü Aç</span>
                             </a>
 
                             <button type="button" 
-                                    onclick="printQrCard('{{ $cardElementId }}', '{{ addslashes($restaurant->name) }} - {{ addslashes($branch->name) }}')"
-                                    class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-white shadow-2xs hover:opacity-95 transition-all" 
-                                    style="background-color: #E85D3F;">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                    onclick="printStandCard('{{ $cardId }}', '{{ addslashes($restaurant->name) }} - {{ addslashes($branch->name) }}')"
+                                    style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; background: #E85D3F; color: #FFFFFF; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(232, 93, 63, 0.25); transition: all 0.2s;">
+                                <span>🖨️</span>
                                 <span>Yazdır / İndir</span>
                             </button>
                         </div>
@@ -148,36 +192,60 @@
 
     </div>
 
-    <!-- Print Helper Script -->
+    <!-- Stand Card Print Engine -->
     <script>
-        function printQrCard(elementId, title) {
-            const el = document.getElementById(elementId);
-            if (!el) return;
+        function printStandCard(elementId, title) {
+            const card = document.getElementById(elementId);
+            if (!card) return;
 
-            const printWindow = window.open('', '_blank', 'width=700,height=800');
+            const printWindow = window.open('', '_blank', 'width=800,height=900');
             printWindow.document.write(`
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>${title} QR Menü</title>
-                    <script src="https://cdn.tailwindcss.com"></` + `script>
+                    <meta charset="utf-8">
+                    <title>${title} Masa Kartı</title>
                     <style>
-                        @media print {
-                            body { margin: 0; padding: 20px; display: flex; align-items: center; justify-content: center; background: white; }
-                            .print-card { width: 340px !important; box-shadow: none !important; border: 1.5px solid #e7e5e4 !important; }
+                        @page {
+                            size: A5 portrait;
+                            margin: 10mm;
                         }
-                        body { background: #f5f5f4; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-                        .print-card { width: 340px; margin: auto; }
+                        body {
+                            margin: 0;
+                            padding: 20px;
+                            background: #F4F0E8;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            min-height: 100vh;
+                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                            -webkit-print-color-adjust: exact !important;
+                            print-color-adjust: exact !important;
+                        }
+                        .print-wrapper {
+                            width: 320px;
+                            margin: auto;
+                        }
+                        @media print {
+                            body {
+                                background: white !important;
+                                padding: 0 !important;
+                                min-height: auto !important;
+                            }
+                            .print-wrapper {
+                                width: 320px !important;
+                            }
+                        }
                     </style>
                 </head>
                 <body>
-                    <div class="print-card">
-                        ${el.outerHTML}
+                    <div class="print-wrapper">
+                        ${card.outerHTML}
                     </div>
                     <script>
                         setTimeout(() => {
                             window.print();
-                        }, 500);
+                        }, 400);
                     </` + `script>
                 </body>
                 </html>
