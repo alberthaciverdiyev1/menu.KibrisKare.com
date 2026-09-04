@@ -77,11 +77,11 @@
     <!-- ================= BREADCRUMB ================= -->
     <nav class="flex items-center gap-1.5 py-2.5 text-xs text-muted font-medium flex-wrap">
         <a href="{{ route('home') }}" class="text-terracotta font-semibold hover:underline">Keşfet</a>
-        <span class="text-muted/40">›</span>
+        <span class="text-stone-300">›</span>
         <a href="{{ route('restaurants.index', ['city' => $restaurant->city->slug]) }}" class="hover:text-ink transition-colors">{{ $restaurant->city->name }}</a>
-        <span class="text-muted/40">›</span>
+        <span class="text-stone-300">›</span>
         <span class="text-muted">{{ $restaurant->cuisine }}</span>
-        <span class="text-muted/40">›</span>
+        <span class="text-stone-300">›</span>
         <span class="text-ink font-bold truncate">{{ $restaurant->name }}</span>
     </nav>
 
@@ -93,31 +93,31 @@
     @endif
 
     <!-- ================= RESTORANIM.NET 3-COLUMN HERO PHOTO GRID ================= -->
-    <div class="h-[280px] sm:h-[340px] md:h-[360px] w-full rounded-2xl overflow-hidden mt-1 border border-warm">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-2.5 h-full w-full bg-sand">
+    <div class="h-[280px] sm:h-[340px] md:h-[360px] w-full rounded-2xl overflow-hidden mt-1">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-2.5 h-full w-full">
 
             <!-- Column 1: Left Big Photo (md:col-span-5) -->
             <div @click="openGallery(0)"
-                 class="md:col-span-5 h-full rounded-xl overflow-hidden bg-sand group cursor-pointer relative">
+                 class="md:col-span-5 h-full rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative">
                 <img src="{{ $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
             </div>
 
             <!-- Column 2: Middle 2 Stacked Photos (md:col-span-3) -->
             <div class="hidden md:grid md:col-span-3 grid-rows-2 gap-2 sm:gap-2.5 h-full min-h-0">
-                <div @click="openGallery(1)" class="rounded-xl overflow-hidden bg-sand group cursor-pointer relative h-full min-h-0">
+                <div @click="openGallery(1)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full min-h-0">
                     <img src="{{ $allPhotos[1] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
-                <div @click="openGallery(2)" class="rounded-xl overflow-hidden bg-sand group cursor-pointer relative h-full min-h-0">
+                <div @click="openGallery(2)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full min-h-0">
                     <img src="{{ $allPhotos[2] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
             </div>
 
             <!-- Column 3: Right 2 Stacked Photos with +X Overlay (md:col-span-4) -->
             <div class="hidden md:grid md:col-span-4 grid-rows-2 gap-2 sm:gap-2.5 h-full min-h-0">
-                <div @click="openGallery(3)" class="rounded-xl overflow-hidden bg-sand group cursor-pointer relative h-full min-h-0">
+                <div @click="openGallery(3)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full min-h-0">
                     <img src="{{ $allPhotos[3] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
                 </div>
-                <div @click="openGallery(4)" class="rounded-xl overflow-hidden bg-sand group cursor-pointer relative h-full min-h-0">
+                <div @click="openGallery(4)" class="rounded-xl overflow-hidden bg-stone-200 group cursor-pointer relative h-full min-h-0">
                     <img src="{{ $allPhotos[4] ?? $allPhotos[0] }}" alt="{{ $restaurant->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103">
 
                     @if($totalPhotos > 4)
@@ -149,13 +149,13 @@
             </div>
             <span class="font-bold text-ink">{{ number_format($restaurant->rating, 1) }}</span>
             <span class="text-muted">({{ $restaurant->reviews_count }} değerlendirme)</span>
-            <span class="text-muted/40">•</span>
+            <span class="text-stone-300">•</span>
             @if($restaurant->price_range)
                 <span class="font-bold text-terracotta font-mono">{{ $restaurant->price_range }}</span>
-                <span class="text-muted/40">•</span>
+                <span class="text-stone-300">•</span>
             @endif
             <span class="font-medium text-ink">{{ $restaurant->cuisine }}</span>
-            <span class="text-muted/40">•</span>
+            <span class="text-stone-300">•</span>
             <span class="font-bold {{ $todayOpen ? 'text-open' : 'text-rose-600' }}">
                 {{ $todayOpen ? 'Şu an Açık' : 'Kapalı' }}
             </span>
@@ -163,7 +163,7 @@
     </div>
 
     <!-- ================= SUB-NAVIGATION TABS ================= -->
-    <div id="genel-bakis" class="mt-6 border-b border-warm sticky top-[72px] z-20 bg-sand/95 backdrop-blur-md -mx-2 px-2 sm:mx-0 sm:px-0">
+    <div id="genel-bakis" class="mt-6 border-b border-stone-200/70 sticky top-[72px] z-20 bg-sand/95 backdrop-blur-md -mx-2 px-2 sm:mx-0 sm:px-0">
         <div class="flex items-center gap-6 sm:gap-8 overflow-x-auto hide-scrollbar text-xs sm:text-sm whitespace-nowrap font-semibold">
             <a href="#genel-bakis" class="inline-flex items-center gap-2 py-3 border-b-2 border-terracotta text-terracotta font-bold">
                 <x-ico name="clock" class="w-4 h-4" />
@@ -196,20 +196,20 @@
         <!-- Left Column: Menu Highlights, Description, Reviews (8 Cols) -->
         <div class="lg:col-span-8 space-y-8">
             <!-- 2. Mekan Hakkında Açıklama -->
-            <section class="bg-surface rounded-2xl p-6 shadow-2xs border border-warm space-y-3">
+            <section class="bg-surface rounded-2xl p-6 shadow-2xs space-y-3">
                 <h2 class="text-lg font-bold text-ink">Mekan Hakkında</h2>
                 <p class="text-xs sm:text-sm text-ink/80 leading-relaxed font-normal">
                     {{ $restaurant->description ?: 'Misafirlerimize özenle hazırlanan lezzetler ve kaliteli bir atmosfer sunuyoruz.' }}
                 </p>
                 <div class="pt-2 flex flex-wrap gap-2">
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-sand border border-warm text-xs font-semibold text-ink">
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-sand text-xs font-semibold text-ink">
                         Mutfak: {{ $restaurant->cuisine }}
                     </span>
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-sand border border-warm text-xs font-semibold text-ink">
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-sand text-xs font-semibold text-ink">
                         Şehir: {{ $restaurant->city->name }}
                     </span>
                     @if($restaurant->price_range)
-                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-sand border border-warm text-xs font-bold text-terracotta font-mono">
+                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-sand text-xs font-bold text-terracotta font-mono">
                             Fiyat: {{ $restaurant->price_range }}
                         </span>
                     @endif
@@ -217,7 +217,7 @@
             </section>
 
             <!-- 1. Menü Öne Çıkanları (restoranim.net Menu Section) -->
-            <section class="bg-surface rounded-2xl p-6 shadow-2xs border border-warm space-y-5">
+            <section class="bg-surface rounded-2xl p-6 shadow-2xs space-y-5">
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-lg font-bold text-ink flex items-center gap-2">
@@ -236,7 +236,7 @@
                 <!-- Featured Items list -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     @foreach($featuredItems as $dish)
-                        <div class="p-3 rounded-xl bg-sand border border-warm/70 flex items-center gap-3.5">
+                        <div class="p-3 rounded-xl bg-sand flex items-center gap-3.5">
                             <img src="{{ $dish->image ?: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80' }}"
                                  alt="{{ $dish->name }}"
                                  class="w-16 h-16 rounded-lg object-cover shrink-0">
@@ -255,15 +255,16 @@
 
                 <div class="pt-2 text-center">
                     <a href="{{ route('restaurant.menu', $restaurant->slug) }}"
-                       class="inline-flex items-center justify-center w-full py-3 rounded-xl bg-sand hover:bg-stone-200/60 border border-warm text-ink text-xs font-bold transition-colors">
+                       class="inline-flex items-center justify-center w-full py-3 rounded-xl bg-sand hover:bg-stone-200/60 text-ink text-xs font-bold transition-colors">
                         <span>Tüm Menü ve Fiyat Listesini Görüntüle →</span>
                     </a>
                 </div>
             </section>
 
             <!-- Şubeler & Lokasyonlar Bölümü -->
+            <!-- Şubeler & Lokasyonlar Bölümü -->
             @if($restaurant->branches->isNotEmpty())
-                <section id="subeler" class="bg-surface rounded-2xl p-6 shadow-2xs border border-warm space-y-5">
+                <section id="subeler" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-5">
                     <div class="flex items-center justify-between">
                         <div>
                             <h2 class="text-lg font-bold text-ink flex items-center gap-2">
@@ -281,7 +282,7 @@
                                 $bHours = $branch->getTodayHours();
                                 $bMapUrl = "https://www.google.com/maps/dir/?api=1&destination={$branch->latitude},{$branch->longitude}";
                             @endphp
-                            <div class="p-4 rounded-xl bg-sand/60 border border-warm space-y-3 flex flex-col justify-between hover:border-terracotta/60 transition-colors">
+                            <div class="p-4 rounded-xl bg-sand/60 space-y-3 flex flex-col justify-between hover:bg-stone-200/40 transition-colors">
                                 <div class="space-y-2">
                                     <div class="flex items-start justify-between gap-2">
                                         <div>
@@ -310,7 +311,7 @@
                                     </div>
                                 </div>
 
-                                <div class="pt-2 border-t border-warm/80 flex items-center gap-2">
+                                <div class="pt-2 border-t border-stone-200/50 flex items-center gap-2">
                                     <a href="{{ route('restaurant.menu', ['restaurant' => $restaurant->slug, 'branch' => $branch->id]) }}"
                                        class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-terracotta hover:bg-terracotta-dark text-white text-xs font-bold transition-colors">
                                         <x-ico name="book-open" class="w-3.5 h-3.5" />
@@ -319,7 +320,7 @@
 
                                     @if($branch->phone)
                                         <a href="tel:{{ $branch->phone }}"
-                                           class="inline-flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-surface hover:bg-sand text-ink border border-warm text-xs font-bold transition-colors">
+                                           class="inline-flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-surface hover:bg-sand text-ink border border-stone-200/60 text-xs font-bold transition-colors">
                                             <x-ico name="phone" class="w-3.5 h-3.5 text-terracotta" />
                                             <span>Ara</span>
                                         </a>
@@ -327,7 +328,7 @@
 
                                     @if($branch->latitude && $branch->longitude)
                                         <a href="{{ $bMapUrl }}" target="_blank" rel="noopener noreferrer"
-                                           class="inline-flex items-center justify-center p-2 rounded-lg bg-surface hover:bg-sand text-terracotta border border-warm transition-colors"
+                                           class="inline-flex items-center justify-center p-2 rounded-lg bg-surface hover:bg-sand text-terracotta border border-stone-200/60 transition-colors"
                                            title="Yol Tarifi">
                                             <x-ico name="navigation" class="w-3.5 h-3.5" />
                                         </a>
@@ -340,7 +341,7 @@
             @endif
 
             <!-- 3. Konum & Harita Entegrasyonu -->
-            <section id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs border border-warm space-y-4">
+            <section id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h2 class="text-lg font-bold text-ink flex items-center gap-2">
@@ -466,11 +467,11 @@
 
 
             <!-- 4. Yorumlar & Değerlendirme (restoranim.net Style) -->
-            <section id="degerlendirmeler" class="bg-surface rounded-2xl p-6 sm:p-8 shadow-2xs border border-warm space-y-6">
+            <section id="degerlendirmeler" class="bg-surface rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold text-ink">Değerlendirmeler</h2>
                     <button type="button" @click="reviewFormOpen = !reviewFormOpen"
-                            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sand hover:bg-stone-200/70 border border-warm text-ink font-bold text-xs shadow-2xs transition-colors cursor-pointer">
+                            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sand hover:bg-stone-200/70 text-ink font-bold text-xs shadow-2xs transition-colors cursor-pointer">
                         <x-ico name="chat" class="w-3.5 h-3.5 text-terracotta" />
                         <span x-text="reviewFormOpen ? 'Formu Kapat' : 'Yorum Yaz'"></span>
                     </button>
@@ -523,11 +524,11 @@
                     </div>
 
                     <!-- Right: 5 to 1 Star Progress Bars -->
-                    <div class="md:col-span-8 space-y-2 md:border-l md:border-warm md:pl-8">
+                    <div class="md:col-span-8 space-y-2 md:border-l md:border-stone-100 md:pl-8">
                         @foreach($breakdown as $item)
                             <div class="flex items-center gap-3 text-xs">
                                 <span class="font-bold text-ink w-3 text-center">{{ $item['stars'] }}</span>
-                                <div class="flex-1 h-2 rounded-full bg-sand border border-warm/60 overflow-hidden">
+                                <div class="flex-1 h-2 rounded-full bg-stone-100 overflow-hidden">
                                     <div class="h-full rounded-full bg-gradient-to-r from-star to-terracotta" style="width: {{ $item['pct'] }}%;"></div>
                                 </div>
                                 <span class="text-muted font-mono text-right w-14 text-[11px]">{{ $item['count'] }}</span>
@@ -537,11 +538,11 @@
                 </div>
 
                 <!-- Yorumlarda sıkça bahsedilenler -->
-                <div class="pt-6 border-t border-warm">
+                <div class="pt-6 border-t border-stone-100">
                     <h3 class="text-sm font-bold text-ink mb-3.5">Yorumlarda sıkça bahsedilenler</h3>
                     <div class="flex flex-wrap gap-2.5">
                         @foreach($frequentKeywords as $keyword)
-                            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-warm bg-sand/60 hover:bg-surface text-xs font-semibold text-ink shadow-2xs hover:border-terracotta transition-colors">
+                            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-stone-200/80 bg-white hover:bg-stone-50 text-xs font-semibold text-ink shadow-2xs hover:border-terracotta/60 transition-colors">
                                 <span class="w-4 h-4 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center shrink-0">
                                     <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.536 5.879a1 1 0 001.415 1.414 5 5 0 007.242 0 1 1 0 00-1.414-1.414 3 3 0 01-4.414 0 1 1 0 00-1.414 0z" clip-rule="evenodd"/>
@@ -553,13 +554,13 @@
                     </div>
                 </div>
 
-                <div class="border-t border-warm my-2"></div>
+                <div class="border-t border-stone-100 my-2"></div>
 
                 <!-- Yorumlar Header & Filter Dropdown -->
                 <div class="flex items-center justify-between pt-1">
                     <h3 class="text-base font-bold text-ink">Yorumlar</h3>
                     <div class="relative">
-                        <select class="appearance-none bg-surface border border-warm text-ink text-xs font-semibold rounded-xl pl-3.5 pr-8 py-2 focus:outline-none focus:border-terracotta cursor-pointer shadow-2xs">
+                        <select class="appearance-none bg-surface border border-stone-200 text-ink text-xs font-semibold rounded-xl pl-3.5 pr-8 py-2 focus:outline-none focus:border-terracotta cursor-pointer shadow-2xs">
                             <option value="populer">Popüler</option>
                             <option value="en-yeni">En Yeni</option>
                             <option value="en-yuksek">En Yüksek Puan</option>
@@ -572,7 +573,7 @@
                 <!-- Review Form -->
                 <form id="review-form" x-show="reviewFormOpen" x-cloak method="POST"
                       action="{{ $firstBranchId ? route('branches.reviews.store', $firstBranchId) : '#' }}"
-                      class="p-5 rounded-xl bg-sand border border-warm space-y-4">
+                      class="p-5 rounded-xl bg-sand space-y-4">
                     @csrf
                     <div>
                         <span class="block text-xs font-bold text-ink mb-1.5">Puanınız:</span>
@@ -591,14 +592,14 @@
                         <div>
                             <label for="review-author" class="block text-xs font-bold text-muted mb-1">Adınız / Rumuz</label>
                             <input id="review-author" type="text" name="author_name" placeholder="Misafir"
-                                   class="w-full px-3.5 py-2 rounded-lg bg-surface border border-warm text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta focus:border-terracotta placeholder:text-muted/60">
+                                   class="w-full px-3.5 py-2 rounded-lg bg-surface border border-stone-200 text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta focus:border-terracotta placeholder:text-muted/60">
                         </div>
                         <div>
                             <label for="review-branch" class="block text-xs font-bold text-muted mb-1">Şube</label>
                             @if($hasMultipleBranches)
                                 <select id="review-branch"
                                         @change="document.getElementById('review-form').action = $event.target.selectedOptions[0].dataset.url"
-                                        class="w-full px-3.5 py-2 rounded-lg bg-surface border border-warm text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta focus:border-terracotta">
+                                        class="w-full px-3.5 py-2 rounded-lg bg-surface border border-stone-200 text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta focus:border-terracotta">
                                     @foreach($restaurant->branches as $b)
                                         <option value="{{ $b->id }}" data-url="{{ route('branches.reviews.store', $b->id) }}" {{ $b->is_main ? 'selected' : '' }}>{{ $b->name }}</option>
                                     @endforeach
@@ -613,7 +614,7 @@
                         <label for="review-comment" class="block text-xs font-bold text-muted mb-1">Yorumunuz</label>
                         <textarea id="review-comment" name="comment" rows="3"
                                   placeholder="Yemekler, servis ve ortam nasıldı?"
-                                  class="w-full px-3.5 py-2 rounded-lg bg-surface border border-warm text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta focus:border-terracotta placeholder:text-muted/60 resize-none"></textarea>
+                                  class="w-full px-3.5 py-2 rounded-lg bg-surface border border-stone-200 text-xs text-ink focus:outline-none focus:ring-1 focus:ring-terracotta focus:border-terracotta placeholder:text-muted/60 resize-none"></textarea>
                     </div>
 
                     <div class="flex items-center justify-end gap-2 pt-1">
@@ -625,10 +626,10 @@
                 <!-- Reviews Feed -->
                 <div class="space-y-6 pt-2">
                     @forelse($allReviews->take(6) as $rev)
-                        <div class="border-b border-warm pb-6 last:border-0 last:pb-0 space-y-3">
+                        <div class="border-b border-stone-100 pb-6 last:border-0 last:pb-0 space-y-3">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-sand border border-warm font-bold text-xs flex items-center justify-center text-ink shadow-2xs shrink-0">
+                                    <div class="w-9 h-9 rounded-full bg-sand font-bold text-xs flex items-center justify-center text-ink shadow-2xs shrink-0">
                                         <x-ico name="user" class="w-4 h-4 text-muted" />
                                     </div>
                                     <div>
@@ -658,16 +659,16 @@
                             <!-- Photos Row -->
                             <div class="grid grid-cols-4 gap-2.5 pt-1 max-w-md">
                                 @foreach($sampleReviewPhotos as $pUrl)
-                                    <img src="{{ $pUrl }}" alt="Yorum Fotoğrafı" class="aspect-square rounded-xl object-cover hover:opacity-90 transition-opacity cursor-pointer shadow-2xs border border-warm">
+                                    <img src="{{ $pUrl }}" alt="Yorum Fotoğrafı" class="aspect-square rounded-xl object-cover hover:opacity-90 transition-opacity cursor-pointer shadow-2xs">
                                 @endforeach
                             </div>
                         </div>
                     @empty
                         <!-- Showcase Review matching restoranim.net screenshot -->
-                        <div class="border-b border-warm pb-6 space-y-3">
+                        <div class="border-b border-stone-100 pb-6 space-y-3">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-sand border border-warm font-bold text-xs flex items-center justify-center text-ink shadow-2xs shrink-0">
+                                    <div class="w-9 h-9 rounded-full bg-sand font-bold text-xs flex items-center justify-center text-ink shadow-2xs shrink-0">
                                         <x-ico name="user" class="w-4 h-4 text-muted" />
                                     </div>
                                     <div>
@@ -695,7 +696,7 @@
                             <!-- Photos Row -->
                             <div class="grid grid-cols-4 gap-2.5 pt-1 max-w-md">
                                 @foreach($sampleReviewPhotos as $pUrl)
-                                    <img src="{{ $pUrl }}" alt="Yorum Fotoğrafı" class="aspect-square rounded-xl object-cover hover:opacity-90 transition-opacity cursor-pointer shadow-2xs border border-warm">
+                                    <img src="{{ $pUrl }}" alt="Yorum Fotoğrafı" class="aspect-square rounded-xl object-cover hover:opacity-90 transition-opacity cursor-pointer shadow-2xs">
                                 @endforeach
                             </div>
                         </div>
@@ -704,7 +705,7 @@
                         <div class="space-y-3">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-sand border border-warm font-bold text-xs flex items-center justify-center text-ink shadow-2xs shrink-0">
+                                    <div class="w-9 h-9 rounded-full bg-sand font-bold text-xs flex items-center justify-center text-ink shadow-2xs shrink-0">
                                         <x-ico name="user" class="w-4 h-4 text-muted" />
                                     </div>
                                     <div>
@@ -739,13 +740,13 @@
         <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
 
             <!-- 1. İletişim Kartı (restoranim.net Style) -->
-            <div id="sidebar-iletisim" class="bg-surface rounded-2xl p-6 shadow-2xs border border-warm space-y-5">
+            <div id="sidebar-iletisim" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-5">
                 <h3 class="text-base font-bold text-ink">İletişim</h3>
 
                 <div class="space-y-4">
                     <!-- Adres -->
                     <div class="flex items-start gap-3.5">
-                        <div class="w-10 h-10 rounded-full bg-sand text-terracotta border border-warm flex items-center justify-center shrink-0 mt-0.5">
+                        <div class="w-10 h-10 rounded-full bg-sand text-terracotta flex items-center justify-center shrink-0 mt-0.5">
                             <x-ico name="map-pin" class="w-5 h-5 text-terracotta" />
                         </div>
                         <div class="min-w-0">
@@ -760,7 +761,7 @@
 
                     <!-- Telefon -->
                     <div class="flex items-center gap-3.5">
-                        <div class="w-10 h-10 rounded-full bg-sand text-terracotta border border-warm flex items-center justify-center shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-sand text-terracotta flex items-center justify-center shrink-0">
                             <x-ico name="phone" class="w-5 h-5 text-terracotta" />
                         </div>
                         <a href="tel:{{ $restaurant->phone ?: '03224367666' }}" class="text-xs sm:text-sm font-semibold text-ink hover:text-terracotta transition-colors">
@@ -770,7 +771,7 @@
 
                     <!-- Web Sitesi -->
                     <div class="flex items-center gap-3.5">
-                        <div class="w-10 h-10 rounded-full bg-sand text-terracotta border border-warm flex items-center justify-center shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-sand text-terracotta flex items-center justify-center shrink-0">
                             <x-ico name="globe" class="w-5 h-5 text-terracotta" />
                         </div>
                         <a href="{{ $restaurant->website ?: ('http://' . $restaurant->slug . '.com/') }}" target="_blank" rel="noopener noreferrer" class="text-xs sm:text-sm font-medium text-terracotta hover:text-terracotta-dark hover:underline truncate transition-colors">
@@ -779,13 +780,13 @@
                     </div>
                 </div>
 
-                <div class="border-t border-warm my-4"></div>
+                <div class="border-t border-stone-100 my-4"></div>
 
                 <!-- Action Buttons (Ara & Yol Tarifi) -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <!-- Ara -->
                     <a href="tel:{{ $restaurant->phone ?: '03224367666' }}"
-                       class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-surface border border-warm hover:bg-sand text-ink text-xs sm:text-sm font-bold shadow-2xs transition-colors">
+                       class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-white border border-stone-200/80 hover:bg-stone-50 text-ink text-xs sm:text-sm font-bold shadow-2xs transition-colors">
                         <x-ico name="phone" class="w-4 h-4 text-ink" />
                         <span>Ara</span>
                     </a>
@@ -800,7 +801,7 @@
             </div>
 
             <!-- 2. Çalışma Saatleri (restoranim.net Style) -->
-            <div class="bg-surface rounded-2xl p-6 shadow-2xs border border-warm space-y-3">
+            <div class="bg-surface rounded-2xl p-6 shadow-2xs space-y-3">
                 <div class="flex items-center gap-2.5 pb-2">
                     <x-ico name="clock" class="w-5 h-5 text-terracotta" />
                     <h3 class="text-base font-bold text-ink">Çalışma Saatleri</h3>
@@ -815,7 +816,7 @@
                             $range = !empty($cfg['open']) && !empty($cfg['close']) ? $cfg['open'] . '–' . $cfg['close'] : '09:00–21:00';
                             $time = $closed ? 'Kapalı' : $range;
                         @endphp
-                        <div class="flex items-center justify-between py-2.5 px-3 rounded-lg border-b border-warm last:border-b-0 {{ $isToday ? 'bg-terracotta/10 text-terracotta font-bold border-transparent' : 'text-muted' }}">
+                        <div class="flex items-center justify-between py-2.5 px-3 rounded-lg border-b border-stone-100 last:border-b-0 {{ $isToday ? 'bg-terracotta/10 text-terracotta font-bold' : 'text-muted' }}">
                             <span class="{{ $isToday ? 'text-terracotta font-bold' : 'text-muted font-medium' }}">{{ $name }}</span>
                             <span class="{{ $isToday ? 'text-terracotta font-bold font-mono' : ($closed ? 'text-ink font-medium' : 'text-ink font-mono font-medium') }}">
                                 {{ $time }}
@@ -826,7 +827,7 @@
             </div>
 
             <!-- 3. İşletme Sahiplenme Kutusu -->
-            <div class="bg-sand rounded-2xl p-5 space-y-2.5 border border-warm">
+            <div class="bg-sand rounded-2xl p-5 space-y-2.5">
                 <h4 class="font-bold text-xs text-ink">Bu işletme sizin mi?</h4>
                 <p class="text-[11px] text-muted leading-relaxed">
                     İşletme sahibiyseniz profili sahiplenerek bilgileri düzenleyebilir ve dijital menünüzü yönetebilirsiniz.
@@ -842,7 +843,7 @@
 
     <!-- ================= EN YAKIN / BENZER İŞLETMELER ================= -->
     @if($relatedRestaurants->isNotEmpty())
-        <section class="mt-14 pt-8 border-t border-warm">
+        <section class="mt-14 pt-8 border-t border-stone-200/60">
             <div class="flex items-center justify-between gap-4 mb-6">
                 <div>
                     <h2 class="text-xl font-bold text-ink">{{ $restaurant->city->name }} Çevresindeki Mekanlar</h2>
@@ -916,16 +917,16 @@
 </div>
 
 <!-- ================= MOBILE STICKY FLOATING ACTION BAR (restoranim.net Style) ================= -->
-<div class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md border-t border-warm p-3 px-4 flex items-center gap-2 shadow-2xl">
+<div class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md border-t border-stone-200/80 p-3 px-4 flex items-center gap-2 shadow-2xl">
     @if($restaurant->phone)
         <a href="tel:{{ $restaurant->phone }}"
-           class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-sand border border-warm text-ink font-bold text-xs">
+           class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-sand text-ink font-bold text-xs">
             <x-ico name="phone" class="w-3.5 h-3.5 text-terracotta" />
             <span>Ara</span>
         </a>
     @endif
     <a href="{{ $mapsUrl }}" target="_blank" rel="noopener noreferrer"
-       class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-sand border border-warm text-ink font-bold text-xs">
+       class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-sand text-ink font-bold text-xs">
         <x-ico name="map-pin" class="w-3.5 h-3.5 text-terracotta" />
         <span>Yol Tarifi</span>
     </a>
