@@ -125,7 +125,7 @@
                                     <x-ico name="chevron-right" class="w-4 h-4" />
                                 </a>
                             </div>
-                            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="mt-4 grid grid-cols-1 xl:grid-cols-2 gap-4">
                                 @foreach($featuredItems as $dish)
                                     <x-menu-item-card :dish="$dish" :showMenuLink="false" />
                                 @endforeach

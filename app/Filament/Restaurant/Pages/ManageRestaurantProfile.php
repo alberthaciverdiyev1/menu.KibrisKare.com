@@ -29,7 +29,9 @@ class ManageRestaurantProfile extends Page implements HasForms
         $restaurant = $this->getRestaurant();
 
         if ($restaurant) {
-            $this->form->fill($restaurant->attributesToArray());
+            $formData = $restaurant->attributesToArray();
+            $formData['categories'] = $restaurant->categories()->pluck('categories.id')->toArray();
+            $this->form->fill($formData);
         }
     }
 
@@ -59,6 +61,14 @@ class ManageRestaurantProfile extends Page implements HasForms
                             ->placeholder('Örn: Kıbrıs Mutfağı, Kebap & Steak')
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\Select::make('categories')
+                            ->label('Restoran Kategorileri')
+                            ->helperText('Yönetici (Admin) tarafından tanımlanmış kategorilerden restoranınıza uygun olanları seçebilirsiniz.')
+                            ->multiple()
+                            ->relationship('categories', 'name')
+                            ->preload()
+                            ->searchable()
+                            ->columnSpanFull(),
                         Forms\Components\Textarea::make('description')
                             ->label('Hakkında / Açıklama')
                             ->rows(3)
@@ -91,10 +101,14 @@ class ManageRestaurantProfile extends Page implements HasForms
     public function save(): void
     {
         $data = $this->form->getState();
+        $categories = $data['categories'] ?? [];
+        unset($data['categories']);
+
         $restaurant = $this->getRestaurant();
 
         if ($restaurant) {
             $restaurant->update($data);
+            $restaurant->categories()->sync($categories);
 
             Notification::make()
                 ->title('Restoran bilgileri başarıyla güncellendi!')
