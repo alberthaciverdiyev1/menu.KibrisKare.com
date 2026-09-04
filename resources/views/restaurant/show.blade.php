@@ -46,7 +46,7 @@
     $mapsUrl = "https://www.google.com/maps/dir/?api=1&destination={$restaurant->display_latitude},{$restaurant->display_longitude}";
 @endphp
 
-<div class="max-w-6xl mx-auto px-4 sm:px-4 pt-4 pb-28"
+<div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 pt-3 pb-28"
      x-data="{
         galleryOpen: false,
         galleryIndex: 0,
@@ -75,7 +75,7 @@
      }">
 
     <!-- ================= BREADCRUMB ================= -->
-    <nav class="flex items-center gap-1.5 py-3 text-xs text-muted font-medium flex-wrap">
+    <nav class="flex items-center gap-1.5 py-2.5 text-xs text-muted font-medium flex-wrap">
         <a href="{{ route('home') }}" class="text-terracotta font-semibold hover:underline">Keşfet</a>
         <span class="text-stone-300">›</span>
         <a href="{{ route('restaurants.index', ['city' => $restaurant->city->slug]) }}" class="hover:text-ink transition-colors">{{ $restaurant->city->name }}</a>
@@ -176,7 +176,7 @@
     </div>
 
     <!-- ================= SUB-NAVIGATION TABS ================= -->
-    <div id="genel-bakis" class="mt-6 border-b border-stone-200/80 sticky top-[72px] z-20 bg-sand/95 backdrop-blur-md -mx-4 px-4 sm:mx-0 sm:px-0">
+    <div id="genel-bakis" class="mt-6 border-b border-stone-200/80 sticky top-[72px] z-20 bg-sand/95 backdrop-blur-md -mx-2 px-2 sm:mx-0 sm:px-0">
         <div class="flex items-center gap-6 sm:gap-8 overflow-x-auto hide-scrollbar text-xs sm:text-sm whitespace-nowrap font-semibold">
             <a href="#genel-bakis" class="inline-flex items-center gap-2 py-3 border-b-2 border-terracotta text-terracotta font-bold">
                 <x-ico name="clock" class="w-4 h-4" />
@@ -204,7 +204,7 @@
     </div>
 
     <!-- ================= MAIN TWO-COLUMN CONTENT GRID ================= -->
-    <div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
 
         <!-- Left Column: Menu Highlights, Description, Reviews (8 Cols) -->
         <div class="lg:col-span-8 space-y-8">
@@ -300,9 +300,6 @@
                                         <div>
                                             <h3 class="font-bold text-sm text-ink flex items-center gap-1.5 flex-wrap">
                                                 <span>{{ $branch->name }}</span>
-                                                @if($branch->is_main)
-                                                    <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-terracotta text-white">Ana Şube</span>
-                                                @endif
                                             </h3>
                                             @if($branch->city)
                                                 <span class="text-[11px] font-medium text-muted">{{ $branch->city->name }}</span>
