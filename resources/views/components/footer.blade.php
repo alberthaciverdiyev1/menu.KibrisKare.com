@@ -45,9 +45,14 @@
                 <p class="text-xs text-stone-400 leading-relaxed font-normal">
                     Mekanınızı listemize ekleyin, misafirlerinize güncel QR ve web menünüzü sunun.
                 </p>
-                <a href="/admin" class="inline-block mt-2 px-4 py-2.5 rounded-lg bg-stone-800 hover:bg-terracotta text-white text-xs font-bold border border-stone-700">
-                    Yönetim Paneli Girişi →
-                </a>
+                <div class="flex flex-col gap-2 pt-1">
+                    <a href="/restaurant-panel" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-terracotta hover:bg-terracotta-dark text-white text-xs font-bold shadow-xs text-center">
+                        <span>Restoran Portalı Girişi →</span>
+                    </a>
+                    <a href="/admin" class="text-[11px] text-stone-500 hover:text-stone-400 text-center">
+                        Sistem Yöneticisi (Admin)
+                    </a>
+                </div>
             </div>
 
         </div>

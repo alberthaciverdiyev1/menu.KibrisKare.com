@@ -12,15 +12,40 @@ use Filament\Panel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+#[Fillable(['name', 'email', 'password', 'restaurant_id', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public function restaurant(): BelongsTo
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isRestaurantOwner(): bool
+    {
+        return $this->role === 'restaurant' || $this->restaurant_id !== null;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
+        if ($panel->getId() === 'admin') {
+            return $this->isAdmin();
+        }
+
+        if ($panel->getId() === 'restaurant') {
+            return $this->isAdmin() || ($this->isRestaurantOwner() && $this->restaurant_id !== null);
+        }
+
         return true;
     }
 

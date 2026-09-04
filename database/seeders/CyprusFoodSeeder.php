@@ -17,11 +17,12 @@ class CyprusFoodSeeder extends Seeder
     public function run(): void
     {
         // Admin user for Filament
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@menu.cy'],
             [
                 'name' => 'Admin User',
                 'password' => bcrypt('password'),
+                'role' => 'admin',
             ]
         );
 
@@ -413,6 +414,17 @@ class CyprusFoodSeeder extends Seeder
                         'opening_hours' => '11:00 - 23:00',
                         'is_main' => false,
                         'is_active' => true,
+                    ]
+                );
+
+                // Create a restaurant manager login for Niazi's
+                User::updateOrCreate(
+                    ['email' => 'niazi@menu.cy'],
+                    [
+                        'name' => "Niazi's Manager",
+                        'password' => bcrypt('password'),
+                        'role' => 'restaurant',
+                        'restaurant_id' => $restaurant->id,
                     ]
                 );
             }
