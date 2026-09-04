@@ -30,10 +30,16 @@
 </head>
 <body class="bg-sand text-ink antialiased min-h-screen flex flex-col selection:bg-terracotta selection:text-white font-sans">
 
+    <!-- Skip link (keyboard accessibility) -->
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-ink focus:text-white focus:px-4 focus:py-2.5 focus:rounded-lg focus:text-sm focus:font-bold focus:shadow-lg">
+        İçeriğe Geç
+    </a>
+
     <x-navbar :cities="$cities ?? []" :selectedCity="$selectedCity ?? null" :currentCity="$currentCity ?? null" />
 
     <!-- MAIN CONTENT -->
-    <main class="flex-grow">
+    <main id="main-content" class="flex-grow focus:outline-none" tabindex="-1">
         @yield('content')
     </main>
 

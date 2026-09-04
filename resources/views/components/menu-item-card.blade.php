@@ -18,8 +18,9 @@
             @if($dish->is_chef_special || $dish->is_popular || $dish->is_vegetarian)
                 <div class="flex items-center gap-1.5 flex-wrap mb-1.5">
                     @if($dish->is_chef_special)
-                        <span class="font-bold text-star bg-amber-50 px-2 py-0.5 rounded text-[10px] border border-amber-200/50">
-                            ★ Şefin Seçimi
+                        <span class="inline-flex items-center gap-1 font-bold text-star bg-amber-50 px-2 py-0.5 rounded text-[10px] border border-amber-200/50">
+                            <x-ico name="star" filled class="w-2.5 h-2.5" />
+                            <span>Şefin Seçimi</span>
                         </span>
                     @endif
                     @if($dish->is_popular)

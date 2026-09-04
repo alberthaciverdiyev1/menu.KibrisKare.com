@@ -35,7 +35,7 @@
                         <!-- Rating Badge (Top Left) -->
                         <div class="absolute top-3.5 left-3.5">
                             <span class="inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-black bg-ink text-white shadow-xs">
-                                <span class="text-star font-bold">★</span>
+                                <x-ico name="star" filled class="w-3.5 h-3.5 text-star" />
                                 <span>{{ number_format($restaurant->rating, 1) }}</span>
                                 <span class="text-stone-300 font-normal text-[11px]">({{ $restaurant->reviews_count }})</span>
                             </span>
@@ -60,13 +60,15 @@
                 <!-- RESTAURANT ESSENTIALS & ACTIONS -->
                 <div class="lg:col-span-6 flex flex-col justify-between h-full space-y-6">
                     <div>
-                        <!-- Badges -->
-                        <div class="flex items-center gap-2 text-xs mb-2.5">
-                            <span class="px-2.5 py-1 rounded-md font-bold bg-sand text-ink border border-warm">
-                                📍 {{ $restaurant->city->name }}
+                        <!-- Badges (SVG icons instead of emoji) -->
+                        <div class="flex items-center gap-2 text-xs mb-2.5 flex-wrap">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold bg-sand text-ink border border-warm">
+                                <x-ico name="map-pin" class="w-3.5 h-3.5 text-terracotta" />
+                                {{ $restaurant->city->name }}
                             </span>
-                            <span class="px-2.5 py-1 rounded-md font-bold bg-sand text-muted border border-warm">
-                                🍽️ {{ $restaurant->cuisine }}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md font-bold bg-sand text-muted border border-warm">
+                                <x-ico name="tag" class="w-3.5 h-3.5" />
+                                {{ $restaurant->cuisine }}
                             </span>
                             <span class="px-2.5 py-1 rounded-md font-bold font-mono bg-sand text-ink border border-warm">
                                 {{ $restaurant->price_range }}
@@ -98,24 +100,28 @@
 
                     <!-- PRIMARY CALL TO ACTIONS -->
                     <div class="pt-4 border-t border-warm flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                        <a href="{{ route('restaurant.menu', $restaurant->slug) }}" 
+                        <a href="{{ route('restaurant.menu', $restaurant->slug) }}"
                            class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm shadow-xs text-center">
-                            <span>📖 Dijital Menüyü ve Fiyatları Gör</span>
+                            <x-ico name="book-open" class="w-5 h-5" />
+                            <span>Dijital Menüyü ve Fiyatları Gör</span>
                             <span class="opacity-80 font-normal text-xs">({{ $restaurant->menuItems->count() }} Çeşit)</span>
                         </a>
 
                         @if($restaurant->phone)
-                            <a href="tel:{{ $restaurant->phone }}" 
+                            <a href="tel:{{ $restaurant->phone }}"
                                class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-surface hover:bg-sand border border-warm text-ink font-bold text-sm shadow-2xs text-center">
-                                <span>📞 {{ $restaurant->phone }}</span>
+                                <x-ico name="phone" class="w-4 h-4 text-terracotta" />
+                                <span>{{ $restaurant->phone }}</span>
                             </a>
                         @endif
 
-                        <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->latitude }},{{ $restaurant->longitude }}" 
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->latitude }},{{ $restaurant->longitude }}"
                            target="_blank"
+                           rel="noopener"
+                           aria-label="{{ $restaurant->name }} konumunu Google Haritalar'da aç"
                            class="inline-flex items-center justify-center p-3.5 rounded-xl bg-surface hover:bg-sand border border-warm text-ink font-bold text-sm shadow-2xs text-center"
                            title="Google Haritalar">
-                            <span>🗺️</span>
+                            <x-ico name="map" class="w-5 h-5 text-terracotta" />
                         </a>
                     </div>
 
@@ -163,22 +169,28 @@
                     
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-bold text-ink">
                         <div class="flex items-center gap-2 p-3 rounded-xl bg-sand border border-warm">
-                            <span class="text-open">✓</span> Açık Hava & Teras
+                            <x-ico name="check" class="w-3.5 h-3.5 text-open shrink-0" />
+                            <span>Açık Hava & Teras</span>
                         </div>
                         <div class="flex items-center gap-2 p-3 rounded-xl bg-sand border border-warm">
-                            <span class="text-open">✓</span> Ücretsiz Wi-Fi
+                            <x-ico name="check" class="w-3.5 h-3.5 text-open shrink-0" />
+                            <span>Ücretsiz Wi-Fi</span>
                         </div>
                         <div class="flex items-center gap-2 p-3 rounded-xl bg-sand border border-warm">
-                            <span class="text-open">✓</span> Kolay Otopark
+                            <x-ico name="check" class="w-3.5 h-3.5 text-open shrink-0" />
+                            <span>Kolay Otopark</span>
                         </div>
                         <div class="flex items-center gap-2 p-3 rounded-xl bg-sand border border-warm">
-                            <span class="text-open">✓</span> Kredi Kartı Geçerli
+                            <x-ico name="check" class="w-3.5 h-3.5 text-open shrink-0" />
+                            <span>Kredi Kartı Geçerli</span>
                         </div>
                         <div class="flex items-center gap-2 p-3 rounded-xl bg-sand border border-warm">
-                            <span class="text-open">✓</span> Paket Servis
+                            <x-ico name="check" class="w-3.5 h-3.5 text-open shrink-0" />
+                            <span>Paket Servis</span>
                         </div>
                         <div class="flex items-center gap-2 p-3 rounded-xl bg-sand border border-warm">
-                            <span class="text-open">✓</span> Rezervasyon İmkanı
+                            <x-ico name="check" class="w-3.5 h-3.5 text-open shrink-0" />
+                            <span>Rezervasyon İmkanı</span>
                         </div>
                     </div>
                 </div>
@@ -226,17 +238,19 @@
                     </div>
 
                     <!-- Map Link Button -->
-                    <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->latitude }},{{ $restaurant->longitude }}" 
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ $restaurant->latitude }},{{ $restaurant->longitude }}"
                        target="_blank"
-                       class="block w-full py-3 rounded-xl bg-ink text-white hover:bg-terracotta text-center font-bold text-xs uppercase tracking-wider shadow-xs">
-                        Google Haritalarda Aç ↗
+                       rel="noopener"
+                       class="inline-flex w-full items-center justify-center gap-1.5 py-3 rounded-xl bg-ink text-white hover:bg-terracotta text-center font-bold text-xs uppercase tracking-wider shadow-xs">
+                        <span>Google Haritalarda Aç</span>
+                        <x-ico name="external" class="w-3.5 h-3.5" />
                     </a>
                 </div>
 
                 <!-- FAST ACCESS TO DIGITAL MENU -->
                 <div class="bg-sand rounded-2xl border border-warm p-6 shadow-2xs text-center space-y-3">
-                    <div class="w-10 h-10 rounded-full bg-terracotta text-white font-bold flex items-center justify-center mx-auto text-base">
-                        📖
+                    <div class="w-10 h-10 rounded-full bg-terracotta text-white flex items-center justify-center mx-auto">
+                        <x-ico name="book-open" class="w-5 h-5" />
                     </div>
                     <h4 class="font-extrabold text-ink text-sm">Menü ve Fiyat Listesi</h4>
                     <p class="text-xs text-muted leading-relaxed font-medium">

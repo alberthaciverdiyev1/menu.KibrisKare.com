@@ -42,15 +42,18 @@
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-muted">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </span>
-                    <input type="text" 
-                           name="q" 
-                           value="{{ $search ?? '' }}" 
-                           placeholder="Mekan adı, mutfak veya adres arayın..." 
+                    <label for="restaurant-search" class="sr-only">Restoran ara</label>
+                    <input id="restaurant-search"
+                           type="text"
+                           name="q"
+                           value="{{ $search ?? '' }}"
+                           placeholder="Mekan adı, mutfak veya adres arayın..."
                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-warm rounded-xl text-sm text-ink placeholder-muted/70 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta font-medium shadow-2xs">
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <select name="sort" onchange="this.form.submit()" class="bg-white border border-warm rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-bold text-ink focus:outline-none focus:border-terracotta">
+                    <label for="sort-by" class="sr-only">Sıralama</label>
+                    <select id="sort-by" name="sort" onchange="this.form.submit()" class="bg-white border border-warm rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-bold text-ink focus:outline-none focus:border-terracotta">
                         <option value="rating_desc" {{ ($sort ?? '') == 'rating_desc' ? 'selected' : '' }}>En Yüksek Puan</option>
                         <option value="reviews_desc" {{ ($sort ?? '') == 'reviews_desc' ? 'selected' : '' }}>En Çok Değerlendirilen</option>
                         <option value="name_asc" {{ ($sort ?? '') == 'name_asc' ? 'selected' : '' }}>İsim (A-Z)</option>

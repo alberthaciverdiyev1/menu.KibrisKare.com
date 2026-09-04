@@ -26,7 +26,7 @@
 
             <div class="flex items-center gap-1.5 text-[11px] text-muted mt-0.5">
                 <span class="font-bold text-star flex items-center gap-0.5">
-                    <span>★</span>
+                    <x-ico name="star" filled class="w-3 h-3" />
                     <span>{{ number_format($restaurant->rating, 1) }}</span>
                 </span>
                 <span>•</span>
@@ -65,7 +65,7 @@
             <!-- Rating (Top Left) -->
             <div class="absolute top-3 left-3 flex items-center gap-1.5">
                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-extrabold bg-ink text-white shadow-xs border border-stone-700/40">
-                    <span class="text-star font-bold">★</span>
+                    <x-ico name="star" filled class="w-3 h-3 text-star" />
                     <span>{{ number_format($restaurant->rating, 1) }}</span>
                     <span class="text-stone-300 text-[11px] font-medium">({{ $restaurant->reviews_count }})</span>
                 </span>

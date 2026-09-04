@@ -37,10 +37,12 @@
                     <div class="pl-3.5 pr-2 text-muted">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="text" 
-                           name="q" 
-                           value="{{ $searchQuery ?? '' }}" 
-                           placeholder="Restoran adı, yemek veya mutfak arayın (örn: Şeftali Kebabı, Burger, Pizza)..." 
+                    <label for="hero-search" class="sr-only">Restoran, yemek veya mutfak ara</label>
+                    <input id="hero-search"
+                           type="text"
+                           name="q"
+                           value="{{ $searchQuery ?? '' }}"
+                           placeholder="Restoran adı, yemek veya mutfak arayın (örn: Şeftali Kebabı, Burger, Pizza)..."
                            class="w-full bg-transparent border-none text-ink text-sm sm:text-base placeholder-muted/70 focus:outline-none focus:ring-0 font-medium">
                     <button type="submit" 
                             class="px-6 sm:px-8 py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm uppercase tracking-wider shrink-0 shadow-xs">
@@ -91,8 +93,9 @@
 
             <div class="flex items-center gap-3">
                 @if($selectedCategorySlug)
-                    <a href="?city={{ $selectedCity->slug ?? 'girne' }}" class="text-xs font-bold text-muted hover:text-ink bg-surface border border-warm px-3 py-1.5 rounded-lg">
-                        ✕ Filtreyi Kaldır
+                    <a href="?city={{ $selectedCity->slug ?? 'girne' }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-ink bg-surface border border-warm px-3 py-1.5 rounded-lg">
+                        <x-ico name="close" class="w-3.5 h-3.5" />
+                        <span>Filtreyi Kaldır</span>
                     </a>
                 @endif
                 <a href="{{ route('categories') }}" class="text-xs font-bold text-terracotta hover:text-terracotta-dark hover:underline">

@@ -26,7 +26,10 @@
                     </div>
 
                     <div class="flex items-center gap-3 text-xs text-muted font-medium mt-1.5">
-                        <span class="font-bold text-star">★ {{ number_format($restaurant->rating, 1) }}</span>
+                        <span class="font-bold text-star flex items-center gap-1">
+                            <x-ico name="star" filled class="w-3 h-3" />
+                            <span>{{ number_format($restaurant->rating, 1) }}</span>
+                        </span>
                         <span>•</span>
                         <span>{{ $restaurant->city->name }}</span>
                         <span>•</span>
@@ -38,9 +41,10 @@
 
                 @if($restaurant->phone)
                     <div class="shrink-0">
-                        <a href="tel:{{ $restaurant->phone }}" 
+                        <a href="tel:{{ $restaurant->phone }}"
                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface hover:bg-sand border border-warm text-ink font-bold text-xs shadow-2xs">
-                            <span>📞 Sipariş / Rezervasyon: {{ $restaurant->phone }}</span>
+                            <x-ico name="phone" class="w-4 h-4 text-terracotta" />
+                            <span>Sipariş / Rezervasyon: {{ $restaurant->phone }}</span>
                         </a>
                     </div>
                 @endif
@@ -87,16 +91,19 @@
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-muted">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>
-                <input type="text" 
-                       x-model="searchQuery" 
-                       placeholder="Menüde yemek, tatlı veya içecek arayın..." 
+                <label for="menu-search" class="sr-only">Menüde ara</label>
+                <input id="menu-search"
+                       type="text"
+                       x-model="searchQuery"
+                       placeholder="Menüde yemek, tatlı veya içecek arayın..."
                        class="w-full pl-10 pr-10 py-3 bg-surface border border-warm rounded-xl text-sm text-ink placeholder-muted/70 focus:outline-none focus:border-terracotta font-medium shadow-2xs">
-                
-                <button type="button" 
-                        x-show="searchQuery" 
-                        @click="searchQuery = ''" 
-                        class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-xs font-bold text-muted hover:text-ink">
-                    ✕
+
+                <button type="button"
+                        x-show="searchQuery"
+                        @click="searchQuery = ''"
+                        aria-label="Aramayı temizle"
+                        class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-muted hover:text-ink">
+                    <x-ico name="close" class="w-4 h-4" />
                 </button>
             </div>
 
