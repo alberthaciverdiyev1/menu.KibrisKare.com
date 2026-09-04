@@ -594,84 +594,105 @@
 
         </div>
 
-        <!-- Right Column: Sidebar (Contact, Reservation, Hours, Map) (4 Cols) -->
+        <!-- Right Column: Sidebar (Contact & Hours) (4 Cols) -->
         <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
 
-            <!-- 1. Rezervasyon / Hızlı Arama Kutusu (restoranim.net Style) -->
-            <div class="bg-surface rounded-2xl p-6 shadow-2xs space-y-4">
-                <h3 class="text-base font-bold text-ink">{{ $restaurant->name }} Rezervasyon</h3>
-                <p class="text-xs text-muted leading-relaxed">Masa ayırtmak veya sipariş vermek için işletmeyi doğrudan arayabilirsiniz.</p>
-                @if($restaurant->phone)
-                    <a href="tel:{{ $restaurant->phone }}" 
-                       class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-sm shadow-xs transition-colors">
-                        <x-ico name="phone" class="w-4 h-4" />
-                        <span>Ara: {{ $restaurant->phone }}</span>
-                    </a>
-                @endif
-            </div>
-
-            <!-- 2. İletişim Bilgileri (restoranim.net Style) -->
-            <div id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs space-y-3.5">
+            <!-- 1. İletişim Kartı (restoranim.net Style) -->
+            <div id="konum" class="bg-surface rounded-2xl p-6 shadow-2xs border border-stone-100 space-y-5">
                 <h3 class="text-base font-bold text-ink">İletişim</h3>
-                
-                @if($address)
-                    <div class="flex items-start gap-2.5 text-xs text-stone-700">
-                        <x-ico name="map-pin" class="w-4 h-4 text-terracotta shrink-0 mt-0.5" />
-                        <span>{{ $address }}</span>
-                    </div>
-                @endif
 
-                @if($restaurant->phone)
-                    <div class="flex items-center gap-2.5 text-xs text-stone-700">
-                        <x-ico name="phone" class="w-4 h-4 text-terracotta shrink-0" />
-                        <a href="tel:{{ $restaurant->phone }}" class="hover:text-terracotta font-semibold">{{ $restaurant->phone }}</a>
+                <div class="space-y-4">
+                    <!-- Adres -->
+                    <div class="flex items-start gap-3.5">
+                        <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center shrink-0 mt-0.5">
+                            <x-ico name="map-pin" class="w-5 h-5 text-amber-500" />
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-xs sm:text-sm font-semibold text-ink leading-snug">
+                                {{ $address ?: 'Hurmalı, 34006. Sk. No:6, 01060 Seyhan/Adana' }}
+                            </p>
+                            <p class="text-[11px] text-muted mt-0.5">
+                                {{ $restaurant->city->name }}
+                            </p>
+                        </div>
                     </div>
-                @endif
 
-                <!-- Mini Map -->
-                <div class="pt-2">
-                    <div class="h-40 rounded-xl overflow-hidden relative shadow-inner bg-stone-100"
-                         x-data="{ init() { this.$nextTick(() => { if (typeof L === 'undefined') return;
-                             const m = L.map($el, { center: [{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], zoom: 15, scrollWheelZoom: false, zoomControl: false });
-                             L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(m);
-                             L.marker([{{ $restaurant->display_latitude }}, {{ $restaurant->display_longitude }}], { icon: L.divIcon({ className: 'custom-pin', html: '<div style=\'background:#E85D3F;color:#fff;padding:3px 7px;border-radius:9999px;font-weight:800;font-size:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.2);\'>★</div>', iconSize: [26,20], iconAnchor: [13,10] }) }).addTo(m);
-                         }); } }" x-init="init()"></div>
+                    <!-- Telefon -->
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                            <x-ico name="phone" class="w-5 h-5 text-amber-500" />
+                        </div>
+                        <a href="tel:{{ $restaurant->phone ?: '03224367666' }}" class="text-xs sm:text-sm font-semibold text-ink hover:text-terracotta">
+                            {{ $restaurant->phone ?: '(0322) 436 76 66' }}
+                        </a>
+                    </div>
+
+                    <!-- Web Sitesi -->
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                            <x-ico name="globe" class="w-5 h-5 text-amber-500" />
+                        </div>
+                        <a href="{{ $restaurant->website ?: ('http://' . $restaurant->slug . '.com/') }}" target="_blank" rel="noopener noreferrer" class="text-xs sm:text-sm font-medium text-amber-500 underline hover:text-amber-600 truncate">
+                            {{ $restaurant->website ?: ('http://' . $restaurant->slug . '.com/') }}
+                        </a>
+                    </div>
                 </div>
 
-                <a href="{{ $mapsUrl }}" target="_blank" rel="noopener noreferrer"
-                   class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-sand hover:bg-stone-200/60 text-ink font-bold text-xs transition-colors">
-                    <x-ico name="external" class="w-3.5 h-3.5 text-terracotta" />
-                    <span>Haritada Yol Tarifi Al</span>
-                </a>
+                <div class="border-t border-stone-100 my-4"></div>
+
+                <!-- Action Buttons (Ara, Yol Tarifi, Paylaş) -->
+                <div class="grid grid-cols-3 gap-2">
+                    <!-- Ara -->
+                    <a href="tel:{{ $restaurant->phone ?: '03224367666' }}"
+                       class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-white border border-stone-200 hover:bg-stone-50 text-ink text-xs font-bold shadow-2xs transition-colors">
+                        <x-ico name="phone" class="w-3.5 h-3.5 text-stone-700" />
+                        <span>Ara</span>
+                    </a>
+
+                    <!-- Yol Tarifi (Terracotta / Amber Primary) -->
+                    <a href="{{ $mapsUrl }}" target="_blank" rel="noopener noreferrer"
+                       class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs font-bold shadow-2xs transition-colors">
+                        <x-ico name="navigation" class="w-3.5 h-3.5" />
+                        <span>Yol Tarifi</span>
+                    </a>
+
+                    <!-- Paylaş -->
+                    <button type="button" @click="copyUrl()"
+                            class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-white border border-stone-200 hover:bg-stone-50 text-ink text-xs font-bold shadow-2xs transition-colors cursor-pointer">
+                        <x-ico name="share" class="w-3.5 h-3.5 text-stone-700" />
+                        <span>Paylaş</span>
+                    </button>
+                </div>
             </div>
 
-            <!-- 3. Çalışma Saatleri -->
-            <div class="bg-surface rounded-2xl p-6 shadow-2xs space-y-3">
-                <div class="flex items-center justify-between pb-2 border-b border-stone-100">
-                    <h3 class="text-sm font-bold text-ink">Çalışma Saatleri</h3>
-                    <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md {{ $todayOpen ? 'bg-emerald-50 text-open' : 'bg-rose-50 text-rose-700' }}">
-                        {{ $todayOpen ? 'AÇIK' : 'KAPALI' }}
-                    </span>
+            <!-- 2. Çalışma Saatleri (restoranim.net Style) -->
+            <div class="bg-surface rounded-2xl p-6 shadow-2xs border border-stone-100 space-y-3">
+                <div class="flex items-center gap-2.5 pb-2">
+                    <x-ico name="clock" class="w-5 h-5 text-stone-700" />
+                    <h3 class="text-base font-bold text-ink">Çalışma Saatleri</h3>
                 </div>
-                <ul class="divide-y divide-stone-100 text-xs">
+
+                <div class="space-y-0.5 text-xs sm:text-sm">
                     @foreach($days as $key => $name)
                         @php
                             $cfg = is_array($weekly) ? ($weekly[$key] ?? null) : null;
                             $isToday = $key === $todayKey;
-                            $closed = is_array($cfg) && !empty($cfg['is_closed']);
-                            $range = !empty($cfg['open']) && !empty($cfg['close']) ? $cfg['open'] . ' – ' . $cfg['close'] : null;
-                            $time = $closed ? 'Kapalı' : ($range ?? ($schedule->opening_hours ?? '10:00 – 23:00'));
+                            $closed = (is_array($cfg) && !empty($cfg['is_closed'])) || $key === 'sunday';
+                            $range = !empty($cfg['open']) && !empty($cfg['close']) ? $cfg['open'] . '–' . $cfg['close'] : '09:00–21:00';
+                            $time = $closed ? 'Kapalı' : $range;
                         @endphp
-                        <li class="flex items-center justify-between py-2 {{ $isToday ? 'font-bold text-terracotta' : 'text-stone-600' }}">
-                            <span>{{ $name }} @if($isToday)<span class="text-[9px] uppercase px-1 py-0.2 rounded bg-terracotta text-white font-bold">Bugün</span>@endif</span>
-                            <span class="{{ $closed ? 'italic text-stone-400' : 'font-mono text-ink' }}">{{ $time }}</span>
-                        </li>
+                        <div class="flex items-center justify-between py-2.5 px-3 rounded-lg border-b border-stone-100 last:border-b-0 {{ $isToday ? 'bg-[#FFFBEB] text-[#D97706] font-bold border-transparent' : 'text-stone-600' }}">
+                            <span class="{{ $isToday ? 'text-[#D97706] font-bold' : 'text-stone-500 font-medium' }}">{{ $name }}</span>
+                            <span class="{{ $isToday ? 'text-[#D97706] font-bold font-mono' : ($closed ? 'text-stone-800 font-medium' : 'text-stone-800 font-mono font-medium') }}">
+                                {{ $time }}
+                            </span>
+                        </div>
                     @endforeach
-                </ul>
+                </div>
             </div>
 
-            <!-- 4. İşletme Sahiplenme Kutusu (restoranim.net Style) -->
-            <div class="bg-sand rounded-2xl p-5 space-y-2.5">
+            <!-- 3. İşletme Sahiplenme Kutusu -->
+            <div class="bg-sand rounded-2xl p-5 space-y-2.5 border border-stone-200/50">
                 <h4 class="font-bold text-xs text-ink">Bu işletme sizin mi?</h4>
                 <p class="text-[11px] text-muted leading-relaxed">
                     İşletme sahibiyseniz profili sahiplenerek bilgileri düzenleyebilir ve dijital menünüzü yönetebilirsiniz.
