@@ -73,12 +73,6 @@
                     <p class="mt-2 text-sm text-muted">
                         {{ $restaurant->cuisine }} · {{ $restaurant->city->name }}{{ $restaurant->price_range ? ' · ' . $restaurant->price_range : '' }}
                     </p>
-
-                    <p class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm {{ $todayOpen ? 'text-open' : 'text-muted' }}">
-                        <span class="w-2 h-2 rounded-full {{ $todayOpen ? 'bg-open' : 'bg-muted' }}"></span>
-                        <span class="font-bold">{{ $todayOpen ? 'Şu anda açık' : 'Şu anda kapalı' }}</span>
-                        <span class="text-muted">· Bugün {{ $restaurant->getTodayHours() }}</span>
-                    </p>
                 </div>
 
                 <div class="shrink-0 w-full xl:w-60 space-y-2.5">
