@@ -123,6 +123,16 @@
                             Yol Tarifi
                         </a>
                     </div>
+
+                    @if($restaurant->phone)
+                        <div class="pt-3 mt-1 border-t border-warm">
+                            <p class="text-[11px] font-bold uppercase tracking-wider text-muted">Rezervasyon &amp; Sipariş</p>
+                            <a href="tel:{{ $restaurant->phone }}"
+                               class="mt-1 block text-lg font-extrabold text-ink hover:text-terracotta whitespace-nowrap">
+                                {{ $restaurant->phone }}
+                            </a>
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -222,18 +232,6 @@
                     Google Haritalar'da aç
                 </a>
             </section>
-
-            <!-- Contact -->
-            @if($restaurant->phone)
-                <section class="bg-surface rounded-2xl border border-warm shadow-sm p-6 space-y-3">
-                    <div class="flex items-center gap-3">
-                        <span class="w-1 h-6 rounded-full bg-terracotta"></span>
-                        <h2 class="text-base font-extrabold text-ink">Rezervasyon & Sipariş</h2>
-                    </div>
-                    <a href="tel:{{ $restaurant->phone }}" class="block text-lg font-extrabold text-ink hover:text-terracotta">{{ $restaurant->phone }}</a>
-                    <p class="text-xs text-muted">Menü ve fiyat bilgisi için arayabilir ya da dijital menüyü inceleyebilirsiniz.</p>
-                </section>
-            @endif
 
         </aside>
     </div>
